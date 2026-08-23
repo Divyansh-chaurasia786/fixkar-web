@@ -1360,11 +1360,15 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 <CheckCircle2 size={14} color={activeTab === 'projects-governance' ? '#38BDF8' : 'currentColor'} />
                 <span>Project Approvals</span>
               </div>
-              {superStats?.pendingApprovals > 0 && (
-                <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
-                  {superStats.pendingApprovals}
-                </span>
-              )}
+              {(() => {
+                const pendingTesting = (projects || []).filter(p => p.stage === 'testing' || p.status === 'Testing' || p.stage === 'review').length;
+                if (pendingTesting === 0) return null;
+                return (
+                  <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.2)', color: '#38BDF8', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
+                    {pendingTesting}
+                  </span>
+                );
+              })()}
             </button>
 
             {/* Unified Tab: SMS Gateway & Pricing */}
