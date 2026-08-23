@@ -5263,17 +5263,30 @@ function getProjectStageIndex(stageStr) {
       const f2sData = await f2sRes.json().catch(() => null);
       if (f2sRes.ok && f2sData && f2sData.return === true) {
         const parsedWallet = parseFloat(f2sData.wallet) || 0;
-        const smsCount = Number(f2sData.sms_count) || Math.floor(parsedWallet / 0.125);
+        const smsCount = Number(f2sData.sms_count) || 0;
+
+        // Dynamic Real Carrier Rate per SMS calculated directly from live wallet response:
+        let realRate = 0.25;
+        if (parsedWallet > 0 && smsCount > 0) {
+          realRate = parseFloat((parsedWallet / smsCount).toFixed(4));
+        } else if (parsedWallet >= 600000) realRate = 0.11;
+        else if (parsedWallet >= 130000) realRate = 0.13;
+        else if (parsedWallet >= 60000) realRate = 0.15;
+        else if (parsedWallet >= 14000) realRate = 0.17;
+        else if (parsedWallet >= 8000) realRate = 0.19;
+        else if (parsedWallet >= 4000) realRate = 0.21;
+        else realRate = 0.25;
+
         return {
           valid: true,
           isSms: true,
           provider: 'Fast2SMS Enterprise DLT Gateway',
           walletAmount: `₹${parsedWallet.toFixed(2)}`,
           balanceCredits: smsCount,
-          wholesaleCost: 0.125,
+          wholesaleCost: realRate,
           route: 'dlt_manual',
-          status: '🟢 Fast2SMS Node Connected & Verified (Real Live Account)',
-          message: `✅ Fast2SMS Real Carrier Account Verified! Wallet: ₹${parsedWallet.toFixed(2)} (${smsCount.toLocaleString()} SMS Available)`
+          status: '🟢 Connected & Verified (Real Live Account)',
+          message: `✅ Fast2SMS Real Carrier Account Verified! Wallet: ₹${parsedWallet.toFixed(2)} (${smsCount.toLocaleString()} SMS Available @ ₹${realRate.toFixed(3)}/SMS wholesale)`
         };
       }
     } catch (e) {}
