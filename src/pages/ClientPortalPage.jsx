@@ -1676,7 +1676,7 @@ export function ClientPortalPage({ onNavigateHome }) {
                       <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '10px', padding: '12px' }}>
                         <div style={{ fontSize: '0.7rem', color: '#A78BFA', fontFamily: 'monospace' }}>DLT OTP HEADER</div>
                         <div style={{ fontWeight: 700, color: '#fff', fontSize: '0.9rem', marginTop: '2px' }}>{clientData.dltSenderId || 'FIXKAR'}</div>
-                        <div style={{ fontSize: '0.74rem', color: '#94A3B8', marginTop: '4px' }}>Gateway: {clientData.otpProvider || 'Fast2SMS Enterprise DLT'}</div>
+                        <div style={{ fontSize: '0.74rem', color: '#94A3B8', marginTop: '4px' }}>Gateway: {clientData.otpProvider || 'Fixkar Telecom Cloud (DLT Enterprise)'}</div>
                       </div>
                     </div>
                   </div>
