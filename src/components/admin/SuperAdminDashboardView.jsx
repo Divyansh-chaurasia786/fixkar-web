@@ -3951,15 +3951,15 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 </div>
               </div>
 
-              {/* Inbound Emails Table */}
-              <div style={{ overflowX: 'auto', width: '100%' }}>
-                <table className="fixkar-table" style={{ width: '100%', minWidth: '780px' }}>
+              {/* Inbound Emails Table (Fixed Layout, Zero Horizontal Scroll) */}
+              <div style={{ width: '100%', overflow: 'hidden' }}>
+                <table className="fixkar-table" style={{ width: '100%', tableLayout: 'fixed', margin: 0 }}>
                   <thead>
                     <tr>
-                      <th style={{ width: '28%' }}>CLIENT SENDER</th>
-                      <th style={{ width: '44%' }}>SUBJECT &amp; MESSAGE</th>
-                      <th style={{ width: '16%' }}>RECEIVED (IST)</th>
-                      <th style={{ width: '12%', textAlign: 'right' }}>ACTION</th>
+                      <th style={{ width: '28%', padding: '10px 14px' }}>CLIENT SENDER</th>
+                      <th style={{ width: '44%', padding: '10px 14px' }}>SUBJECT &amp; MESSAGE</th>
+                      <th style={{ width: '16%', padding: '10px 14px' }}>RECEIVED (IST)</th>
+                      <th style={{ width: '12%', padding: '10px 14px', textAlign: 'right' }}>ACTION</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -3986,35 +3986,35 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                               cursor: 'pointer',
                             }}
                           >
-                            <td>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <td style={{ padding: '10px 14px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden' }}>
                                 {isUnread && (
                                   <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#38BDF8', display: 'inline-block', flexShrink: 0 }} />
                                 )}
-                                <div style={{ minWidth: 0, overflow: 'hidden' }}>
-                                  <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.78rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                <div style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                  <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.78rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                     {fromName || fromEmail}
                                   </div>
-                                  <div style={{ color: '#FDE047', fontSize: '0.7rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontFamily: 'monospace' }}>
+                                  <div style={{ color: '#FDE047', fontSize: '0.7rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'monospace' }}>
                                     {fromEmail}
                                   </div>
                                 </div>
                               </div>
                             </td>
-                            <td>
-                              <div style={{ fontWeight: 700, color: '#F8FAFC', fontSize: '0.78rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            <td style={{ padding: '10px 14px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              <div style={{ fontWeight: 700, color: '#F8FAFC', fontSize: '0.78rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                 {email.subject || 'Client Inquiry'}
                               </div>
-                              <div style={{ color: '#94A3B8', fontSize: '0.7rem', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              <div style={{ color: '#94A3B8', fontSize: '0.7rem', marginTop: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                 {email.text || email.html?.replace(/<[^>]*>?/gm, '') || 'No text content'}
                               </div>
                             </td>
-                            <td>
-                              <span style={{ color: '#94A3B8', fontSize: '0.72rem', whiteSpace: 'nowrap' }}>
+                            <td style={{ padding: '10px 14px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              <span style={{ color: '#94A3B8', fontSize: '0.72rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                 {email.timestamp || (email.receivedAt ? new Date(email.receivedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Recent')}
                               </span>
                             </td>
-                            <td style={{ textAlign: 'right' }}>
+                            <td style={{ padding: '10px 14px', textAlign: 'right', whiteSpace: 'nowrap' }}>
                               <button
                                 type="button"
                                 onClick={(e) => { e.stopPropagation(); handleMarkInboundRead(email); }}
