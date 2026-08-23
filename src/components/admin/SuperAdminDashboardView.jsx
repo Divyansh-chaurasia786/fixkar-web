@@ -1465,8 +1465,6 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
               </div>
             </button>
           </nav>
-
-          </nav>
         </div>
 
         {/* Sidebar Footer Controls */}
