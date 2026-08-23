@@ -4883,71 +4883,79 @@ echo $response;
                 </div>
               </div>
 
-              {/* Inbound Emails Table */}
-              <div className="fixkar-panel" style={{ padding: 0, overflow: 'hidden' }}>
-                <div style={{ overflowX: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.8rem' }}>
-                    <thead>
-                      <tr style={{ background: 'rgba(255, 255, 255, 0.03)', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                        <th style={{ padding: '12px 16px', color: '#94A3B8', fontWeight: 700 }}>CLIENT SENDER</th>
-                        <th style={{ padding: '12px 16px', color: '#94A3B8', fontWeight: 700 }}>SUBJECT &amp; MESSAGE PREVIEW</th>
-                        <th style={{ padding: '12px 16px', color: '#94A3B8', fontWeight: 700 }}>TO ADDRESS</th>
-                        <th style={{ padding: '12px 16px', color: '#94A3B8', fontWeight: 700 }}>RECEIVED (IST)</th>
-                        <th style={{ padding: '12px 16px', color: '#94A3B8', fontWeight: 700, textAlign: 'right' }}>ACTION</th>
+              {/* Inbound Emails Table (Responsive, Fixed Layout, Zero Horizontal Overflow) */}
+              <div className="fixkar-panel" style={{ padding: 0, overflow: 'hidden', width: '100%', boxSizing: 'border-box' }}>
+                <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.8rem' }}>
+                  <thead>
+                    <tr style={{ background: 'rgba(255, 255, 255, 0.03)', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                      <th style={{ width: '28%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>CLIENT SENDER</th>
+                      <th style={{ width: '44%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>SUBJECT &amp; MESSAGE</th>
+                      <th style={{ width: '16%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>RECEIVED (IST)</th>
+                      <th style={{ width: '12%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'right' }}>ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredInbound.length === 0 ? (
+                      <tr>
+                        <td colSpan={4} style={{ padding: '36px', textAlign: 'center', color: '#94A3B8' }}>
+                          <Mail size={30} style={{ opacity: 0.3, margin: '0 auto 10px', display: 'block' }} />
+                          No client emails in inbox yet. Incoming messages sent to <strong>support@fixkar.co.in</strong> will land here automatically.
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {filteredInbound.length === 0 ? (
-                        <tr>
-                          <td colSpan={5} style={{ padding: '36px', textAlign: 'center', color: '#94A3B8' }}>
-                            <Mail size={32} style={{ opacity: 0.3, margin: '0 auto 10px', display: 'block' }} />
-                            No client emails in inbox yet. Incoming messages sent to <strong>support@fixkar.co.in</strong> will land here automatically.
-                          </td>
-                        </tr>
-                      ) : (
-                        filteredInbound.map((email, idx) => (
+                    ) : (
+                      filteredInbound.map((email, idx) => {
+                        const rawFrom = email.from || 'Unknown Client';
+                        const fromName = rawFrom.includes('<') ? rawFrom.split('<')[0].trim() : rawFrom;
+                        const fromEmail = rawFrom.includes('<') ? rawFrom.match(/<([^>]+)>/)?.[1] || rawFrom : rawFrom;
+
+                        return (
                           <tr
                             key={email.id || idx}
+                            onClick={() => handleMarkInboundRead(email)}
                             style={{
                               borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
-                              background: email.status === 'UNREAD' ? 'rgba(56, 189, 248, 0.04)' : 'transparent',
+                              background: email.status === 'UNREAD' ? 'rgba(56, 189, 248, 0.05)' : 'transparent',
+                              cursor: 'pointer',
+                              transition: 'background 0.15s ease',
                             }}
+                            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.background = email.status === 'UNREAD' ? 'rgba(56, 189, 248, 0.05)' : 'transparent'; }}
                           >
-                            <td style={{ padding: '14px 16px' }}>
+                            <td style={{ padding: '12px 14px', overflow: 'hidden' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 {email.status === 'UNREAD' && (
-                                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#38BDF8', display: 'inline-block', flexShrink: 0 }} />
+                                  <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#38BDF8', display: 'inline-block', flexShrink: 0 }} />
                                 )}
-                                <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.84rem' }}>
-                                  {email.from}
+                                <div style={{ minWidth: 0, overflow: 'hidden' }}>
+                                  <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.82rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {fromName || fromEmail}
+                                  </div>
+                                  <div style={{ color: '#FDE047', fontSize: '0.72rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontFamily: 'monospace' }}>
+                                    {fromEmail}
+                                  </div>
                                 </div>
                               </div>
                             </td>
-                            <td style={{ padding: '14px 16px' }}>
-                              <div style={{ fontWeight: 700, color: '#F8FAFC', fontSize: '0.82rem' }}>
+                            <td style={{ padding: '12px 14px', overflow: 'hidden' }}>
+                              <div style={{ fontWeight: 700, color: '#F8FAFC', fontSize: '0.8rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {email.subject || 'Client Inquiry'}
                               </div>
-                              <div style={{ color: '#94A3B8', fontSize: '0.74rem', marginTop: '3px', maxWidth: '420px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              <div style={{ color: '#94A3B8', fontSize: '0.73rem', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {email.text || email.html?.replace(/<[^>]*>?/gm, '') || 'No text snippet'}
                               </div>
                             </td>
-                            <td style={{ padding: '14px 16px' }}>
-                              <span style={{ fontSize: '0.72rem', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.35)', color: '#38BDF8', padding: '3px 8px', borderRadius: '6px', fontFamily: 'monospace' }}>
-                                {email.to || 'support@fixkar.co.in'}
-                              </span>
+                            <td style={{ padding: '12px 14px', color: '#94A3B8', fontSize: '0.74rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              {email.timestamp || (email.receivedAt ? new Date(email.receivedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Recent')}
                             </td>
-                            <td style={{ padding: '14px 16px', color: '#94A3B8', fontSize: '0.75rem', fontFamily: 'monospace' }}>
-                              {email.timestamp || (email.receivedAt ? new Date(email.receivedAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) : 'Just now')}
-                            </td>
-                            <td style={{ padding: '14px 16px', textAlign: 'right' }}>
+                            <td style={{ padding: '12px 14px', textAlign: 'right', whiteSpace: 'nowrap' }}>
                               <button
                                 type="button"
-                                onClick={() => handleMarkInboundRead(email)}
+                                onClick={(e) => { e.stopPropagation(); handleMarkInboundRead(email); }}
                                 style={{
-                                  background: 'rgba(56, 189, 248, 0.15)',
+                                  background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(37, 99, 235, 0.2) 100%)',
                                   border: '1px solid rgba(56, 189, 248, 0.4)',
                                   color: '#38BDF8',
-                                  padding: '5px 12px',
+                                  padding: '5px 10px',
                                   borderRadius: '6px',
                                   fontSize: '0.72rem',
                                   fontWeight: 700,
@@ -4958,15 +4966,15 @@ echo $response;
                                 }}
                               >
                                 <Eye size={12} />
-                                <span>Read Message</span>
+                                <span>Read</span>
                               </button>
                             </td>
                           </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
               </div>
             </div>
           );
