@@ -395,6 +395,7 @@ export function AdminDashboardView({ onNavigateHome }) {
   const [inboundEmails, setInboundEmails] = useState([]);
   const [emailLogs, setEmailLogs] = useState([]);
   const [emailSearchQuery, setEmailSearchQuery] = useState('');
+  const [selectedEmailForModal, setSelectedEmailForModal] = useState(null);
   const [selectedInboundEmailModal, setSelectedInboundEmailModal] = useState(null);
   const [showInboundReplyComposer, setShowInboundReplyComposer] = useState(false);
   const [inboundReplyText, setInboundReplyText] = useState('');
