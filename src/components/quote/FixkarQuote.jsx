@@ -153,7 +153,7 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
     return [
       { id: 'whatsapp', title: '1-Click WhatsApp Button', price: 0, desc: 'Direct 1-tap mobile WhatsApp chat for instant customer inquiries.' },
       { id: 'contactForm', title: 'Smart Contact Form', price: 0, desc: 'Collects visitor details & sends instant email alerts.' },
-      { id: 'smsEmailGateway', title: 'SMS OTP & Transactional Email Engine', price: 1499, desc: 'Fast2SMS + Resend cloud integration for user OTP logins, order alerts & email receipts (+1,000 Credits included).' },
+      { id: 'smsEmailGateway', title: 'Fixkar SMS OTP & Transactional Email Engine', price: 1499, desc: 'Fixkar Sovereign Cloud Messaging Matrix for user OTP logins, order alerts & high-deliverability email receipts (+1,000 Credits included).' },
       { id: 'businessEmail', title: 'Professional Business Email (info@yourbrand.com)', price: 999, desc: 'Custom domain mailboxes with verified SPF, DKIM, and Cloudflare MX email routing.' },
       { id: 'bookingCalendar', title: 'Online Appointment Booking', price: 1799, desc: 'Clients choose date & time slots online automatically.' },
       { id: 'priceCalculator', title: 'Interactive Menu/Price Estimator', price: 2199, desc: 'Instant cost estimator for services, catering, or salons.' },
