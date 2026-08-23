@@ -297,46 +297,66 @@
   ],
   "transactionalEmailPacks": [
     {
+      "id": "email_2500",
+      "title": "Starter Micro Pack",
+      "price": 159,
+      "credits": 2500,
+      "popular": false,
+      "unitRate": "₹0.064 / email",
+      "specs": "2,500 High-Speed Transactional Emails • Brevo Matrix",
+      "desc": "2,500 High-Speed Transactional Emails • Verified Delivery (50.9% Margin)"
+    },
+    {
       "id": "email_starter",
-      "title": "Starter Email Pack",
-      "price": 499,
+      "title": "Starter Pro Pack",
+      "price": 319,
       "credits": 5000,
       "popular": false,
-      "unitRate": "₹0.100 / email",
-      "specs": "5,000 High-Speed Transactional Emails • Fixkar Mail Matrix",
-      "desc": "5,000 High-Speed Transactional Emails • Verified Delivery"
+      "unitRate": "₹0.064 / email",
+      "specs": "5,000 High-Speed Transactional Emails • Brevo Matrix",
+      "desc": "5,000 High-Speed Transactional Emails • Verified Delivery (51.1% Margin)"
+    },
+    {
+      "id": "email_10k",
+      "title": "Growth Lite Pack",
+      "price": 625,
+      "credits": 10000,
+      "popular": true,
+      "unitRate": "₹0.063 / email",
+      "specs": "10,000 High-Speed Transactional Emails • Brevo Matrix",
+      "desc": "10,000 High-Speed Transactional Emails • High Deliverability Queue (50% Margin)"
     },
     {
       "id": "email_growth",
-      "title": "Growth Email Pack",
-      "price": 1499,
-      "credits": 25000,
-      "popular": true,
-      "unitRate": "₹0.060 / email",
-      "specs": "25,000 High-Speed Transactional Emails • Fixkar Mail Matrix",
-      "desc": "25,000 High-Speed Transactional Emails • High Deliverability Queue"
+      "title": "Growth Business Pack",
+      "price": 1250,
+      "credits": 20000,
+      "popular": false,
+      "unitRate": "₹0.063 / email",
+      "specs": "20,000 High-Speed Transactional Emails • Brevo Matrix",
+      "desc": "20,000 High-Speed Transactional Emails • Dedicated Deliverability (50% Margin)"
     },
     {
       "id": "email_scale",
-      "title": "Scale Email Pack",
-      "price": 2499,
+      "title": "Scale Enterprise Pack",
+      "price": 3125,
       "credits": 50000,
       "popular": false,
-      "unitRate": "₹0.050 / email",
-      "specs": "50,000 High-Speed Transactional Emails • Fixkar Mail Matrix",
-      "desc": "50,000 High-Speed Transactional Emails • Dedicated IP Routing"
+      "unitRate": "₹0.063 / email",
+      "specs": "50,000 High-Speed Transactional Emails • Brevo Matrix",
+      "desc": "50,000 High-Speed Transactional Emails • High-Volume SLA (50% Margin)"
     },
     {
       "id": "email_enterprise",
-      "title": "Enterprise Email Pack",
-      "price": 4499,
+      "title": "Mega Enterprise Pack",
+      "price": 6250,
       "credits": 100000,
       "popular": false,
-      "unitRate": "₹0.045 / email",
-      "specs": "1,00,000 High-Speed Transactional Emails • Fixkar Mail Matrix",
-      "desc": "100,000 High-Speed Transactional Emails • Enterprise Deliverability SLA"
+      "unitRate": "₹0.063 / email",
+      "specs": "1,00,000 High-Speed Transactional Emails • Brevo Matrix",
+      "desc": "100,000 High-Speed Transactional Emails • Enterprise Deliverability (50% Margin)"
     }
   ],
   "lastSyncedAt": "2026-08-23T20:15:00.000Z",
-  "lastUpdatedAt": "2026-08-23T18:07:32.939Z"
+  "lastUpdatedAt": "2026-08-23T18:31:51.085Z"
 }
