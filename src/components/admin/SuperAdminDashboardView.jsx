@@ -3436,11 +3436,11 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                           <Mail size={20} color="#38BDF8" />
                           <h2 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#fff', margin: 0 }}>
-                            Master Email Gateway &amp; Resend Cloud Connection
+                            Client Upstream Email Gateway &amp; Resend Pool (Client Isolated)
                           </h2>
                         </div>
                         <p style={{ fontSize: '0.78rem', color: '#94A3B8', margin: '4px 0 0' }}>
-                          Configure master Resend upstream API credentials, set wholesale margins (e.g. ₹0.034/email), and publish live email pack rates.
+                          Register upstream Resend API credentials dedicated for clients' websites, OTP verification, client API keys, and client portals. Fixkar's internal root system notifications (kill switch, super admin OTPs) remain protected in backend infrastructure.
                         </p>
                       </div>
 
@@ -3465,21 +3465,26 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                           }}
                         >
                           <Save size={15} />
-                          <span>{emailGatewaySaving ? 'Publishing Live...' : 'Save & Publish Live Email Engine'}</span>
+                          <span>{emailGatewaySaving ? 'Publishing Live...' : 'Save & Publish Client Email Gateway'}</span>
                         </button>
                       </div>
                     </div>
                   </div>
 
-                  {/* 2. SECTION 1: MASTER RESEND UPSTREAM API CREDENTIALS */}
+                  {/* 2. SECTION 1: MASTER RESEND UPSTREAM API CREDENTIALS FOR CLIENTS */}
                   <div className="fixkar-panel">
                     <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
-                      <div className="fixkar-panel-title">
-                        <Server size={16} color="#38BDF8" />
-                        <span>1. Master Resend API Credentials &amp; Identity</span>
+                      <div>
+                        <div className="fixkar-panel-title">
+                          <Server size={16} color="#38BDF8" />
+                          <span>1. Client Upstream Resend API Credentials &amp; Pool Identity</span>
+                        </div>
+                        <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '3px' }}>
+                          Used exclusively to fulfill client volume email dispatches and client API requests.
+                        </div>
                       </div>
-                      <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontFamily: 'monospace', fontWeight: 700 }}>
-                        {emailGatewayConfig.status || '🟢 Master Cloud Mail Matrix Active'}
+                      <span style={{ fontSize: '0.72rem', color: '#4ADE80', fontFamily: 'monospace', fontWeight: 700 }}>
+                        {emailGatewayConfig.status || '🟢 Client Dispatch Pool Active'}
                       </span>
                     </div>
 
@@ -3487,11 +3492,11 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                       {/* Provider */}
                       <div>
                         <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700, display: 'block', marginBottom: '5px' }}>
-                          Email Gateway Provider
+                          Client Email Gateway Provider
                         </label>
                         <input
                           type="text"
-                          value={emailGatewayConfig.provider || 'Resend Enterprise Cloud Mail Engine'}
+                          value={emailGatewayConfig.provider || 'Resend Enterprise Client Mail Engine'}
                           onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, provider: e.target.value })}
                           style={{
                             width: '100%',
@@ -3507,11 +3512,11 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                         />
                       </div>
 
-                      {/* Master Resend API Key */}
+                      {/* Master Resend API Key for Clients */}
                       <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
                           <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700 }}>
-                            Master Resend API Key (re_...)
+                            Client Pool Resend API Key (re_...)
                           </label>
                           <button
                             type="button"
@@ -3525,7 +3530,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                           type={showMasterEmailApiKey ? 'text' : 'password'}
                           value={emailGatewayConfig.apiKey || ''}
                           onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, apiKey: e.target.value })}
-                          placeholder="re_xxxxxxxxxxxxxxxxxxxxxx"
+                          placeholder="re_client_pool_xxxxxxxxxxxxxx"
                           style={{
                             width: '100%',
                             padding: '8px 12px',
