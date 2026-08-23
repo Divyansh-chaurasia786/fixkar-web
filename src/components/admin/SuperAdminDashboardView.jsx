@@ -40,7 +40,9 @@ import {
   Check,
   Key,
   Send,
-  Layers
+  Layers,
+  Play,
+  Pause
 } from 'lucide-react';
 import '../../styles/admin-console.css';
 
