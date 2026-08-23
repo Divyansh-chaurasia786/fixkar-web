@@ -1527,22 +1527,34 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
           {/* GROUP 2: SMS & EMAIL GATEWAYS (UNIFIED MESSAGING) */}
           <div className="fixkar-nav-heading" style={{ marginTop: '14px' }}>SMS &amp; EMAIL HUB</div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-            {/* Unified Tab: SMS & Email Gateways */}
+            {/* Unified Tab: SMS & Email Gateways (Packs & Credentials Only) */}
             <button
               type="button"
               onClick={() => { setActiveTab('gateway'); setGatewaySubTab('sms'); }}
-              className={`fixkar-nav-btn ${activeTab === 'gateway' || activeTab === 'emails' ? 'active' : ''}`}
+              className={`fixkar-nav-btn ${activeTab === 'gateway' ? 'active' : ''}`}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Globe size={14} color={activeTab === 'gateway' || activeTab === 'emails' ? '#38BDF8' : 'currentColor'} />
+                <Globe size={14} color={activeTab === 'gateway' ? '#38BDF8' : 'currentColor'} />
                 <span>SMS &amp; Email Gateways</span>
+              </div>
+            </button>
+
+            {/* Dedicated Standalone Tab: Inbound & Client Mailbox */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('emails')}
+              className={`fixkar-nav-btn ${activeTab === 'emails' ? 'active' : ''}`}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Mail size={14} color={activeTab === 'emails' ? '#38BDF8' : 'currentColor'} />
+                <span>Inbound &amp; Client Mail</span>
               </div>
               {(() => {
                 const unreadCount = (inboundEmails || []).filter((e) => e.status === 'UNREAD').length;
                 if (unreadCount === 0) return null;
                 return (
-                  <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.2)', color: '#38BDF8', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
-                    {unreadCount} unread
+                  <span style={{ fontSize: '0.62rem', background: '#EF4444', color: '#fff', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
+                    {unreadCount}
                   </span>
                 );
               })()}
@@ -2596,16 +2608,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 }}
               >
                 <Mail size={15} color={gatewaySubTab === 'email' ? '#fff' : 'currentColor'} />
-                <span>✉️ Email Engine &amp; Inbound Mail</span>
-                {(() => {
-                  const unreadCount = (inboundEmails || []).filter((e) => e.status === 'UNREAD').length;
-                  if (unreadCount === 0) return null;
-                  return (
-                    <span style={{ fontSize: '0.62rem', background: '#EF4444', color: '#fff', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
-                      {unreadCount}
-                    </span>
-                  );
-                })()}
+                <span>✉️ Email Gateway &amp; Resend Pool</span>
               </button>
 
               <button
@@ -3752,127 +3755,191 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                       </table>
                     </div>
                   </div>
-
-                  {/* 4. SECTION 3: CLIENT INBOUND MAILBOX FEED */}
-                  <div className="fixkar-panel" style={{ padding: '0', overflow: 'hidden' }}>
-                    <div className="fixkar-panel-head" style={{ padding: '16px 20px', margin: 0 }}>
-                      <div className="fixkar-panel-title">
-                        <Mail size={16} color="#38BDF8" />
-                        <span>3. Client Inbound Mailbox Feed (support@fixkar.co.in)</span>
-                      </div>
-
-                      <div style={{ position: 'relative', width: '280px' }}>
-                        <Search size={13} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
-                        <input
-                          type="text"
-                          value={emailSearchQuery}
-                          onChange={(e) => setEmailSearchQuery(e.target.value)}
-                          placeholder="Search sender or subject..."
-                          style={{
-                            width: '100%',
-                            padding: '6px 10px 6px 28px',
-                            background: 'rgba(0, 0, 0, 0.3)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            borderRadius: '8px',
-                            color: '#fff',
-                            fontSize: '0.76rem',
-                          }}
-                        />
-                      </div>
-                    </div>
-
-                    <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.8rem' }}>
-                      <thead>
-                        <tr style={{ background: 'rgba(255, 255, 255, 0.03)', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                          <th style={{ width: '28%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase' }}>CLIENT SENDER</th>
-                          <th style={{ width: '44%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase' }}>SUBJECT &amp; MESSAGE</th>
-                          <th style={{ width: '16%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase' }}>RECEIVED (IST)</th>
-                          <th style={{ width: '12%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>ACTION</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredInbound.length === 0 ? (
-                          <tr>
-                            <td colSpan={4} style={{ padding: '36px', textAlign: 'center', color: '#94A3B8' }}>
-                              <Mail size={30} style={{ opacity: 0.3, margin: '0 auto 10px', display: 'block' }} />
-                              No client emails in inbox yet. Incoming messages sent to <strong>support@fixkar.co.in</strong> will land here automatically.
-                            </td>
-                          </tr>
-                        ) : (
-                          filteredInbound.map((email, idx) => {
-                            const rawFrom = email.from || 'Unknown Client';
-                            const fromName = rawFrom.includes('<') ? rawFrom.split('<')[0].trim() : rawFrom;
-                            const fromEmail = rawFrom.includes('<') ? rawFrom.match(/<([^>]+)>/)?.[1] || rawFrom : rawFrom;
-
-                            return (
-                              <tr
-                                key={email.id || idx}
-                                onClick={() => handleMarkInboundRead(email)}
-                                style={{
-                                  borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
-                                  background: email.status === 'UNREAD' ? 'rgba(56, 189, 248, 0.05)' : 'transparent',
-                                  cursor: 'pointer',
-                                  transition: 'background 0.15s ease',
-                                }}
-                                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; }}
-                                onMouseLeave={(e) => { e.currentTarget.style.background = email.status === 'UNREAD' ? 'rgba(56, 189, 248, 0.05)' : 'transparent'; }}
-                              >
-                                <td style={{ padding: '12px 14px', overflow: 'hidden' }}>
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    {email.status === 'UNREAD' && (
-                                      <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#38BDF8', display: 'inline-block', flexShrink: 0 }} />
-                                    )}
-                                    <div style={{ minWidth: 0, overflow: 'hidden' }}>
-                                      <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.82rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                        {fromName || fromEmail}
-                                      </div>
-                                      <div style={{ color: '#FDE047', fontSize: '0.72rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontFamily: 'monospace' }}>
-                                        {fromEmail}
-                                      </div>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td style={{ padding: '12px 14px', overflow: 'hidden' }}>
-                                  <div style={{ fontWeight: 700, color: '#F8FAFC', fontSize: '0.8rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                    {email.subject || 'Client Inquiry'}
-                                  </div>
-                                  <div style={{ color: '#94A3B8', fontSize: '0.73rem', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                    {email.text || email.html?.replace(/<[^>]*>?/gm, '') || 'No text snippet'}
-                                  </div>
-                                </td>
-                                <td style={{ padding: '12px 14px', color: '#94A3B8', fontSize: '0.74rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                  {email.timestamp || (email.receivedAt ? new Date(email.receivedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Recent')}
-                                </td>
-                                <td style={{ padding: '12px 14px', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                                  <button
-                                    type="button"
-                                    onClick={(e) => { e.stopPropagation(); handleMarkInboundRead(email); }}
-                                    style={{
-                                      background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(37, 99, 235, 0.2) 100%)',
-                                      border: '1px solid rgba(56, 189, 248, 0.4)',
-                                      color: '#38BDF8',
-                                      padding: '5px 10px',
-                                      borderRadius: '6px',
-                                      fontSize: '0.72rem',
-                                      fontWeight: 700,
-                                      cursor: 'pointer',
-                                    }}
-                                  >
-                                    View &amp; Reply →
-                                  </button>
-                                </td>
-                              </tr>
-                            );
-                          })
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
                 </div>
               );
             })()}
           </div>
         )}
+
+        {/* ═════════════════════════════════════════════════════════════════
+            TAB: DEDICATED INBOUND & CLIENT MAILBOX FEED (support@fixkar.co.in)
+            ═════════════════════════════════════════════════════════════════ */}
+        {activeTab === 'emails' && (() => {
+          const filteredInbound = inboundEmails.filter((email) => {
+            if (!emailSearchQuery) return true;
+            const q = emailSearchQuery.toLowerCase();
+            return (
+              (email.from && String(email.from).toLowerCase().includes(q)) ||
+              (email.subject && String(email.subject).toLowerCase().includes(q)) ||
+              (email.text && String(email.text).toLowerCase().includes(q)) ||
+              (email.to && String(email.to).toLowerCase().includes(q))
+            );
+          });
+
+          const handleMarkInboundRead = async (email) => {
+            setSelectedInboundEmailModal(email);
+            if (email.status === 'UNREAD') {
+              try {
+                await fetch(`${API_BASE}/api/admin/emails/inbound/mark-read`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${adminToken}`,
+                  },
+                  body: JSON.stringify({ id: email.id }),
+                });
+                setInboundEmails((prev) => prev.map((e) => (e.id === email.id ? { ...e, status: 'READ' } : e)));
+              } catch (err) {
+                console.error(err);
+              }
+            }
+          };
+
+          return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {/* Header Search & Actions Toolbar */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+                <div style={{ position: 'relative', flex: '1 1 320px', maxWidth: '480px' }}>
+                  <Search size={14} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                  <input
+                    type="text"
+                    value={emailSearchQuery}
+                    onChange={(e) => setEmailSearchQuery(e.target.value)}
+                    placeholder="Search client sender, subject, or message content..."
+                    style={{
+                      width: '100%',
+                      padding: '9px 14px 9px 34px',
+                      background: 'rgba(17, 24, 39, 0.8)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '10px',
+                      color: '#fff',
+                      fontSize: '0.82rem',
+                      outline: 'none',
+                    }}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.76rem', color: '#94A3B8', background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', padding: '6px 12px', borderRadius: '8px' }}>
+                    <Mail size={13} color="#38BDF8" />
+                    <span>Inbound Mailbox: <strong style={{ color: '#38BDF8', fontFamily: 'monospace' }}>support@fixkar.co.in</strong></span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={fetchAllSuperData}
+                    style={{
+                      background: 'rgba(56, 189, 248, 0.12)',
+                      border: '1px solid rgba(56, 189, 248, 0.35)',
+                      color: '#38BDF8',
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      fontSize: '0.78rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                    }}
+                  >
+                    <RefreshCw size={13} />
+                    <span>Refresh Mailbox</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Inbound Emails Table */}
+              <div className="fixkar-panel" style={{ padding: 0, overflow: 'hidden', width: '100%', boxSizing: 'border-box' }}>
+                <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.8rem' }}>
+                  <thead>
+                    <tr style={{ background: 'rgba(255, 255, 255, 0.03)', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                      <th style={{ width: '28%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase' }}>CLIENT SENDER</th>
+                      <th style={{ width: '44%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase' }}>SUBJECT &amp; MESSAGE</th>
+                      <th style={{ width: '16%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase' }}>RECEIVED (IST)</th>
+                      <th style={{ width: '12%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredInbound.length === 0 ? (
+                      <tr>
+                        <td colSpan={4} style={{ padding: '36px', textAlign: 'center', color: '#94A3B8' }}>
+                          <Mail size={30} style={{ opacity: 0.3, margin: '0 auto 10px', display: 'block' }} />
+                          No client emails in inbox yet. Incoming messages sent to <strong>support@fixkar.co.in</strong> will land here automatically.
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredInbound.map((email, idx) => {
+                        const rawFrom = email.from || 'Unknown Client';
+                        const fromName = rawFrom.includes('<') ? rawFrom.split('<')[0].trim() : rawFrom;
+                        const fromEmail = rawFrom.includes('<') ? rawFrom.match(/<([^>]+)>/)?.[1] || rawFrom : rawFrom;
+
+                        return (
+                          <tr
+                            key={email.id || idx}
+                            onClick={() => handleMarkInboundRead(email)}
+                            style={{
+                              borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
+                              background: email.status === 'UNREAD' ? 'rgba(56, 189, 248, 0.05)' : 'transparent',
+                              cursor: 'pointer',
+                              transition: 'background 0.15s ease',
+                            }}
+                            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.background = email.status === 'UNREAD' ? 'rgba(56, 189, 248, 0.05)' : 'transparent'; }}
+                          >
+                            <td style={{ padding: '12px 14px', overflow: 'hidden' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                {email.status === 'UNREAD' && (
+                                  <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#38BDF8', display: 'inline-block', flexShrink: 0 }} />
+                                )}
+                                <div style={{ minWidth: 0, overflow: 'hidden' }}>
+                                  <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.82rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {fromName || fromEmail}
+                                  </div>
+                                  <div style={{ color: '#FDE047', fontSize: '0.72rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontFamily: 'monospace' }}>
+                                    {fromEmail}
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                            <td style={{ padding: '12px 14px', overflow: 'hidden' }}>
+                              <div style={{ fontWeight: 700, color: '#F8FAFC', fontSize: '0.8rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                {email.subject || 'Client Inquiry'}
+                              </div>
+                              <div style={{ color: '#94A3B8', fontSize: '0.73rem', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                {email.text || email.html?.replace(/<[^>]*>?/gm, '') || 'No text snippet'}
+                              </div>
+                            </td>
+                            <td style={{ padding: '12px 14px', color: '#94A3B8', fontSize: '0.74rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              {email.timestamp || (email.receivedAt ? new Date(email.receivedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Recent')}
+                            </td>
+                            <td style={{ padding: '12px 14px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); handleMarkInboundRead(email); }}
+                                style={{
+                                  background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(37, 99, 235, 0.2) 100%)',
+                                  border: '1px solid rgba(56, 189, 248, 0.4)',
+                                  color: '#38BDF8',
+                                  padding: '5px 10px',
+                                  borderRadius: '6px',
+                                  fontSize: '0.72rem',
+                                  fontWeight: 700,
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                View &amp; Reply →
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* ═════════════════════════════════════════════════════════════════
             TAB 2: CLIENT API STUDIO (ISOLATED TOKENS FOR CLIENT PORTALS)
