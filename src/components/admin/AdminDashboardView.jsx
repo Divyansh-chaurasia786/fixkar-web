@@ -3289,7 +3289,15 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
               <button
                 onClick={() => setPaymentConfirmationNotice(null)}
                 style={{ background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#CBD5E1', padding: '8px 14px', borderRadius: '8px', fontSize: '0.78rem', cursor: 'pointer' }}
-              {/* ─── PHASE 1: CLIENT REGISTRATION & IDENTITY ONBOARDING MODAL ─────────── */}
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── PHASE 1: CLIENT REGISTRATION & IDENTITY ONBOARDING MODAL ─────────── */}
       {isAddClientModalOpen && (
         <div
           style={{
