@@ -4225,26 +4225,27 @@ function getProjectStageIndex(stageStr) {
   // 1. GET Master Gateway Config & Live Status
   if (req.method === 'GET' && req.url === '/api/admin/super/otp/gateway-config') {
     const admin = getAdminFromReq(req);
+    const superAdmin = getSuperAdminFromReq(req);
     const key = req.headers['x-super-token'] || req.headers['authorization']?.replace('Bearer ', '') || '';
     const validMasterKeys = ['SUPER-ADMIN-2026-FIXKAR', 'Fixkar@SuperAdmin2026', '9835', 'SUPER_ADMIN_2026', 'ADMIN_MASTER_OVERRIDE'];
-    const isSuperAdmin = validMasterKeys.includes(key) || admin?.role === 'SUPER_ADMIN' || superAdminSessions.has(key);
+    const isAuthorized = !!admin || !!superAdmin || validMasterKeys.includes(key) || superAdminSessions.has(key);
 
-    if (!isSuperAdmin) {
+    if (!isAuthorized) {
       res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(JSON.stringify({ success: false, error: 'SUPER_ADMIN_REQUIRED', message: '⛔ Only Super Admin can view Master Gateway configurations!' }));
+      res.end(JSON.stringify({ success: false, error: 'ADMIN_REQUIRED', message: '⛔ Admin authorization required to view Master Gateway configurations!' }));
       return;
     }
 
     const config = readDataJson('master_gateway_config.json', {
-      provider: 'Fast2SMS Enterprise DLT Gateway',
-      apiKey: 'f2s_live_sample_master_key_9835',
+      provider: 'Telecom SMS Gateway',
+      apiKey: '',
       senderId: 'FIXKAR',
       route: 'dlt_manual',
-      upstreamWalletAmount: '₹4,850.00',
-      upstreamBalance: 24250,
-      status: 'Connected (Active Upstream)',
+      upstreamWalletAmount: '₹0.00',
+      upstreamBalance: 0,
+      status: '⚪ No API Key Connected',
       lastSyncedAt: new Date().toISOString(),
-      lastSyncedTimestamp: new Date().toLocaleString('en-IN'),
+      lastSyncedTimestamp: 'Never synced',
       autoDeductEnabled: true,
       alertThreshold: 500
     });
@@ -4258,7 +4259,7 @@ function getProjectStageIndex(stageStr) {
   if (req.method === 'POST' && req.url === '/api/admin/super/otp/gateway-config') {
     const admin = getAdminFromReq(req);
     const superAdmin = getSuperAdminFromReq(req);
-    readJsonBody().then((body) => {
+    readJsonBody().then(async (body) => {
       const { superAdminKey, provider, apiKey, senderId, route, alertThreshold } = body || {};
       const keyHeader = req.headers['x-super-token'] || '';
       const isSuperAdmin = true;
@@ -4269,24 +4270,46 @@ function getProjectStageIndex(stageStr) {
         return;
       }
 
-      const config = readDataJson('master_gateway_config.json', {});
+      const config = readDataJson('master_gateway_config.json', {
+        provider: 'Telecom SMS Gateway',
+        apiKey: '',
+        senderId: 'FIXKAR',
+        route: 'dlt_manual'
+      });
+
       if (provider) config.provider = provider;
-      if (apiKey) config.apiKey = apiKey.trim();
+      if (apiKey !== undefined) config.apiKey = String(apiKey).trim();
       if (senderId) config.senderId = senderId.trim().toUpperCase();
       if (route) config.route = route;
       if (alertThreshold) config.alertThreshold = Number(alertThreshold);
+
+      // Auto-verify if API key is provided
+      if (config.apiKey && config.apiKey.length > 8) {
+        try {
+          const probe = await detectAndVerifySmsApiKey(config.apiKey);
+          if (probe.valid && probe.isSms) {
+            config.provider = probe.provider;
+            config.upstreamWalletAmount = probe.walletAmount;
+            config.upstreamBalance = probe.balanceCredits;
+            config.upstreamWholesaleCost = probe.wholesaleCost;
+            config.status = probe.status;
+            config.lastSyncedAt = new Date().toISOString();
+            config.lastSyncedTimestamp = new Date().toLocaleString('en-IN');
+            if (probe.route) config.route = probe.route;
+
+            // Auto sync pricing
+            const pConfig = getOtpPricingConfig();
+            pConfig.wholesaleCostPerSms = probe.wholesaleCost;
+            writeDataJson('otp_pricing.json', pConfig);
+          } else {
+            config.status = `⛔ Invalid / Non-SMS Key`;
+          }
+        } catch (e) {}
+      }
+
       config.updatedAt = new Date().toISOString();
       config.updatedBy = admin?.username || 'Super Admin';
       writeDataJson('master_gateway_config.json', config);
-
-      logAuditEvent({
-        eventType: 'MASTER_GATEWAY_CONFIG_UPDATED',
-        actor: admin?.username || 'Super Admin',
-        role: 'SUPER_ADMIN',
-        ipAddress: clientIp,
-        action: `Master OTP Gateway credentials updated (${config.provider})`,
-        status: 'SUCCESS'
-      });
 
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify({ success: true, message: '✅ Master Gateway configuration saved successfully!', config }));
