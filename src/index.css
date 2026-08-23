@@ -173,11 +173,35 @@ a:hover svg.lucide-send,
   color: #93C5FD;
 }
 
-/* 3. Read / View / Eye Button — Scales with pulse focus */
+/* 3. Read / View / Eye Button — Realistic Eye Blink (Opens & Closes) */
+@keyframes eyeBlink {
+  0% {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(1.1, 0.08); /* Eyelid closes shut */
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(0.95, 1.25); /* Eye pops wide open */
+    opacity: 1;
+    color: #38BDF8;
+  }
+  75% {
+    transform: scale(1.04, 0.92); /* Gentle natural bounce */
+  }
+  100% {
+    transform: scale(1.15, 1.15); /* Remains attentively open */
+    color: #38BDF8;
+  }
+}
+
 button:hover svg.lucide-eye,
-a:hover svg.lucide-eye {
-  transform: scale(1.25);
+a:hover svg.lucide-eye,
+.btn-read:hover svg {
+  animation: eyeBlink 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   color: #38BDF8;
+  transform-origin: center center;
 }
 
 /* 4. Kill Switch / Emergency Power — Glows red & tilts alert */
