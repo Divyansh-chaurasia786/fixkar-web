@@ -68,6 +68,22 @@
       "isCustomizable": true
     },
     {
+      "id": "smsEmailGateway",
+      "title": "Fixkar SMS OTP & Transactional Email Engine",
+      "price": 1499,
+      "whatItDoes": "High-deliverability telecom gateway for instant mobile OTP verification, login codes, and transactional email order notifications (+1,000 Credits included).",
+      "whyYouNeedIt": "Essential for secure user logins, e-commerce checkout confirmation, and client notifications.",
+      "isCustomizable": true
+    },
+    {
+      "id": "businessEmail",
+      "title": "Professional Business Email (info@yourbrand.com)",
+      "price": 999,
+      "whatItDoes": "Custom domain mailbox with SPF, DKIM, DMARC security records and Cloudflare MX email routing.",
+      "whyYouNeedIt": "Builds trust and looks far more professional than using a free @gmail.com address for business deals.",
+      "isCustomizable": true
+    },
+    {
       "id": "bookingCalendar",
       "title": "Online Appointment & Booking System",
       "price": 1799,
