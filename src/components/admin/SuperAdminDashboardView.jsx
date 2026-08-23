@@ -1056,6 +1056,40 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
     }
   };
 
+  const [emailGatewaySyncing, setEmailGatewaySyncing] = useState(false);
+
+  const handleSyncEmailGatewayQuota = async () => {
+    setEmailGatewaySyncing(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/super/email/sync-upstream-quota`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${adminToken}`,
+          'x-super-token': superAdminToken || '9835',
+        },
+        body: JSON.stringify({
+          superAdminKey: superAdminToken || '9835',
+          apiKey: emailGatewayConfig.apiKey,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.config) {
+        setEmailGatewayConfig(data.config);
+        setPricingNotice(data.message || '✅ Email Gateway & Daily Quota Synced!');
+        setTimeout(() => setPricingNotice(null), 8000);
+      } else {
+        setPricingNotice(data.message || '⛔ Failed to sync email quota');
+        setTimeout(() => setPricingNotice(null), 8000);
+      }
+    } catch (err) {
+      setPricingNotice('⛔ Error syncing email gateway: ' + err.message);
+      setTimeout(() => setPricingNotice(null), 8000);
+    } finally {
+      setEmailGatewaySyncing(false);
+    }
+  };
+
   const [baseRetailRatePerEmail, setBaseRetailRatePerEmail] = useState(0.080);
 
   const handleRecalculateEmailPacksFromBaseRate = (baseRate) => {
@@ -1865,29 +1899,49 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
             ═════════════════════════════════════════════════════════════════ */}
         {activeTab === 'dashboard' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {/* 3 Compact, Balanced KPI Cards (Exclusively in Super Dashboard) */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '14px' }}>
-              {/* Card 1: Fast2SMS Master Pool */}
+            {/* 4 Compact, Balanced KPI Cards (Exclusively in Super Dashboard) */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+              {/* Card 1: Upstream SMS Pool */}
               <div
                 className="fixkar-stat-card"
-                onClick={() => setActiveTab('gateway')}
+                onClick={() => { setActiveTab('gateway'); setGatewaySubTab('sms'); }}
                 style={{ cursor: 'pointer', padding: '14px 16px' }}
               >
                 <div className="fixkar-card-top" style={{ marginBottom: '6px' }}>
-                  <span className="fixkar-card-tag" style={{ fontSize: '0.66rem' }}>UPSTREAM FAST2SMS POOL</span>
+                  <span className="fixkar-card-tag" style={{ fontSize: '0.66rem' }}>UPSTREAM SMS GATEWAY</span>
                   <Globe size={16} color="#FBBF24" />
                 </div>
                 <div className="fixkar-card-num" style={{ color: '#FDE047', fontSize: '1.28rem', marginBottom: '6px' }}>
-                  {(gatewayConfig.upstreamBalance || 24250).toLocaleString()}{' '}
-                  <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#94A3B8' }}>SMS</span>
+                  {(gatewayConfig.upstreamBalance || 0).toLocaleString()}{' '}
+                  <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#94A3B8' }}>SMS Left</span>
                 </div>
                 <div className="fixkar-card-footer" style={{ fontSize: '0.72rem' }}>
-                  <span style={{ color: '#4ADE80' }}>● {gatewayConfig.status}</span>
-                  <span style={{ color: '#93C5FD' }}>Reserve: {gatewayConfig.upstreamWalletAmount}</span>
+                  <span style={{ color: '#4ADE80' }}>● {gatewayConfig.provider ? gatewayConfig.provider.split(' ')[0] : 'Active'}</span>
+                  <span style={{ color: '#93C5FD' }}>Reserve: {gatewayConfig.upstreamWalletAmount || '₹0.00'}</span>
                 </div>
               </div>
 
-              {/* Card 2: Client Distributed Pool */}
+              {/* Card 2: Upstream Email Pool & Daily Quota */}
+              <div
+                className="fixkar-stat-card"
+                onClick={() => { setActiveTab('gateway'); setGatewaySubTab('email'); }}
+                style={{ cursor: 'pointer', padding: '14px 16px' }}
+              >
+                <div className="fixkar-card-top" style={{ marginBottom: '6px' }}>
+                  <span className="fixkar-card-tag" style={{ fontSize: '0.66rem' }}>CLOUD EMAIL GATEWAY</span>
+                  <Mail size={16} color="#38BDF8" />
+                </div>
+                <div className="fixkar-card-num" style={{ color: '#38BDF8', fontSize: '1.28rem', marginBottom: '6px' }}>
+                  {emailGatewayConfig.emailsRemainingToday ?? 99}{' '}
+                  <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#94A3B8' }}>Left Today</span>
+                </div>
+                <div className="fixkar-card-footer" style={{ fontSize: '0.72rem' }}>
+                  <span style={{ color: '#FDE047' }}>Sent Today: {emailGatewayConfig.emailsSentToday ?? 1}/{emailGatewayConfig.dailyLimit || 100}</span>
+                  <span style={{ color: '#4ADE80' }}>● {emailGatewayConfig.domainName || 'fixkar.co.in'}</span>
+                </div>
+              </div>
+
+              {/* Card 3: Client Distributed Pool */}
               <div
                 className="fixkar-stat-card"
                 onClick={() => setActiveTab('client-apis')}
@@ -1895,34 +1949,34 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
               >
                 <div className="fixkar-card-top" style={{ marginBottom: '6px' }}>
                   <span className="fixkar-card-tag" style={{ fontSize: '0.66rem' }}>CLIENT DISTRIBUTED POOL</span>
-                  <Smartphone size={16} color="#38BDF8" />
+                  <Smartphone size={16} color="#4ADE80" />
                 </div>
-                <div className="fixkar-card-num" style={{ color: '#38BDF8', fontSize: '1.28rem', marginBottom: '6px' }}>
+                <div className="fixkar-card-num" style={{ color: '#4ADE80', fontSize: '1.28rem', marginBottom: '6px' }}>
                   {totalDistributedCredits.toLocaleString()}{' '}
                   <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#94A3B8' }}>OTPs</span>
                 </div>
                 <div className="fixkar-card-footer" style={{ fontSize: '0.72rem' }}>
-                  <span style={{ color: '#4ADE80' }}>● Realtime Atomic Deduction</span>
-                  <span style={{ color: '#94A3B8' }}>{wallets.length || 4} Clients</span>
+                  <span style={{ color: '#86EFAC' }}>● Atomic Deduction</span>
+                  <span style={{ color: '#94A3B8' }}>{wallets.length || 4} Client Wallets</span>
                 </div>
               </div>
 
-              {/* Card 3: Provisioned Client API Keys */}
+              {/* Card 4: Provisioned Client API Keys */}
               <div
                 className="fixkar-stat-card"
                 onClick={() => setActiveTab('client-apis')}
                 style={{ cursor: 'pointer', padding: '14px 16px' }}
               >
                 <div className="fixkar-card-top" style={{ marginBottom: '6px' }}>
-                  <span className="fixkar-card-tag" style={{ fontSize: '0.66rem' }}>PROVISIONED CLIENT KEYS</span>
-                  <KeyRound size={16} color="#4ADE80" />
+                  <span className="fixkar-card-tag" style={{ fontSize: '0.66rem' }}>PROVISIONED SUB-KEYS</span>
+                  <KeyRound size={16} color="#C084FC" />
                 </div>
-                <div className="fixkar-card-num" style={{ color: '#4ADE80', fontSize: '1.28rem', marginBottom: '6px' }}>
+                <div className="fixkar-card-num" style={{ color: '#C084FC', fontSize: '1.28rem', marginBottom: '6px' }}>
                   {clientApiKeys.length}{' '}
                   <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#94A3B8' }}>Active Keys</span>
                 </div>
                 <div className="fixkar-card-footer" style={{ fontSize: '0.72rem' }}>
-                  <span style={{ color: '#86EFAC' }}>● 100% Isolated Sub-keys</span>
+                  <span style={{ color: '#E879F9' }}>● 100% Isolated</span>
                   <span style={{ color: '#94A3B8' }}>{totalApiDispatches.toLocaleString()} Sent</span>
                 </div>
               </div>
@@ -3333,6 +3387,28 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                       <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                         <button
                           type="button"
+                          onClick={handleSyncEmailGatewayQuota}
+                          disabled={emailGatewaySyncing}
+                          style={{
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            border: '1px solid rgba(255, 255, 255, 0.12)',
+                            color: '#CBD5E1',
+                            padding: '5px 12px',
+                            borderRadius: '6px',
+                            fontSize: '0.72rem',
+                            fontWeight: 700,
+                            cursor: emailGatewaySyncing ? 'wait' : 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '5px',
+                          }}
+                        >
+                          <RefreshCw size={12} className={emailGatewaySyncing ? 'animate-spin' : ''} />
+                          <span>{emailGatewaySyncing ? 'Syncing...' : 'Sync Quota & Domain'}</span>
+                        </button>
+
+                        <button
+                          type="button"
                           onClick={handleSaveEmailGatewayConfig}
                           disabled={emailGatewaySaving}
                           style={{
@@ -3464,17 +3540,51 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                       </div>
                     </div>
 
-                    {/* Email Carrier Status Bar */}
-                    <div style={{ marginTop: '10px', padding: '8px 12px', background: 'rgba(56, 189, 248, 0.05)', border: '1px solid rgba(56, 189, 248, 0.15)', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Mail size={14} color="#38BDF8" />
-                        <span style={{ fontSize: '0.72rem', color: '#CBD5E1' }}>
-                          Live Cloud Mail Carrier Pool: <strong style={{ color: '#4ADE80', fontFamily: 'monospace' }}>Verified Enterprise Engine</strong> (High Deliverability SLA)
-                        </span>
+                    {/* Dynamic Live Daily Quota & Deliverability Bar */}
+                    <div style={{ marginTop: '12px', padding: '12px 14px', background: 'rgba(56, 189, 248, 0.04)', border: '1px solid rgba(56, 189, 248, 0.16)', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <Mail size={15} color="#38BDF8" />
+                          <span style={{ fontSize: '0.76rem', color: '#CBD5E1', fontWeight: 700 }}>
+                            Daily Cloud Deliverability Quota:
+                          </span>
+                          <span style={{ fontSize: '0.88rem', color: '#4ADE80', fontWeight: 900, fontFamily: 'monospace' }}>
+                            {emailGatewayConfig.emailsRemainingToday ?? 99} Emails Left in Day
+                          </span>
+                          <span style={{ fontSize: '0.7rem', color: '#94A3B8' }}>
+                            (Sent Today: <strong style={{ color: '#FDE047' }}>{emailGatewayConfig.emailsSentToday ?? 1}</strong> / {emailGatewayConfig.dailyLimit || 100})
+                          </span>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontSize: '0.66rem', background: 'rgba(74, 222, 128, 0.15)', color: '#4ADE80', border: '1px solid rgba(74, 222, 128, 0.3)', padding: '2px 8px', borderRadius: '12px', fontWeight: 800 }}>
+                            ● {emailGatewayConfig.domainName || 'fixkar.co.in'} ({emailGatewayConfig.domainStatus || 'Verified'})
+                          </span>
+                          <span style={{ fontSize: '0.66rem', background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>
+                            Monthly: {emailGatewayConfig.emailsRemainingMonth ?? 2999} Left
+                          </span>
+                        </div>
                       </div>
-                      <span style={{ fontSize: '0.66rem', color: '#94A3B8' }}>
-                        Last Synced: <strong style={{ color: '#CBD5E1' }}>{emailGatewayConfig.lastSyncedAt ? new Date(emailGatewayConfig.lastSyncedAt).toLocaleDateString('en-IN') : 'Recent'}</strong>
-                      </span>
+
+                      {/* Visual Progress Bar */}
+                      {(() => {
+                        const dailyLim = Number(emailGatewayConfig.dailyLimit) || 100;
+                        const sent = Number(emailGatewayConfig.emailsSentToday) || 1;
+                        const usedPct = Math.min(100, Math.max(1, ((sent / dailyLim) * 100)));
+                        const leftPct = (100 - usedPct).toFixed(0);
+                        return (
+                          <div>
+                            <div style={{ width: '100%', height: '6px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '3px', overflow: 'hidden', display: 'flex' }}>
+                              <div style={{ width: `${usedPct}%`, background: '#F59E0B', transition: 'width 0.3s ease' }} />
+                              <div style={{ width: `${100 - usedPct}%`, background: '#10B981', transition: 'width 0.3s ease' }} />
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px', fontSize: '0.66rem', color: '#64748B' }}>
+                              <span>Used Today: {sent} ({usedPct.toFixed(0)}%)</span>
+                              <span style={{ color: '#4ADE80', fontWeight: 700 }}>Remaining Today: {emailGatewayConfig.emailsRemainingToday ?? (dailyLim - sent)} ({leftPct}%)</span>
+                            </div>
+                          </div>
+                        );
+                      })()}
                     </div>
                   </div>
 
