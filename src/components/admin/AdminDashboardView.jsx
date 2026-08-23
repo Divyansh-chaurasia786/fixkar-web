@@ -3838,38 +3838,8 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
             </div>
           </div>
 
-          {/* Admin Profile Card */}
-          <div className="fixkar-sidebar-user">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '8px',
-                  background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#fff',
-                  fontWeight: 800,
-                  fontSize: '0.8rem',
-                }}
-              >
-                AD
-              </div>
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {adminUser?.name || 'Administrator'}
-                </div>
-                <div style={{ fontSize: '0.68rem', color: '#94A3B8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {adminUser?.email || 'admin@fixkar.co.in'}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* GROUP 1: COMMAND */}
-          <div className="fixkar-nav-heading">COMMAND</div>
+          {/* GROUP 1: OVERVIEW & COMMUNICATIONS */}
+          <div className="fixkar-nav-heading" style={{ marginTop: '6px' }}>COMMAND &amp; MAIL</div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
             <button
               onClick={() => { setActiveTab('dashboard'); setSelectedClientDetail(null); }}
@@ -3880,11 +3850,26 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                 <span>Dashboard</span>
               </div>
             </button>
-          </nav>
 
-          {/* GROUP 2: CLIENT OPERATIONS */}
-          <div className="fixkar-nav-heading" style={{ marginTop: '10px' }}>CLIENT OPERATIONS</div>
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <button
+              onClick={() => { setActiveTab('emails'); setSelectedClientDetail(null); }}
+              className={`fixkar-nav-btn ${activeTab === 'emails' ? 'active' : ''}`}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Mail size={14} color={activeTab === 'emails' ? '#38BDF8' : 'currentColor'} />
+                <span>Inbound Mail</span>
+              </div>
+              {(() => {
+                const unreadCount = (inboundEmails || []).filter((e) => e.status === 'UNREAD').length;
+                if (unreadCount === 0) return null;
+                return (
+                  <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.2)', color: '#38BDF8', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
+                    {unreadCount}
+                  </span>
+                );
+              })()}
+            </button>
+
             <button
               onClick={() => { setActiveTab('leads'); setSelectedClientDetail(null); }}
               className={`fixkar-nav-btn ${activeTab === 'leads' ? 'active' : ''}`}
@@ -3894,12 +3879,16 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                 <span>Leads &amp; Enquiries</span>
               </div>
               {pendingEnquiriesCount > 0 && (
-                <span style={{ fontSize: '0.62rem', background: 'rgba(251, 191, 36, 0.2)', color: '#FDE047', padding: '1px 5px', borderRadius: '4px', fontWeight: 700 }}>
+                <span style={{ fontSize: '0.62rem', background: 'rgba(251, 191, 36, 0.2)', color: '#FDE047', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
                   {pendingEnquiriesCount}
                 </span>
               )}
             </button>
+          </nav>
 
+          {/* GROUP 2: CLIENT OPERATIONS */}
+          <div className="fixkar-nav-heading" style={{ marginTop: '12px' }}>CLIENT OPERATIONS</div>
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
             <button
               onClick={() => { setActiveTab('clients'); setSelectedClientDetail(null); }}
               className={`fixkar-nav-btn ${activeTab === 'clients' ? 'active' : ''}`}
@@ -3929,11 +3918,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                 <span>Services</span>
               </div>
             </button>
-          </nav>
 
-          {/* GROUP 3: FINANCE */}
-          <div className="fixkar-nav-heading" style={{ marginTop: '10px' }}>FINANCE</div>
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
             <button
               onClick={() => { setActiveTab('invoices'); setSelectedClientDetail(null); }}
               className={`fixkar-nav-btn ${activeTab === 'invoices' ? 'active' : ''}`}
@@ -3943,12 +3928,10 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                 <span>Invoices &amp; Receipts</span>
               </div>
             </button>
-
-
           </nav>
 
-          {/* GROUP 4: OTP SERVICES (Client-Level Only) */}
-          <div className="fixkar-nav-heading" style={{ marginTop: '10px' }}>OTP SERVICES</div>
+          {/* GROUP 3: OTP SERVICES (Client-Level Only) */}
+          <div className="fixkar-nav-heading" style={{ marginTop: '12px' }}>OTP SERVICES</div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
             <button
               onClick={() => { setActiveTab('otp-accounts'); setSelectedClientDetail(null); }}
@@ -3991,8 +3974,8 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
             </button>
           </nav>
 
-          {/* GROUP 5: SUPPORT */}
-          <div className="fixkar-nav-heading" style={{ marginTop: '10px' }}>SUPPORT</div>
+          {/* GROUP 4: SUPPORT & SYSTEM */}
+          <div className="fixkar-nav-heading" style={{ marginTop: '12px' }}>SUPPORT &amp; SYSTEM</div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
             <button
               onClick={() => { setActiveTab('support'); setSelectedClientDetail(null); }}
@@ -4018,11 +4001,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                 <span>Documents</span>
               </div>
             </button>
-          </nav>
 
-          {/* GROUP 6: SYSTEM */}
-          <div className="fixkar-nav-heading" style={{ marginTop: '10px' }}>SYSTEM</div>
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
             <button
               onClick={() => { setActiveTab('activity'); setSelectedClientDetail(null); }}
               className={`fixkar-nav-btn ${activeTab === 'activity' ? 'active' : ''}`}
@@ -4041,25 +4020,6 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                 <UserCheck size={14} color={activeTab === 'account' ? '#38BDF8' : 'currentColor'} />
                 <span>Admin Profile</span>
               </div>
-            </button>
-
-            <button
-              onClick={() => { setActiveTab('emails'); setSelectedClientDetail(null); }}
-              className={`fixkar-nav-btn ${activeTab === 'emails' ? 'active' : ''}`}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Mail size={14} color={activeTab === 'emails' ? '#38BDF8' : 'currentColor'} />
-                <span>Inbound Mail</span>
-              </div>
-              {(() => {
-                const unreadCount = (inboundEmails || []).filter((e) => e.status === 'UNREAD').length;
-                if (unreadCount === 0) return null;
-                return (
-                  <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.2)', color: '#38BDF8', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
-                    {unreadCount}
-                  </span>
-                );
-              })()}
             </button>
           </nav>
         </div>
