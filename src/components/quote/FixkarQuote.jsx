@@ -38,8 +38,8 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
   const [pageCount, setPageCount] = useState(() => prefilledScope?.pageCount || 5);
   const [hostingPlan, setHostingPlan] = useState(() => prefilledScope?.hostingPlan || 'standard_cloud');
   const [domainOption, setDomainOption] = useState(() => prefilledScope?.domainOption || 'dot_in');
-  const [messagingPack, setMessagingPack] = useState(() => prefilledScope?.messagingPack || 'growth');
-  const [customEmailPack, setCustomEmailPack] = useState(() => prefilledScope?.customEmailPack || 'none');
+  const [messagingPack, setMessagingPack] = useState(() => prefilledScope?.messagingPack || 'none');
+  const [transactionalEmailPack, setTransactionalEmailPack] = useState(() => prefilledScope?.transactionalEmailPack || 'none');
   const [aiOption, setAiOption] = useState(() => prefilledScope?.aiOption || 'none');
   const [seoNeeded, setSeoNeeded] = useState(() => prefilledScope?.seoNeeded !== undefined ? prefilledScope.seoNeeded : true);
   
@@ -177,13 +177,15 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
     ];
   }, [dynamicConfig]);
 
-  // Custom Domain Email Mailboxes
-  const customEmailPacks = useMemo(() => {
-    if (dynamicConfig?.customEmailPacks && dynamicConfig.customEmailPacks.length > 0) return dynamicConfig.customEmailPacks;
+  // Transactional Email Packs (Fixkar Enterprise Mail Matrix)
+  const transactionalEmailPacks = useMemo(() => {
+    if (dynamicConfig?.transactionalEmailPacks && dynamicConfig.transactionalEmailPacks.length > 0) return dynamicConfig.transactionalEmailPacks;
     return [
-      { id: 'none', title: 'No Custom Mailbox (Use Gmail/Personal)', price: 0, specs: 'Free contact alerts forwarded to your existing email', desc: 'You can use your regular Gmail/Yahoo address to receive customer leads.' },
-      { id: 'single', title: '1 Professional Mailbox (info@yourbrand.com)', price: 999, specs: '1 Verified Custom Domain Mailbox • SPF / DKIM / DMARC Anti-Spam', desc: 'Builds trust and looks far more professional than sending business proposals from Gmail.' },
-      { id: 'team', title: '5 Team Mailboxes (info@, sales@, support@, etc.)', price: 2499, specs: '5 Verified Team Mailboxes • Webmail & Mobile Sync • Cloudflare MX', desc: 'Complete corporate business mail suite for your management, sales, and support staff.' },
+      { id: 'none', title: 'No Email Pack (Free Basic Alerts)', price: 0, credits: 0, specs: 'Standard contact form alerts sent to your personal email', desc: 'Best for basic informational websites with low contact frequency.' },
+      { id: 'email_starter', title: 'Starter Email Pack (+5,000 Emails)', price: 499, credits: 5000, unitRate: '₹0.10 / email', specs: '5,000 High-Speed Transactional Emails • Verified Delivery', desc: 'Perfect for password resets, order invoices, and welcome emails.' },
+      { id: 'email_growth', title: 'Growth Email Pack (+25,000 Emails)', price: 1499, credits: 25000, popular: true, unitRate: '₹0.06 / email', specs: '25,000 High-Speed Transactional Emails • High Deliverability Queue', desc: 'Most popular for growing e-commerce stores, portals, and daily customer updates.' },
+      { id: 'email_scale', title: 'Scale Email Pack (+50,000 Emails)', price: 2499, credits: 50000, unitRate: '₹0.05 / email', specs: '50,000 High-Speed Transactional Emails • Dedicated IP Routing', desc: 'High-volume throughput for SaaS apps, booking platforms, and newsletters.' },
+      { id: 'email_enterprise', title: 'Enterprise Email Pack (+100,000 Emails)', price: 4499, credits: 100000, unitRate: '₹0.045 / email', specs: '100,000 High-Speed Transactional Emails • Enterprise Deliverability SLA', desc: 'Max volume for institutions, large communities, and high-frequency dispatch.' },
     ];
   }, [dynamicConfig]);
 
@@ -240,15 +242,15 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
       items.push({ name: `✨ Custom: ${cf.title}`, price: p, isCustom: true });
     });
 
-    // SMS OTP & Transactional Email Pack
+    // SMS OTP Pack
     const activeMsg = messagingPacks.find((m) => m.id === messagingPack);
     if (activeMsg && activeMsg.price > 0) {
       total += activeMsg.price;
       items.push({ name: activeMsg.title, price: activeMsg.price });
     }
 
-    // Custom Domain Business Email Pack
-    const activeMail = customEmailPacks.find((e) => e.id === customEmailPack);
+    // Transactional Email Pack
+    const activeMail = transactionalEmailPacks.find((e) => e.id === transactionalEmailPack);
     if (activeMail && activeMail.price > 0) {
       total += activeMail.price;
       items.push({ name: activeMail.title, price: activeMail.price });
@@ -1101,25 +1103,25 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
                   </div>
                 </div>
 
-                {/* 2. Professional Custom Domain Business Mailboxes */}
+                {/* 2. Fixkar High-Deliverability Transactional Email Engine */}
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                     <div style={{ fontSize: '0.84rem', fontWeight: 800, color: '#fff', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <Mail size={15} color="#38BDF8" />
-                      <span>Custom Domain Business Email Mailboxes:</span>
+                      <span>Transactional Email Dispatches (Invoices, Alerts &amp; Receipts):</span>
                     </div>
                     <span style={{ fontSize: '0.66rem', color: '#38BDF8', background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.3)', padding: '2px 8px', borderRadius: '6px', fontWeight: 700 }}>
-                      Verified SPF / DKIM
+                      ⚡ Fixkar Mail Matrix
                     </span>
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px' }}>
-                    {customEmailPacks.map((ep) => {
-                      const isSelected = customEmailPack === ep.id;
+                    {transactionalEmailPacks.map((ep) => {
+                      const isSelected = transactionalEmailPack === ep.id;
                       return (
                         <div
                           key={ep.id}
-                          onClick={() => setCustomEmailPack(ep.id)}
+                          onClick={() => setTransactionalEmailPack(ep.id)}
                           style={{
                             background: isSelected ? 'rgba(37, 99, 235, 0.2)' : 'rgba(255, 255, 255, 0.02)',
                             border: isSelected ? '2px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.08)',
@@ -1130,9 +1132,16 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
                             flexDirection: 'column',
                             justifyContent: 'space-between',
                             gap: '8px',
+                            position: 'relative',
                             transition: 'all 0.15s ease',
                           }}
                         >
+                          {ep.popular && (
+                            <span style={{ position: 'absolute', top: '-8px', right: '10px', background: '#38BDF8', color: '#000', fontSize: '0.6rem', fontWeight: 900, padding: '1px 6px', borderRadius: '4px', letterSpacing: '0.04em' }}>
+                              MOST POPULAR
+                            </span>
+                          )}
+
                           <div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <strong style={{ fontSize: '0.84rem', color: isSelected ? '#fff' : '#CBD5E1' }}>
@@ -1143,10 +1152,15 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
                             <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '3px', lineHeight: 1.3 }}>
                               {ep.specs || ep.desc}
                             </div>
+                            {ep.unitRate && (
+                              <div style={{ fontSize: '0.68rem', color: '#38BDF8', fontWeight: 700, marginTop: '4px', fontFamily: 'monospace' }}>
+                                Unit Rate: {ep.unitRate}
+                              </div>
+                            )}
                           </div>
 
                           <div style={{ fontSize: '0.88rem', fontWeight: 800, color: ep.price === 0 ? '#4ADE80' : '#FDE047', fontFamily: 'monospace' }}>
-                            {ep.price === 0 ? 'FREE / Personal Gmail' : `+₹${ep.price.toLocaleString('en-IN')} / yr`}
+                            {ep.price === 0 ? 'FREE / Basic Alerts' : `+₹${ep.price.toLocaleString('en-IN')}`}
                           </div>
                         </div>
                       );
