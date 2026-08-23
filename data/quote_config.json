@@ -298,7 +298,7 @@
   "transactionalEmailPacks": [
     {
       "id": "email_5k",
-      "title": "Starter Cloud Pack",
+      "title": "Starter Cloud",
       "price": 319,
       "credits": 5000,
       "popular": false,
@@ -308,7 +308,7 @@
     },
     {
       "id": "email_10k",
-      "title": "Growth Cloud Pack",
+      "title": "Growth Velocity",
       "price": 625,
       "credits": 10000,
       "popular": true,
@@ -318,7 +318,7 @@
     },
     {
       "id": "email_25k",
-      "title": "Business Scale Pack",
+      "title": "Business Scale",
       "price": 1599,
       "credits": 25000,
       "popular": false,
@@ -328,7 +328,7 @@
     },
     {
       "id": "email_50k",
-      "title": "Enterprise Cloud Pack",
+      "title": "Enterprise Matrix",
       "price": 3125,
       "credits": 50000,
       "popular": false,
@@ -338,7 +338,7 @@
     },
     {
       "id": "email_100k",
-      "title": "Infinity Sovereign Pack",
+      "title": "Sovereign Infinity",
       "price": 6250,
       "credits": 100000,
       "popular": false,
@@ -348,5 +348,5 @@
     }
   ],
   "lastSyncedAt": "2026-08-23T20:15:00.000Z",
-  "lastUpdatedAt": "2026-08-23T18:37:49.599Z"
+  "lastUpdatedAt": "2026-08-23T18:41:20.107Z"
 }
