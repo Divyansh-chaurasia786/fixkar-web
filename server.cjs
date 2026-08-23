@@ -4398,18 +4398,204 @@ function getProjectStageIndex(stageStr) {
       killSwitchActive: false,
       lastUpdated: null,
       updatedBy: null,
-      reason: null
+      reason: null,
+      vaultToken: null,
+      quarantinedSummary: null
     });
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ success: true, ...state }));
     return;
   }
 
+  // ─── SECURE VAULT RECOVERY DOWNLOAD ENDPOINT ────────────────────────────────
+  if (req.method === 'GET' && req.url.startsWith('/api/admin/vault/download')) {
+    try {
+      const urlObj = new URL(req.url, 'http://localhost:5050');
+      const token = urlObj.searchParams.get('token');
+      if (!token) {
+        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: false, error: 'TOKEN_REQUIRED', message: 'Vault download token is required.' }));
+        return;
+      }
+      const safeToken = token.replace(/[^a-zA-Z0-9_-]/g, '');
+      const vaultPath = path.join(__dirname, 'data', 'vaults', `${safeToken}.enc`);
+      if (!fs.existsSync(vaultPath)) {
+        res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: false, error: 'VAULT_NOT_FOUND', message: 'Specified encrypted vault package was not found or has expired.' }));
+        return;
+      }
+      const fileData = fs.readFileSync(vaultPath);
+      res.writeHead(200, {
+        'Content-Type': 'application/octet-stream',
+        'Content-Disposition': `attachment; filename="fixkar_encrypted_vault_${safeToken}.enc"`,
+        'Content-Length': fileData.length
+      });
+      res.end(fileData);
+      return;
+    } catch (dErr) {
+      res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ success: false, error: 'DOWNLOAD_FAILED', message: dErr.message }));
+      return;
+    }
+  }
+
+  // ─── RESTORE QUARANTINED DATA & DISARM LOCKDOWN ──────────────────────────────
+  if (req.method === 'POST' && req.url === '/api/admin/super/kill-switch/restore') {
+    readJsonBody().then(async (body) => {
+      const { superAdminPin, adminPassword, vaultPassword, vaultToken } = body || {};
+      const superConfig = readDataJson('super_admin_config.json', { masterPin: '9835' });
+      const validSuperPins = [superConfig.masterPin, '9835', 'SUPER-ADMIN-2026-FIXKAR', 'Fixkar@SuperAdmin2026', 'SUPER_ADMIN_2026', 'ADMIN_MASTER_OVERRIDE'].filter(Boolean);
+      const validAdminPasses = ['admin', 'fixkar2026', 'Admin@123', 'admin123', 'fixkar_root'];
+
+      // 1. Verify Dual-Key Passwords
+      if (!superAdminPin || !validSuperPins.includes(String(superAdminPin).trim())) {
+        res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: false, error: 'INVALID_SUPER_PIN', message: '⛔ Incorrect Super Admin PIN. Restoration aborted.' }));
+        return;
+      }
+      if (!adminPassword || !validAdminPasses.includes(String(adminPassword).trim())) {
+        res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: false, error: 'INVALID_ADMIN_PASSWORD', message: '⛔ Incorrect Admin Password. Restoration aborted.' }));
+        return;
+      }
+      if (!vaultPassword || !String(vaultPassword).trim()) {
+        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: false, error: 'VAULT_PASSWORD_REQUIRED', message: '🔑 Auto-generated vault unlock password from the alert email is required.' }));
+        return;
+      }
+
+      // 2. Identify Vault File
+      const killState = readDataJson('kill_switch_state.json', { killSwitchActive: false });
+      const targetToken = (vaultToken || killState.vaultToken || '').replace(/[^a-zA-Z0-9_-]/g, '');
+      const vaultsDir = path.join(__dirname, 'data', 'vaults');
+      let targetFile = targetToken ? path.join(vaultsDir, `${targetToken}.enc`) : null;
+
+      if (!targetFile || !fs.existsSync(targetFile)) {
+        // Fallback: search latest .enc file in vaults folder
+        if (fs.existsSync(vaultsDir)) {
+          const files = fs.readdirSync(vaultsDir).filter(f => f.endsWith('.enc')).sort().reverse();
+          if (files.length > 0) targetFile = path.join(vaultsDir, files[0]);
+        }
+      }
+
+      if (!targetFile || !fs.existsSync(targetFile)) {
+        res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: false, error: 'VAULT_FILE_NOT_FOUND', message: 'No encrypted vault archive found in storage.' }));
+        return;
+      }
+
+      // 3. Decrypt Vault Package
+      try {
+        const vaultRaw = JSON.parse(fs.readFileSync(targetFile, 'utf8'));
+        const { salt, iv, data: ciphertext } = vaultRaw;
+        const key = crypto.pbkdf2Sync(String(vaultPassword).trim(), Buffer.from(salt, 'hex'), 100000, 32, 'sha256');
+        const decipher = crypto.createDecipheriv('aes-256-cbc', key, Buffer.from(iv, 'hex'));
+        let decrypted = decipher.update(ciphertext, 'hex', 'utf8');
+        decrypted += decipher.final('utf8');
+        const payloadBundle = JSON.parse(decrypted);
+
+        // 4. Restore All Files to data/ directory
+        const restoredFiles = [];
+        if (payloadBundle.files && typeof payloadBundle.files === 'object') {
+          for (const [filename, fileContent] of Object.entries(payloadBundle.files)) {
+            const safeName = path.basename(filename);
+            writeDataJson(safeName, fileContent);
+            restoredFiles.push(safeName);
+          }
+        }
+
+        // 5. Update Kill Switch State to Disarmed
+        const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+        const clientIp = getClientIp(req);
+        const restoredKillState = {
+          killSwitchActive: false,
+          lastUpdated: timestamp,
+          updatedBy: 'Lead Architect & Founder (GOD-MODE Restored)',
+          ipAddress: clientIp,
+          reason: 'Normal Operations Restored — Vault Decrypted & Data Re-Populated',
+          vaultToken: null,
+          quarantinedSummary: null
+        };
+        writeDataJson('kill_switch_state.json', restoredKillState);
+
+        // 6. Log Audit Event & Activity
+        logAuditEvent({
+          eventType: 'KILL_SWITCH_RESTORED',
+          actor: 'Super Admin + Admin (Vault Password Verified)',
+          role: 'SUPER_ADMIN',
+          ipAddress: clientIp,
+          action: `🟢 DATA VAULT RESTORED & LOCKDOWN LIFTED. ${restoredFiles.length} data files successfully restored.`,
+          status: 'SUCCESS'
+        });
+
+        // 7. Send Email Notice
+        try {
+          const resendApiKey = process.env.RESEND_API_KEY || '';
+          const restoreSubject = '🟢 [RESTORED] Fixkar System Operations & Client Data Fully Restored';
+          const restoreHtml = `
+            <div style="font-family: Arial, sans-serif; background: #0b0f19; color: #ffffff; padding: 28px; border-radius: 12px; border: 1px solid #10b981;">
+              <h2 style="color: #10b981; margin-top: 0;">🟢 FIXKAR SYSTEM FULLY RESTORED</h2>
+              <p style="font-size: 15px; color: #cbd5e1; line-height: 1.6;">
+                The Encrypted Vault was successfully unlocked using your Master Password. All client records, projects, billing, and API gateways have been restored to live status.
+              </p>
+              <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; margin: 20px 0; font-family: monospace; font-size: 13px;">
+                <div><strong>Timestamp (IST):</strong> ${timestamp}</div>
+                <div><strong>Files Restored:</strong> ${restoredFiles.length} data entities</div>
+                <div><strong>Operator:</strong> Super Admin (GOD-MODE)</div>
+                <div><strong>Client IP:</strong> ${clientIp}</div>
+              </div>
+            </div>
+          `;
+          if (resendApiKey) {
+            const resendPayload = JSON.stringify({
+              from: 'Fixkar Security <security@fixkar.co.in>',
+              to: ['chaurasiadivyansh86@gmail.com'],
+              subject: restoreSubject,
+              html: restoreHtml
+            });
+            const rReq = https.request({
+              hostname: 'api.resend.com',
+              path: '/emails',
+              method: 'POST',
+              headers: { 'Authorization': `Bearer ${resendApiKey}`, 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(resendPayload) }
+            });
+            rReq.write(resendPayload);
+            rReq.end();
+          }
+        } catch (mErr) {
+          console.error('[Restore Notice Mail Error]', mErr.message);
+        }
+
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({
+          success: true,
+          message: `🟢 SYSTEM RESTORED! ${restoredFiles.length} data files decrypted and live operations resumed.`,
+          restoredFiles,
+          isKillSwitchActive: false
+        }));
+        return;
+      } catch (decryptErr) {
+        console.error('[Kill-Switch Vault Decryption Error]', decryptErr);
+        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({
+          success: false,
+          error: 'DECRYPTION_FAILED',
+          message: '❌ Invalid Vault Password. Unable to decrypt secured data package!'
+        }));
+        return;
+      }
+    });
+    return;
+  }
+
+  // ─── EXECUTE KILL-SWITCH (WRAP DATA, WIPE LIVE SITE, DISPATCH VAULT KEY) ───
   if (req.method === 'POST' && req.url === '/api/admin/super/kill-switch') {
     readJsonBody().then(async (body) => {
       const { superAdminPin, adminPassword, enable, reason } = body || {};
-      const validSuperPins = ['9835', 'SUPER-ADMIN-2026-FIXKAR', 'Fixkar@SuperAdmin2026', 'SUPER_ADMIN_2026', 'ADMIN_MASTER_OVERRIDE'];
-      
+      const superConfig = readDataJson('super_admin_config.json', { masterPin: '9835' });
+      const validSuperPins = [superConfig.masterPin, '9835', 'SUPER-ADMIN-2026-FIXKAR', 'Fixkar@SuperAdmin2026', 'SUPER_ADMIN_2026', 'ADMIN_MASTER_OVERRIDE'].filter(Boolean);
+      const validAdminPasses = ['admin', 'fixkar2026', 'Admin@123', 'admin123', 'fixkar_root'];
+
       // 1. Verify Super Admin Secret PIN
       if (!superAdminPin || !validSuperPins.includes(String(superAdminPin).trim())) {
         res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -4422,7 +4608,6 @@ function getProjectStageIndex(stageStr) {
       }
 
       // 2. Verify Admin Master Password
-      const validAdminPasses = ['admin', 'fixkar2026', 'Admin@123', 'admin123', 'fixkar_root'];
       if (!adminPassword || !validAdminPasses.includes(String(adminPassword).trim())) {
         res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
         res.end(JSON.stringify({
@@ -4433,44 +4618,236 @@ function getProjectStageIndex(stageStr) {
         return;
       }
 
-      // 3. Update Kill-Switch State
       const nextActiveState = typeof enable === 'boolean' ? enable : true;
       const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
       const clientIp = getClientIp(req);
 
+      if (!nextActiveState) {
+        // Disarming directly via regular toggle (if data is not wiped or manually un-quarantined)
+        const disarmState = {
+          killSwitchActive: false,
+          lastUpdated: timestamp,
+          updatedBy: 'Lead Architect & Founder (GOD-MODE)',
+          ipAddress: clientIp,
+          reason: reason || 'Normal Operations Restored'
+        };
+        writeDataJson('kill_switch_state.json', disarmState);
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: true, isKillSwitchActive: false, message: '🟢 Global Lockdown Lifted. Operations resumed.', state: disarmState }));
+        return;
+      }
+
+      // ─────────────────────────────────────────────────────────────────────────
+      // 3. ESSENTIAL DATA ENCAPSULATION & ENCRYPTION VAULT
+      // ─────────────────────────────────────────────────────────────────────────
+      const essentialDataFiles = [
+        'clients.json',
+        'projects.json',
+        'renewals.json',
+        'invoices.json',
+        'otp_wallets.json',
+        'recharges.json',
+        'provisional_recharges.json',
+        'client_api_keys.json',
+        'support_tickets.json',
+        'leads.json',
+        'inbound_emails.json',
+        'email_logs.json',
+        'payments.json',
+        'bank_verified_credits.json',
+        'documents.json'
+      ];
+
+      const payloadBundle = {
+        files: {},
+        metadata: {
+          timestamp,
+          clientIp,
+          triggeredBy: 'Super Admin (GOD-MODE Dual-Key)',
+          reason: reason || 'Manual Emergency Quarantine Triggered'
+        }
+      };
+
+      let totalRecordsCount = 0;
+      for (const fileName of essentialDataFiles) {
+        const fileContent = readDataJson(fileName, []);
+        payloadBundle.files[fileName] = fileContent;
+        if (Array.isArray(fileContent)) {
+          totalRecordsCount += fileContent.length;
+        } else if (fileContent && typeof fileContent === 'object') {
+          totalRecordsCount += Object.keys(fileContent).length;
+        }
+      }
+
+      // Generate Strong Auto-Generated Password & Unique Vault ID
+      const vaultPassword = `FXK-VAULT-${crypto.randomBytes(4).toString('hex').toUpperCase()}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+      const vaultToken = `vault_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
+
+      // AES-256-CBC Encryption
+      const salt = crypto.randomBytes(16);
+      const key = crypto.pbkdf2Sync(vaultPassword, salt, 100000, 32, 'sha256');
+      const iv = crypto.randomBytes(16);
+      const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+      let encrypted = cipher.update(JSON.stringify(payloadBundle), 'utf8', 'hex');
+      encrypted += cipher.final('hex');
+
+      const encryptedVaultPackage = {
+        vaultId: vaultToken,
+        salt: salt.toString('hex'),
+        iv: iv.toString('hex'),
+        data: encrypted,
+        createdAt: new Date().toISOString(),
+        totalFiles: Object.keys(payloadBundle.files).length,
+        totalRecords: totalRecordsCount,
+        manifest: Object.keys(payloadBundle.files)
+      };
+
+      // Save Encrypted Vault File to data/vaults/
+      const vaultsDir = path.join(__dirname, 'data', 'vaults');
+      if (!fs.existsSync(vaultsDir)) {
+        fs.mkdirSync(vaultsDir, { recursive: true });
+      }
+      fs.writeFileSync(path.join(vaultsDir, `${vaultToken}.enc`), JSON.stringify(encryptedVaultPackage, null, 2), 'utf8');
+
+      // ─────────────────────────────────────────────────────────────────────────
+      // 4. WIPE / SANITIZE LIVE ESSENTIAL DATA FROM WEBSITE
+      // ─────────────────────────────────────────────────────────────────────────
+      for (const fileName of essentialDataFiles) {
+        writeDataJson(fileName, []);
+      }
+
+      // Record Kill Switch State
+      const secureRecoveryUrl = `https://fixkar.co.in/api/admin/vault/download?token=${vaultToken}`;
       const killState = {
-        killSwitchActive: nextActiveState,
+        killSwitchActive: true,
         lastUpdated: timestamp,
         updatedBy: 'Lead Architect & Founder (GOD-MODE)',
         ipAddress: clientIp,
-        reason: reason || (nextActiveState ? 'Manual Emergency Quarantine Triggered' : 'Normal Operations Restored')
+        reason: reason || 'Manual Emergency Quarantine Triggered — All Data Encrypted & Wiped',
+        vaultToken,
+        quarantinedRecords: totalRecordsCount,
+        quarantinedSummary: {
+          filesCount: essentialDataFiles.length,
+          totalRecords: totalRecordsCount
+        },
+        vaultRecoveryUrl: secureRecoveryUrl
       };
       writeDataJson('kill_switch_state.json', killState);
 
-      // 4. Log high-severity audit and activity event
+      // Log Critical Audit Event
       logAuditEvent({
-        eventType: nextActiveState ? 'KILL_SWITCH_ACTIVATED' : 'KILL_SWITCH_DEACTIVATED',
+        eventType: 'KILL_SWITCH_ACTIVATED_DATA_QUARANTINED',
         actor: 'Super Admin + Admin (Dual-Key Verified)',
         role: 'SUPER_ADMIN',
         ipAddress: clientIp,
-        action: nextActiveState 
-          ? `🚨 SYSTEM EMERGENCY KILL-SWITCH ENGAGED! All client OTP gateways frozen. Reason: ${killState.reason}` 
-          : `🟢 SYSTEM EMERGENCY LOCKDOWN LIFTED. All client OTP services resumed.`,
+        action: `🚨 SYSTEM KILL-SWITCH ENGAGED! ${totalRecordsCount} records across ${essentialDataFiles.length} data files encrypted and wiped from live system. Vault ID: ${vaultToken}`,
         status: 'CRITICAL_SECURITY'
       });
 
-      const activities = readDataJson('activity_logs.json', []);
-      activities.unshift({
-        id: `act_${Date.now()}`,
-        activity: nextActiveState ? '🚨 System Kill-Switch Activated' : '🟢 System Lockdown Lifted',
-        description: `${nextActiveState ? 'Global emergency quarantine armed.' : 'Standard traffic resumed.'} Reason: ${killState.reason}`,
-        actor: 'Super Admin (GOD-MODE)',
-        role: 'SUPER_ADMIN',
-        timestamp
-      });
-      writeDataJson('activity_logs.json', activities);
+      // ─────────────────────────────────────────────────────────────────────────
+      // 5. DISPATCH EMERGENCY EMAIL TO chaurasiadivyansh86@gmail.com
+      // ─────────────────────────────────────────────────────────────────────────
+      const targetEmail = 'chaurasiadivyansh86@gmail.com';
+      const emailSubject = `🚨 [CRITICAL ALERT] Fixkar System Kill-Switch Activated — Data Wrapped & Encrypted`;
+      const emailHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #030712; color: #f9fafb; margin: 0; padding: 24px; }
+            .card { background: #0f172a; border: 1px solid #ef4444; border-radius: 16px; max-width: 620px; margin: 0 auto; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.8); }
+            .header { background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%); padding: 24px; border-bottom: 1px solid rgba(239, 68, 68, 0.4); }
+            .body { padding: 24px; }
+            .pass-box { background: #030712; border: 2px dashed #f59e0b; border-radius: 12px; padding: 18px; margin: 20px 0; text-align: center; }
+            .pass-text { font-size: 22px; font-family: monospace; font-weight: 800; color: #fbbf24; letter-spacing: 2px; }
+            .info-grid { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px; margin: 18px 0; font-size: 13px; font-family: monospace; line-height: 1.8; }
+            .btn { display: inline-block; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #ffffff !important; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 14px; margin-top: 10px; }
+            .footer { padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 12px; color: #94a3b8; text-align: center; }
+          </style>
+        </head>
+        <body>
+          <div class="card">
+            <div class="header">
+              <div style="font-size: 12px; font-weight: 800; color: #fca5a5; letter-spacing: 0.12em; text-transform: uppercase;">Fixkar Core Security Protocol</div>
+              <h1 style="margin: 6px 0 0 0; font-size: 22px; color: #ffffff;">🚨 Emergency Kill-Switch Activated</h1>
+            </div>
+            <div class="body">
+              <p style="font-size: 14px; line-height: 1.6; color: #e2e8f0; margin-top: 0;">
+                The System Kill-Switch has been triggered via Dual-Key Super Admin & Admin authorization. All essential client databases, API keys, invoices, and records have been <strong>completely wiped from the live website</strong> and wrapped in an encrypted security vault.
+              </p>
 
-      // 5. Send High-Priority Email Alerts to Super Admin & Admin
+              <div class="pass-box">
+                <div style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.08em;">Auto-Generated Vault Decryption Password</div>
+                <div class="pass-text">${vaultPassword}</div>
+                <div style="font-size: 11px; color: #cbd5e1; margin-top: 6px;">⚠️ Keep this password secret. It is required to restore system data.</div>
+              </div>
+
+              <div class="info-grid">
+                <div><strong>Action:</strong> ALL_ESSENTIAL_DATA_WIPED_&_QUARANTINED</div>
+                <div><strong>Timestamp (IST):</strong> ${timestamp}</div>
+                <div><strong>Quarantined Files:</strong> ${essentialDataFiles.length} data files</div>
+                <div><strong>Total Records Encrypted:</strong> ${totalRecordsCount} records</div>
+                <div><strong>Vault Token:</strong> ${vaultToken}</div>
+                <div><strong>Trigger Reason:</strong> ${killState.reason}</div>
+              </div>
+
+              <div style="text-align: center; margin: 24px 0;">
+                <a href="${secureRecoveryUrl}" class="btn">📥 Download Encrypted Vault (.enc)</a>
+                <div style="font-size: 11px; color: #64748b; margin-top: 8px;">Direct Recovery Link: <span style="word-break: break-all; color: #38bdf8;">${secureRecoveryUrl}</span></div>
+              </div>
+
+              <div style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 8px; padding: 12px; font-size: 13px; color: #93c5fd;">
+                <strong>🛠️ How to Restore Website Data:</strong><br>
+                1. Open the Super Admin Dashboard (<code>#admin</code>)<br>
+                2. Click on the <strong>KILL SWITCH (Lockdown Active)</strong> button<br>
+                3. Enter your Super PIN (<code>9835</code>), Admin Password, and the <strong>Vault Password</strong> above<br>
+                4. Click <strong>"Unlock Vault &amp; Restore All Data"</strong> to repopulate all records instantly.
+              </div>
+            </div>
+            <div class="footer">
+              Fixkar Sovereign Cloud Defense Matrix • Automated Dispatch to chaurasiadivyansh86@gmail.com
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      // 1. Resend Enterprise Dispatch
+      try {
+        const resendApiKey = process.env.RESEND_API_KEY || '';
+        if (resendApiKey) {
+          const resendPayload = JSON.stringify({
+            from: 'Fixkar Security <security@fixkar.co.in>',
+            to: [targetEmail],
+            subject: emailSubject,
+            html: emailHtml
+          });
+          const resendReq = https.request({
+            hostname: 'api.resend.com',
+            path: '/emails',
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${resendApiKey}`,
+              'Content-Type': 'application/json',
+              'Content-Length': Buffer.byteLength(resendPayload)
+            }
+          }, (rRes) => {
+            let rData = '';
+            rRes.on('data', c => rData += c);
+            rRes.on('end', () => {
+              console.log(`[Kill-Switch Resend Mail] 🚨 Dispatched to ${targetEmail} (HTTP ${rRes.statusCode}): ${rData}`);
+            });
+          });
+          resendReq.on('error', (e) => console.error('[Resend Kill-Switch Mail Error]', e.message));
+          resendReq.write(resendPayload);
+          resendReq.end();
+        }
+      } catch (rErr) {
+        console.error('[Resend Dispatch Exception]', rErr);
+      }
+
+      // 2. Nodemailer Fallback Dispatch
       try {
         const nodemailer = require('nodemailer');
         const transporter = nodemailer.createTransport({
@@ -4480,57 +4857,24 @@ function getProjectStageIndex(stageStr) {
             pass: process.env.FIREBASE_MAIL_PASS || process.env.SMTP_PASS || 'fixkar-app-password'
           }
         });
-
-        const subject = nextActiveState 
-          ? `🚨 [CRITICAL ALERT] FIXKAR SYSTEM EMERGENCY KILL-SWITCH ACTIVATED` 
-          : `🟢 [NOTICE] FIXKAR SYSTEM EMERGENCY LOCKDOWN LIFTED`;
-
-        const htmlContent = `
-          <div style="font-family: Arial, sans-serif; background: #0b0f19; color: #ffffff; padding: 28px; border-radius: 12px; border: 1px solid ${nextActiveState ? '#ef4444' : '#10b981'};">
-            <h2 style="color: ${nextActiveState ? '#ef4444' : '#10b981'}; margin-top: 0;">
-              ${nextActiveState ? '🚨 EMERGENCY KILL-SWITCH ENGAGED' : '🟢 GLOBAL LOCKDOWN LIFTED'}
-            </h2>
-            <p style="font-size: 15px; color: #cbd5e1; line-height: 1.6;">
-              ${nextActiveState 
-                ? 'This is a high-priority system security notification. The Global Emergency Kill-Switch has been triggered via Dual-Key Super Admin & Admin master authorization. All client OTP API gateways and background transactions are now <strong>FROZEN</strong> in real-time.' 
-                : 'The Global Emergency Lockdown has been lifted following verified Dual-Key authorization. All client OTP API services are restored to normal.'}
-            </p>
-            <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; margin: 20px 0; font-family: monospace; font-size: 13px;">
-              <div><strong>Action:</strong> ${nextActiveState ? 'SYSTEM_LOCKDOWN_ENGAGED' : 'SYSTEM_LOCKDOWN_LIFTED'}</div>
-              <div><strong>Timestamp (IST):</strong> ${timestamp}</div>
-              <div><strong>Dual-Key Verification:</strong> PASS (Super PIN + Admin Password)</div>
-              <div><strong>Operator:</strong> ${killState.updatedBy}</div>
-              <div><strong>IP Address:</strong> ${clientIp}</div>
-              <div><strong>Reason / Memo:</strong> ${killState.reason}</div>
-            </div>
-            <p style="font-size: 12px; color: #94a3b8;">Fixkar Core Security Operations Center • Automated Dual-Key Alert</p>
-          </div>
-        `;
-
-        const alertRecipients = ['chaurasiadivyansh86@gmail.com', 'founder@fixkar.in', 'superadmin@fixkar.in', 'admin@fixkar.in'];
-        for (const recipient of alertRecipients) {
-          try {
-            await transporter.sendMail({
-              from: `"Fixkar Security Desk" <${process.env.FIREBASE_MAIL_USER || 'notifications@fixkar.co.in'}>`,
-              to: recipient,
-              subject,
-              html: htmlContent
-            });
-          } catch (mErr) {
-            console.log(`[Kill-Switch Mail Sandbox Dispatch] Logged for ${recipient}: ${mErr.message}`);
-          }
-        }
-      } catch (mailErr) {
-        console.error('[Kill-Switch Mailer Init Error]', mailErr);
+        await transporter.sendMail({
+          from: `"Fixkar Security Operations" <${process.env.FIREBASE_MAIL_USER || 'notifications@fixkar.co.in'}>`,
+          to: targetEmail,
+          subject: emailSubject,
+          html: emailHtml
+        });
+        console.log(`[Kill-Switch Nodemailer] 🚨 Delivered to ${targetEmail}`);
+      } catch (nmErr) {
+        console.log(`[Kill-Switch Nodemailer Fallback Log] ${nmErr.message}`);
       }
 
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify({
         success: true,
-        isKillSwitchActive: nextActiveState,
-        message: nextActiveState 
-          ? '🚨 GLOBAL EMERGENCY KILL-SWITCH ACTIVATED! All client OTP gateways are frozen. Security alert emails dispatched to Super Admin and Admin.' 
-          : '🟢 Global Lockdown Lifted. Standard API dispatches and client operations resumed.',
+        isKillSwitchActive: true,
+        message: `🚨 KILL-SWITCH ACTIVATED! ${totalRecordsCount} essential records have been wrapped into an encrypted vault and wiped from the live website. Vault download link and auto-generated password have been emailed to ${targetEmail}.`,
+        vaultToken,
+        quarantinedRecords: totalRecordsCount,
         state: killState
       }));
     });
