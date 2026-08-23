@@ -1758,6 +1758,106 @@ function handleRequest(req, res) {
     return;
   }
 
+  // ─── DIRECT IN-DASHBOARD EMAIL REPLY ENDPOINT ──────────────────────────────
+  if (req.method === 'POST' && req.url === '/api/emails/reply') {
+    readJsonBody().then(async (body) => {
+      const to = body?.to;
+      const subject = body?.subject || 'Re: Inquiry to Fixkar';
+      const message = body?.message || '';
+      const inReplyToId = body?.inReplyToId;
+
+      if (!to || !message.trim()) {
+        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ error: 'Recipient "to" and "message" are required.' }));
+        return;
+      }
+
+      const resendApiKey = process.env.RESEND_API_KEY || '';
+      let dispatched = false;
+
+      const formattedHtml = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1e293b; line-height: 1.6;">
+          <div style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%); padding: 18px 24px; border-radius: 8px 8px 0 0; color: #ffffff;">
+            <h2 style="margin: 0; font-size: 1.25rem; font-weight: 700;">Fixkar Technology Solutions</h2>
+            <p style="margin: 4px 0 0; font-size: 0.85rem; opacity: 0.9;">Official Client Communication</p>
+          </div>
+          <div style="background: #ffffff; padding: 24px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 8px 8px;">
+            <div style="font-size: 0.95rem; color: #334155; white-space: pre-wrap; margin-bottom: 24px;">${message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+            <p style="font-size: 0.78rem; color: #64748b; margin: 0;">
+              Best regards,<br />
+              <strong>Fixkar Support & Engineering Team</strong><br />
+              🌐 <a href="https://fixkar.co.in" style="color: #0284c7; text-decoration: none;">https://fixkar.co.in</a> | ✉️ support@fixkar.co.in
+            </p>
+          </div>
+        </div>
+      `;
+
+      if (resendApiKey) {
+        try {
+          const resendPayload = JSON.stringify({
+            from: 'Fixkar Support <support@fixkar.co.in>',
+            to: [to],
+            subject: subject,
+            text: message,
+            html: formattedHtml,
+            reply_to: 'support@fixkar.co.in'
+          });
+
+          await new Promise((resolve) => {
+            const rReq = https.request({
+              hostname: 'api.resend.com',
+              path: '/emails',
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${resendApiKey}`,
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(resendPayload)
+              }
+            }, (rRes) => {
+              let rBuf = '';
+              rRes.on('data', c => rBuf += c);
+              rRes.on('end', () => {
+                if (rRes.statusCode >= 200 && rRes.statusCode < 300) dispatched = true;
+                resolve();
+              });
+            });
+            rReq.on('error', () => resolve());
+            rReq.write(resendPayload);
+            rReq.end();
+          });
+        } catch (e) {
+          console.error('[Email Reply Resend Error]', e.message);
+        }
+      }
+
+      // Log the outbound email
+      const emailLogs = readDataJson('email_logs.json', []);
+      emailLogs.unshift({
+        id: `reply_${Date.now()}`,
+        recipient: to,
+        from: 'support@fixkar.co.in',
+        subject: subject,
+        message: message,
+        inReplyToId: inReplyToId || null,
+        status: 'DELIVERED',
+        engine: resendApiKey ? 'Resend (support@fixkar.co.in)' : 'Mock Delivery',
+        timestamp: new Date().toISOString(),
+        formattedTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+      });
+      writeDataJson('email_logs.json', emailLogs);
+
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({
+        success: true,
+        message: `Reply successfully dispatched to ${to} from support@fixkar.co.in!`,
+        engine: resendApiKey ? 'Resend (support@fixkar.co.in)' : 'Mock Engine',
+        sentAt: new Date().toISOString()
+      }));
+    });
+    return;
+  }
+
   // ============================================================================
   // LAYER 1: ADMIN AUTHENTICATION & MANAGEMENT ENDPOINTS
   // ============================================================================
