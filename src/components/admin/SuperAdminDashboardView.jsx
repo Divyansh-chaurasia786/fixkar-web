@@ -1345,27 +1345,26 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
               className={`fixkar-nav-btn ${activeTab === 'dashboard' ? 'active' : ''}`}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <LayoutDashboard size={14} color={activeTab === 'dashboard' ? '#FBBF24' : 'currentColor'} />
+                <LayoutDashboard size={14} color={activeTab === 'dashboard' ? '#38BDF8' : 'currentColor'} />
                 <span>Super Dashboard</span>
               </div>
-              <span style={{ fontSize: '0.62rem', background: 'rgba(245, 158, 11, 0.25)', color: '#FDE047', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>
-                ROOT
-              </span>
             </button>
 
-            {/* Tab: Project Approvals & Release Governance (Super Admin Gate) */}
+            {/* Tab: Project Approvals & Release Governance */}
             <button
               type="button"
               onClick={() => setActiveTab('projects-governance')}
               className={`fixkar-nav-btn ${activeTab === 'projects-governance' ? 'active' : ''}`}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckCircle2 size={14} color={activeTab === 'projects-governance' ? '#FBBF24' : 'currentColor'} />
+                <CheckCircle2 size={14} color={activeTab === 'projects-governance' ? '#38BDF8' : 'currentColor'} />
                 <span>Project Approvals</span>
               </div>
-              <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.2)', color: '#38BDF8', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>
-                Testing &amp; Live
-              </span>
+              {superStats?.pendingApprovals > 0 && (
+                <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
+                  {superStats.pendingApprovals}
+                </span>
+              )}
             </button>
 
             {/* Unified Tab: SMS Gateway & Pricing */}
@@ -1375,12 +1374,9 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
               className={`fixkar-nav-btn ${activeTab === 'gateway' ? 'active' : ''}`}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Globe size={14} color={activeTab === 'gateway' ? '#FBBF24' : 'currentColor'} />
+                <Globe size={14} color={activeTab === 'gateway' ? '#38BDF8' : 'currentColor'} />
                 <span>SMS Gateway &amp; Pricing</span>
               </div>
-              <span style={{ fontSize: '0.62rem', background: 'rgba(74, 222, 128, 0.2)', color: '#86EFAC', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
-                Fast2SMS • ₹{otpPricing.baseRetailRatePerSms || 0.25}/SMS
-              </span>
             </button>
 
             {/* Tab 2: Client API Studio */}
@@ -1390,12 +1386,9 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
               className={`fixkar-nav-btn ${activeTab === 'client-apis' ? 'active' : ''}`}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <KeyRound size={14} color={activeTab === 'client-apis' ? '#FBBF24' : 'currentColor'} />
+                <KeyRound size={14} color={activeTab === 'client-apis' ? '#38BDF8' : 'currentColor'} />
                 <span>Client API Studio</span>
               </div>
-              <span style={{ fontSize: '0.64rem', fontFamily: 'monospace', color: '#93C5FD', fontWeight: 700 }}>
-                {clientApiKeys.length} Keys
-              </span>
             </button>
 
             {/* Tab 3: Provisional Reconciliation */}
@@ -1405,19 +1398,15 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
               className={`fixkar-nav-btn ${activeTab === 'provisional' ? 'active' : ''}`}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <ShieldCheck size={14} color={activeTab === 'provisional' ? '#FBBF24' : 'currentColor'} />
+                <ShieldCheck size={14} color={activeTab === 'provisional' ? '#38BDF8' : 'currentColor'} />
                 <span>48h Bank Radar</span>
               </div>
-              {pendingProvisionalCount > 0 ? (
-                <span style={{ fontSize: '0.62rem', background: 'rgba(245, 158, 11, 0.25)', color: '#FDE047', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>
-                  {pendingProvisionalCount} Due
+              {pendingProvisionalCount > 0 && (
+                <span style={{ fontSize: '0.62rem', background: 'rgba(245, 158, 11, 0.2)', color: '#FDE047', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
+                  {pendingProvisionalCount}
                 </span>
-              ) : (
-                <span style={{ fontSize: '0.62rem', color: '#4ADE80', fontWeight: 700 }}>✓ Clear</span>
               )}
             </button>
-
-
 
             {/* Tab: Renewal Radar */}
             <button
@@ -1426,51 +1415,51 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
               className={`fixkar-nav-btn ${activeTab === 'renewals' ? 'active' : ''}`}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Clock size={14} color={activeTab === 'renewals' ? '#FBBF24' : 'currentColor'} />
+                <Clock size={14} color={activeTab === 'renewals' ? '#38BDF8' : 'currentColor'} />
                 <span>Renewal Radar</span>
               </div>
-              {(renewals || []).filter((r) => (r?.daysRemaining ?? 999) <= 30).length > 0 ? (
-                <span style={{ fontSize: '0.62rem', background: 'rgba(239, 68, 68, 0.25)', color: '#FDA4AF', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>
-                  {(renewals || []).filter((r) => (r?.daysRemaining ?? 999) <= 30).length} Due
-                </span>
-              ) : (
-                <span style={{ fontSize: '0.62rem', color: '#4ADE80', fontWeight: 700 }}>✓ Clear</span>
-              )}
+              {(() => {
+                const dueRenewals = (renewals || []).filter((r) => (r?.daysRemaining ?? 999) <= 15).length;
+                if (dueRenewals === 0) return null;
+                return (
+                  <span style={{ fontSize: '0.62rem', background: 'rgba(239, 68, 68, 0.2)', color: '#FDA4AF', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
+                    {dueRenewals}
+                  </span>
+                );
+              })()}
             </button>
 
-            {/* Tab: Support Tickets (Admin & Super Admin Shared) */}
+            {/* Tab: Support Tickets */}
             <button
               type="button"
               onClick={() => setActiveTab('support')}
               className={`fixkar-nav-btn ${activeTab === 'support' ? 'active' : ''}`}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <LifeBuoy size={14} color={activeTab === 'support' ? '#FBBF24' : 'currentColor'} />
+                <LifeBuoy size={14} color={activeTab === 'support' ? '#38BDF8' : 'currentColor'} />
                 <span>Support Tickets</span>
               </div>
-              {(supportTickets || []).filter((t) => t.status === 'Open' || t.status === 'In Progress').length > 0 ? (
-                <span style={{ fontSize: '0.62rem', background: 'rgba(244, 63, 94, 0.25)', color: '#FDA4AF', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>
-                  {(supportTickets || []).filter((t) => t.status === 'Open' || t.status === 'In Progress').length} Active
-                </span>
-              ) : (
-                <span style={{ fontSize: '0.62rem', color: '#4ADE80', fontWeight: 700 }}>✓ 0 Open</span>
-              )}
+              {(() => {
+                const openCount = (supportTickets || []).filter((t) => t.status === 'Open' || t.status === 'In Progress').length;
+                if (openCount === 0) return null;
+                return (
+                  <span style={{ fontSize: '0.62rem', background: 'rgba(244, 63, 94, 0.2)', color: '#FDA4AF', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
+                    {openCount}
+                  </span>
+                );
+              })()}
             </button>
 
-            {/* Tab: Master Credential & Security Governance (Super Admin Exclusive) */}
+            {/* Tab: Master Credential & Security Governance */}
             <button
               type="button"
               onClick={() => setActiveTab('security-credentials')}
               className={`fixkar-nav-btn ${activeTab === 'security-credentials' ? 'active' : ''}`}
-              style={{ marginTop: '4px' }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <ShieldCheck size={14} color={activeTab === 'security-credentials' ? '#FBBF24' : '#F59E0B'} />
-                <span style={{ color: activeTab === 'security-credentials' ? '#FDE047' : '#FCD34D' }}>Security &amp; Passwords</span>
+                <ShieldCheck size={14} color={activeTab === 'security-credentials' ? '#FDE047' : '#F59E0B'} />
+                <span>Security &amp; Passwords</span>
               </div>
-              <span style={{ fontSize: '0.62rem', background: 'rgba(245, 158, 11, 0.2)', color: '#FDE047', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>
-                SOVEREIGN
-              </span>
             </button>
 
             {/* Tab: Inbound Client Mail */}
@@ -1478,15 +1467,20 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
               type="button"
               onClick={() => setActiveTab('emails')}
               className={`fixkar-nav-btn ${activeTab === 'emails' ? 'active' : ''}`}
-              style={{ marginTop: '4px' }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Mail size={14} color={activeTab === 'emails' ? '#38BDF8' : '#94A3B8'} />
-                <span style={{ color: activeTab === 'emails' ? '#38BDF8' : '#E2E8F0' }}>Inbound Client Mail</span>
+                <span>Inbound Client Mail</span>
               </div>
-              <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>
-                {inboundEmails.length} EMAILS
-              </span>
+              {(() => {
+                const unreadCount = (inboundEmails || []).filter((e) => e.status === 'UNREAD').length;
+                if (unreadCount === 0) return null;
+                return (
+                  <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.2)', color: '#38BDF8', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
+                    {unreadCount}
+                  </span>
+                );
+              })()}
             </button>
 
           </nav>
