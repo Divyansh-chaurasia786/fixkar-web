@@ -1336,7 +1336,8 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
       alert('Please select a client to generate their isolated API key');
       return;
     }
-    if (newApiKeyForm.allocationType === 'BANK_TRANSFER' && !newApiKeyForm.utrNumber.trim()) {
+    const cleanUtr = (newApiKeyForm.utrNumber || '').trim();
+    if (newApiKeyForm.allocationType === 'BANK_TRANSFER' && !cleanUtr) {
       alert('⚠️ Please enter a valid 12-digit Bank / UPI UTR Transaction Reference Number.');
       return;
     }
@@ -1351,14 +1352,14 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
         body: JSON.stringify({
           superAdminKey: superAdminToken || '9835',
           clientCode: newApiKeyForm.clientCode,
-          clientName: newApiKeyForm.clientName,
-          dltSenderId: newApiKeyForm.dltSenderId,
-          packId: newApiKeyForm.packId,
+          clientName: newApiKeyForm.clientName || 'Client Website',
+          dltSenderId: newApiKeyForm.dltSenderId || 'FIXKAR',
+          packId: newApiKeyForm.packId || 'otp_500',
           credits: Number(newApiKeyForm.credits) || 500,
           price: Number(newApiKeyForm.price) || 0,
-          allocationType: newApiKeyForm.allocationType,
-          utrNumber: newApiKeyForm.utrNumber.trim(),
-          notes: newApiKeyForm.notes,
+          allocationType: newApiKeyForm.allocationType || 'COMPLIMENTARY',
+          utrNumber: cleanUtr,
+          notes: newApiKeyForm.notes || 'Starter Onboarding Allotment',
         }),
       });
       const data = await res.json();
@@ -1391,7 +1392,8 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
   const handleTopUpClientWallet = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
     if (!topupModalKey?.clientCode) return;
-    if (topupForm.allocationType === 'BANK_TRANSFER' && !topupForm.utrNumber.trim()) {
+    const cleanUtr = (topupForm.utrNumber || '').trim();
+    if (topupForm.allocationType === 'BANK_TRANSFER' && !cleanUtr) {
       alert('⚠️ Please enter a valid 12-digit Bank / UPI UTR Transaction Reference Number.');
       return;
     }
@@ -1410,8 +1412,8 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
           credits: Number(topupForm.credits) || 500,
           price: Number(topupForm.price) || 0,
           allocationType: topupForm.allocationType,
-          utrNumber: topupForm.utrNumber.trim(),
-          notes: topupForm.notes,
+          utrNumber: cleanUtr,
+          notes: topupForm.notes || 'Wallet Top-Up',
         }),
       });
       const data = await res.json();
