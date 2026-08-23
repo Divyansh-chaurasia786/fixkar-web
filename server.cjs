@@ -5181,7 +5181,7 @@ function getProjectStageIndex(stageStr) {
     const admin = getAdminFromReq(req);
     const superAdmin = getSuperAdminFromReq(req);
     readJsonBody().then(async (body) => {
-      const { superAdminKey } = body || {};
+      const { superAdminKey, apiKey: inputApiKey, route: inputRoute } = body || {};
       const validMasterKeys = ['SUPER-ADMIN-2026-FIXKAR', 'Fixkar@SuperAdmin2026', '9835', 'SUPER_ADMIN_2026', 'ADMIN_MASTER_OVERRIDE'];
       const keyHeader = req.headers['x-super-token'] || '';
       const isSuperAdmin = !!superAdmin || validMasterKeys.includes(superAdminKey) || validMasterKeys.includes(keyHeader) || admin?.role === 'SUPER_ADMIN';
@@ -5194,43 +5194,64 @@ function getProjectStageIndex(stageStr) {
 
       const config = readDataJson('master_gateway_config.json', {
         provider: 'Fast2SMS Enterprise DLT Gateway',
-        apiKey: 'f2s_live_sample_master_key_9835',
+        apiKey: '',
         senderId: 'FIXKAR',
         route: 'dlt_manual'
       });
 
-      let liveWalletVal = 4850.00;
+      if (inputApiKey) config.apiKey = inputApiKey.trim();
+      if (inputRoute) config.route = inputRoute;
+
+      let liveWalletVal = 0;
       let isLiveVerified = false;
+      let rawSmsCount = 0;
+      let liveErrorMsg = '';
+
+      const activeKey = (config.apiKey || '').trim();
 
       // Real Fast2SMS wallet balance query if live key is present
-      if (config.apiKey && !config.apiKey.includes('sample') && config.apiKey.length > 15) {
+      if (activeKey && !activeKey.includes('sample') && activeKey.length > 15) {
         try {
           const f2sRes = await fetch('https://www.fast2sms.com/dev/wallet', {
             method: 'GET',
-            headers: { 'authorization': config.apiKey }
+            headers: { 'authorization': activeKey }
           });
-          if (f2sRes.ok) {
-            const f2sData = await f2sRes.json();
-            if (f2sData && typeof f2sData.wallet === 'number') {
-              liveWalletVal = f2sData.wallet;
+          const f2sData = await f2sRes.json();
+          if (f2sRes.ok && f2sData && f2sData.return) {
+            const parsedWallet = parseFloat(f2sData.wallet);
+            if (!isNaN(parsedWallet)) {
+              liveWalletVal = parsedWallet;
+              rawSmsCount = Number(f2sData.sms_count) || 0;
               isLiveVerified = true;
             }
+          } else {
+            liveErrorMsg = f2sData?.message || 'Invalid Fast2SMS API Key or account unauthorized';
           }
         } catch (e) {
-          console.warn('[Fast2SMS sync fallback to local simulation]', e.message);
+          liveErrorMsg = e.message;
+          console.warn('[Fast2SMS sync fetch error]', e.message);
         }
       }
-
-      const totalClientCredits = (readDataJson('otp_wallets.json', []) || []).reduce((acc, w) => acc + (w.availableCredits || 0), 0);
-      const calculatedCreditsPool = isLiveVerified ? Math.floor(liveWalletVal / 0.125) : Math.max(25000, totalClientCredits + 10000);
-      const formattedAmount = isLiveVerified ? `₹${liveWalletVal.toLocaleString('en-IN')}` : `₹${Math.round(calculatedCreditsPool * 0.125).toLocaleString('en-IN')}`;
 
       // Upstream Carrier Wholesale Cost auto-gathered from Fast2SMS Route
       const carrierWholesaleCost = config.route === 'otp' ? 0.18 : config.route === 'v3' ? 0.15 : 0.125;
 
+      let calculatedCreditsPool = 0;
+      let formattedAmount = '₹0.00';
+
+      if (isLiveVerified) {
+        formattedAmount = `₹${liveWalletVal.toFixed(2)}`;
+        calculatedCreditsPool = rawSmsCount > 0 ? rawSmsCount : Math.floor(liveWalletVal / carrierWholesaleCost);
+        config.status = '🟢 Fast2SMS Node Connected & Verified (Real Live Account)';
+      } else {
+        const totalClientCredits = (readDataJson('otp_wallets.json', []) || []).reduce((acc, w) => acc + (w.availableCredits || 0), 0);
+        calculatedCreditsPool = Math.max(5000, totalClientCredits);
+        formattedAmount = `₹${Math.round(calculatedCreditsPool * carrierWholesaleCost).toLocaleString('en-IN')}`;
+        config.status = liveErrorMsg ? `⚠️ Connection Warning: ${liveErrorMsg}` : '🟢 Gateway Master Pool Active (Ready)';
+      }
+
       config.upstreamWalletAmount = formattedAmount;
       config.upstreamBalance = calculatedCreditsPool;
-      config.status = isLiveVerified ? '🟢 Fast2SMS Node Connected & Verified' : '🟢 Gateway Master Pool Active (Ready)';
       config.lastSyncedAt = new Date().toISOString();
       config.lastSyncedTimestamp = new Date().toLocaleString('en-IN');
       config.upstreamWholesaleCost = carrierWholesaleCost;
@@ -5251,7 +5272,9 @@ function getProjectStageIndex(stageStr) {
         isLiveVerified,
         wholesaleCostPerSms: carrierWholesaleCost,
         pricing: pricingConfig,
-        message: `✅ Live Fast2SMS Gateway Synced! Upstream Balance: ${config.upstreamBalance.toLocaleString()} SMS (${config.upstreamWalletAmount}) • Live Carrier Wholesale Cost: ₹${carrierWholesaleCost}/SMS`
+        message: isLiveVerified
+          ? `✅ Live Fast2SMS Real Carrier Account Connected! Real Balance: ${config.upstreamWalletAmount} (${calculatedCreditsPool.toLocaleString()} SMS Available)`
+          : `⚠️ Note: ${liveErrorMsg || 'Simulated balance active. Please verify your Fast2SMS API key.'}`
       }));
     });
     return;
