@@ -6322,40 +6322,78 @@ function getProjectStageIndex(stageStr) {
       let messageId = `msg_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
       let delivered = false;
 
-      // Resend Dispatch
-      const resendApiKey = process.env.RESEND_API_KEY || '';
-      if (resendApiKey) {
+      // Dynamic Upstream Gateway Dispatch (Brevo / Resend / SES)
+      const masterEmailConfig = readDataJson('master_email_config.json', {});
+      const emailApiKey = (masterEmailConfig.apiKey || process.env.RESEND_API_KEY || '').trim();
+
+      if (emailApiKey) {
         try {
-          const resendPayload = JSON.stringify({
-            from: senderDisplay,
-            to: Array.isArray(to) ? to : [to],
-            subject: String(subject),
-            html: html || `<p>${text}</p>`
-          });
-          const rReq = https.request({
-            hostname: 'api.resend.com',
-            path: '/emails',
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${resendApiKey}`,
-              'Content-Type': 'application/json',
-              'Content-Length': Buffer.byteLength(resendPayload)
-            }
-          }, (rRes) => {
-            let rBuf = '';
-            rRes.on('data', c => rBuf += c);
-            rRes.on('end', () => {
-              try {
-                const parsed = JSON.parse(rBuf);
-                if (parsed.id) messageId = parsed.id;
-              } catch (e) {}
+          // 1. Brevo Dispatch
+          if (emailApiKey.startsWith('xkeysib-') || emailApiKey.length > 50) {
+            const brevoPayload = JSON.stringify({
+              sender: {
+                name: fromName || masterEmailConfig.senderName || 'Fixkar Services',
+                email: masterEmailConfig.senderAddress || 'supportfixkar@gmail.com'
+              },
+              to: [{ email: to, name: matchedKey.clientName || 'Valued User' }],
+              subject: String(subject),
+              htmlContent: html || `<p>${text}</p>`
             });
-          });
-          rReq.write(resendPayload);
-          rReq.end();
-          delivered = true;
+
+            const bReq = https.request('https://api.brevo.com/v3/smtp/email', {
+              method: 'POST',
+              headers: {
+                'api-key': emailApiKey,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Content-Length': Buffer.byteLength(brevoPayload)
+              }
+            }, (bRes) => {
+              let bBuf = '';
+              bRes.on('data', c => bBuf += c);
+              bRes.on('end', () => {
+                try {
+                  const parsed = JSON.parse(bBuf);
+                  if (parsed.messageId) messageId = parsed.messageId;
+                } catch (_) {}
+              });
+            });
+            bReq.write(brevoPayload);
+            bReq.end();
+            delivered = true;
+          } else {
+            // 2. Resend Dispatch
+            const resendPayload = JSON.stringify({
+              from: `${fromName || masterEmailConfig.senderName || 'Fixkar Client'} <${masterEmailConfig.senderAddress || 'support@fixkar.co.in'}>`,
+              to: Array.isArray(to) ? to : [to],
+              subject: String(subject),
+              html: html || `<p>${text}</p>`
+            });
+            const rReq = https.request({
+              hostname: 'api.resend.com',
+              path: '/emails',
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${emailApiKey}`,
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(resendPayload)
+              }
+            }, (rRes) => {
+              let rBuf = '';
+              rRes.on('data', c => rBuf += c);
+              rRes.on('end', () => {
+                try {
+                  const parsed = JSON.parse(rBuf);
+                  if (parsed.id) messageId = parsed.id;
+                } catch (e) {}
+              });
+            });
+            rReq.write(resendPayload);
+            rReq.end();
+            delivered = true;
+          }
         } catch (rErr) {
-          console.error('[Client Email Send Resend Error]', rErr.message);
+          console.error('[Client Email Send Upstream Error]', rErr.message);
         }
       }
 
