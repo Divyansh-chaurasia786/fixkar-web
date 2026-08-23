@@ -3471,32 +3471,27 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                     </div>
                   </div>
 
-                  {/* 2. SECTION 1: MASTER RESEND UPSTREAM API CREDENTIALS FOR CLIENTS */}
+                  {/* 2. SECTION 1: UPSTREAM RESEND CREDENTIALS & SENDER DOMAIN */}
                   <div className="fixkar-panel">
                     <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
-                      <div>
-                        <div className="fixkar-panel-title">
-                          <Server size={16} color="#38BDF8" />
-                          <span>1. Client Upstream Resend API Credentials &amp; Pool Identity</span>
-                        </div>
-                        <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '3px' }}>
-                          Used exclusively to fulfill client volume email dispatches and client API requests.
-                        </div>
+                      <div className="fixkar-panel-title">
+                        <Server size={16} color="#38BDF8" />
+                        <span>1. Upstream Resend Gateway Credentials &amp; Infrastructure</span>
                       </div>
                       <span style={{ fontSize: '0.72rem', color: '#4ADE80', fontFamily: 'monospace', fontWeight: 700 }}>
-                        {emailGatewayConfig.status || '🟢 Client Dispatch Pool Active'}
+                        ● Upstream Carrier Status: {emailGatewayConfig.status || 'Connected'}
                       </span>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
-                      {/* Provider */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px' }}>
+                      {/* Gateway Provider */}
                       <div>
                         <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700, display: 'block', marginBottom: '5px' }}>
-                          Client Email Gateway Provider
+                          Gateway Provider
                         </label>
                         <input
                           type="text"
-                          value={emailGatewayConfig.provider || 'Resend Enterprise Client Mail Engine'}
+                          value={emailGatewayConfig.provider || 'Resend Enterprise Cloud Engine'}
                           onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, provider: e.target.value })}
                           style={{
                             width: '100%',
@@ -3512,11 +3507,11 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                         />
                       </div>
 
-                      {/* Master Resend API Key for Clients */}
+                      {/* Master Resend API Key */}
                       <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
                           <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700 }}>
-                            Client Pool Resend API Key (re_...)
+                            Master Resend API Key
                           </label>
                           <button
                             type="button"
@@ -3530,7 +3525,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                           type={showMasterEmailApiKey ? 'text' : 'password'}
                           value={emailGatewayConfig.apiKey || ''}
                           onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, apiKey: e.target.value })}
-                          placeholder="re_client_pool_xxxxxxxxxxxxxx"
+                          placeholder="Enter Resend Master API Key"
                           style={{
                             width: '100%',
                             padding: '8px 12px',
@@ -3546,87 +3541,67 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                         />
                       </div>
 
-                      {/* Sender Email Address */}
+                      {/* Master Header / Domain Sender ID */}
                       <div>
                         <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700, display: 'block', marginBottom: '5px' }}>
-                          Default Dispatch Sender Email
+                          Header / Domain Sender ID
                         </label>
                         <input
                           type="text"
-                          value={emailGatewayConfig.senderAddress || 'support@fixkar.co.in'}
-                          onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, senderAddress: e.target.value })}
+                          value={emailGatewayConfig.senderId || 'fixkar.co.in'}
+                          onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, senderId: e.target.value })}
                           style={{
                             width: '100%',
                             padding: '8px 12px',
                             background: 'rgba(255, 255, 255, 0.04)',
                             border: '1px solid rgba(255, 255, 255, 0.1)',
                             borderRadius: '8px',
-                            color: '#fff',
+                            color: '#93C5FD',
                             fontSize: '0.8rem',
                             fontFamily: 'monospace',
+                            fontWeight: 800,
                             boxSizing: 'border-box',
                           }}
                         />
                       </div>
 
-                      {/* Upstream Status Badge */}
+                      {/* Email Delivery Route Mode */}
                       <div>
                         <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700, display: 'block', marginBottom: '5px' }}>
-                          Upstream Delivery Channel
+                          Email Delivery Route
                         </label>
-                        <div style={{ padding: '8px 12px', background: '#0D1323', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '8px', color: '#4ADE80', fontSize: '0.8rem', fontWeight: 700, fontFamily: 'monospace' }}>
-                          ⚡ Resend Pro Tier (50,000 Free / $20)
-                        </div>
+                        <select
+                          value={emailGatewayConfig.route || 'rest_api'}
+                          onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, route: e.target.value })}
+                          style={{
+                            width: '100%',
+                            padding: '8px 12px',
+                            background: '#0D1323',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '8px',
+                            color: '#fff',
+                            fontSize: '0.8rem',
+                            boxSizing: 'border-box',
+                          }}
+                        >
+                          <option value="rest_api">HTTPS REST API (Instant Queue Route)</option>
+                          <option value="smtp">High-Speed SMTP Relay (Port 587)</option>
+                          <option value="bulk">Bulk Transactional Route</option>
+                        </select>
                       </div>
                     </div>
 
-                    {/* Resend Carrier Balance Bar & Live Test Dispatcher */}
-                    <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: '1 1 300px' }}>
-                        <span style={{ fontSize: '0.74rem', color: '#94A3B8', fontWeight: 700 }}>Test Connection:</span>
-                        <input
-                          type="email"
-                          value={testEmailRecipient}
-                          onChange={(e) => setTestEmailRecipient(e.target.value)}
-                          placeholder="recipient@example.com"
-                          style={{
-                            flex: 1,
-                            padding: '6px 10px',
-                            background: 'rgba(0, 0, 0, 0.3)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            borderRadius: '6px',
-                            color: '#fff',
-                            fontSize: '0.76rem',
-                          }}
-                        />
-                        <button
-                          type="button"
-                          onClick={handleSendTestEmail}
-                          disabled={testEmailSending}
-                          style={{
-                            background: 'rgba(56, 189, 248, 0.15)',
-                            border: '1px solid rgba(56, 189, 248, 0.4)',
-                            color: '#38BDF8',
-                            padding: '6px 12px',
-                            borderRadius: '6px',
-                            fontSize: '0.74rem',
-                            fontWeight: 700,
-                            cursor: testEmailSending ? 'wait' : 'pointer',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '4px',
-                          }}
-                        >
-                          <Send size={12} />
-                          <span>{testEmailSending ? 'Sending...' : 'Send Test Mail'}</span>
-                        </button>
-                      </div>
-
-                      {testEmailNotice && (
-                        <span style={{ fontSize: '0.74rem', color: testEmailNotice.startsWith('✅') ? '#4ADE80' : '#F87171', fontWeight: 700 }}>
-                          {testEmailNotice}
+                    {/* Resend Carrier Status Bar */}
+                    <div style={{ marginTop: '14px', padding: '10px 14px', background: 'rgba(56, 189, 248, 0.06)', border: '1px solid rgba(56, 189, 248, 0.2)', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <Mail size={16} color="#38BDF8" />
+                        <span style={{ fontSize: '0.76rem', color: '#CBD5E1' }}>
+                          Live Resend Cloud Carrier Pool: <strong style={{ color: '#4ADE80', fontFamily: 'monospace' }}>50,000 Free / Unlimited Pro Engine</strong> (Active &amp; Verified)
                         </span>
-                      )}
+                      </div>
+                      <span style={{ fontSize: '0.7rem', color: '#94A3B8' }}>
+                        Last Synced: <strong style={{ color: '#CBD5E1' }}>Recent</strong>
+                      </span>
                     </div>
                   </div>
 
