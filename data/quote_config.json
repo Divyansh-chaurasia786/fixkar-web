@@ -295,29 +295,53 @@
       "desc": "High-volume throughput for institutions, coaching academies, and large user bases."
     }
   ],
-  "customEmailPacks": [
+  "transactionalEmailPacks": [
     {
       "id": "none",
-      "title": "No Custom Mailbox (Use Gmail/Personal)",
+      "title": "No Email Pack (Free Basic Alerts)",
       "price": 0,
-      "specs": "Free contact alerts forwarded to your existing email",
-      "desc": "You can use your regular Gmail/Yahoo address to receive customer leads."
+      "credits": 0,
+      "specs": "Standard contact form alerts sent to your personal email",
+      "desc": "Best for basic informational websites with low contact frequency."
     },
     {
-      "id": "single",
-      "title": "1 Professional Mailbox (info@yourbrand.com)",
-      "price": 999,
-      "specs": "1 Verified Custom Domain Mailbox • SPF / DKIM / DMARC Anti-Spam",
-      "desc": "Builds trust and looks far more professional than sending business proposals from Gmail."
+      "id": "email_starter",
+      "title": "Starter Email Pack (+5,000 Emails)",
+      "price": 499,
+      "credits": 5000,
+      "unitRate": "₹0.10 / email",
+      "specs": "5,000 High-Speed Transactional Emails • Verified Delivery",
+      "desc": "Perfect for password resets, order invoices, and welcome emails."
     },
     {
-      "id": "team",
-      "title": "5 Team Mailboxes (info@, sales@, support@, etc.)",
+      "id": "email_growth",
+      "title": "Growth Email Pack (+25,000 Emails)",
+      "price": 1499,
+      "credits": 25000,
+      "popular": true,
+      "unitRate": "₹0.06 / email",
+      "specs": "25,000 High-Speed Transactional Emails • High Deliverability Queue",
+      "desc": "Most popular for growing e-commerce stores, portals, and daily customer updates."
+    },
+    {
+      "id": "email_scale",
+      "title": "Scale Email Pack (+50,000 Emails)",
       "price": 2499,
-      "specs": "5 Verified Team Mailboxes • Webmail & Mobile Sync • Cloudflare MX",
-      "desc": "Complete corporate business mail suite for your management, sales, and support staff."
+      "credits": 50000,
+      "unitRate": "₹0.05 / email",
+      "specs": "50,000 High-Speed Transactional Emails • Dedicated IP Routing",
+      "desc": "High-volume throughput for SaaS apps, booking platforms, and newsletters."
+    },
+    {
+      "id": "email_enterprise",
+      "title": "Enterprise Email Pack (+100,000 Emails)",
+      "price": 4499,
+      "credits": 100000,
+      "unitRate": "₹0.045 / email",
+      "specs": "100,000 High-Speed Transactional Emails • Enterprise Deliverability SLA",
+      "desc": "Max volume for institutions, large communities, and high-frequency dispatch."
     }
   ],
-  "lastSyncedAt": "2026-08-23T20:00:00.000Z",
-  "lastUpdatedAt": "2026-08-23T20:00:00.000Z"
+  "lastSyncedAt": "2026-08-23T20:15:00.000Z",
+  "lastUpdatedAt": "2026-08-23T20:15:00.000Z"
 }
