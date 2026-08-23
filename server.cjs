@@ -1680,12 +1680,42 @@ function handleRequest(req, res) {
   // ─── PUBLIC WEBHOOK: INBOUND EMAIL RECEIVER (CLOUDFLARE / RESEND / API) ─────
   if (req.method === 'POST' && req.url.startsWith('/api/webhooks/inbound-email')) {
     readJsonBody().then((body) => {
-      const from = body?.from || body?.sender || body?.envelope?.from || 'Unknown Sender';
-      const to = body?.to || body?.recipient || body?.envelope?.to || 'support@fixkar.co.in';
-      const subject = body?.subject || 'No Subject';
-      const text = body?.text || body?.body || body?.content || '';
-      const html = body?.html || text || '';
+      let from = body?.from || body?.sender || body?.envelope?.from || 'Unknown Sender';
+      let to = body?.to || body?.recipient || body?.envelope?.to || 'support@fixkar.co.in';
+      let subject = body?.subject || 'No Subject';
+      let text = body?.text || body?.body || body?.content || '';
+      let html = body?.html || '';
       const messageId = body?.messageId || body?.id || `in_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+
+      // Automatically clean raw MIME / SMTP headers if passed by Cloudflare
+      if (typeof text === 'string' && (text.includes('Received:') || text.includes('ARC-Seal:') || text.includes('boundary='))) {
+        const rawMime = text;
+        const subjM = rawMime.match(/\r?\nSubject:\s*(.*?)(?:\r?\n[A-Za-z0-9\-]+:|\r?\n\r?\n)/s);
+        if (subjM && subjM[1] && subjM[1].trim()) subject = subjM[1].trim();
+
+        const fromM = rawMime.match(/\r?\nFrom:\s*(.*?)(?:\r?\n[A-Za-z0-9\-]+:|\r?\n\r?\n)/s);
+        if (fromM && fromM[1] && fromM[1].trim()) from = fromM[1].trim();
+
+        const plainM = rawMime.match(/Content-Type:\s*text\/plain[^\r\n]*\r?\n\r?\n(.*?)(?:\r?\n--|\r?\nContent-Type)/s);
+        if (plainM && plainM[1] && plainM[1].trim()) {
+          text = plainM[1].trim();
+        } else {
+          const parts = rawMime.split(/\r?\n\r?\n/);
+          if (parts.length > 1) {
+            text = parts.slice(1).join('\n\n')
+              .replace(/--[a-zA-Z0-9_-]+--?/g, '')
+              .replace(/^Content-[A-Za-z0-9-]+:[^\n]+\n/gm, '')
+              .trim();
+          }
+        }
+
+        const htmlM = rawMime.match(/Content-Type:\s*text\/html[^\r\n]*\r?\n\r?\n(.*?)(?:\r?\n--|\r?\nContent-Type)/s);
+        if (htmlM && htmlM[1] && htmlM[1].trim()) {
+          html = htmlM[1].trim();
+        }
+      }
+
+      if (!html) html = `<div style="font-family: sans-serif; font-size: 1rem; color: #fff; line-height: 1.6;">${(text || '').replace(/\n/g, '<br/>')}</div>`;
 
       const inboundEmails = readDataJson('inbound_emails.json', []);
       const newEntry = {
