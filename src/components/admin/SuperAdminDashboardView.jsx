@@ -639,6 +639,26 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
   };
 
   // ─── SMS / OTP PRICING ENGINE HANDLERS ─────────────────────────────────────
+  const wholesaleCost = Number(otpPricing?.wholesaleCostPerSms) || 0.125;
+
+  const handleAddNewPack = () => {
+    setOtpPricing((prev) => ({
+      ...prev,
+      packages: [
+        ...(prev.packages || []),
+        {
+          id: `otp_pack_${Date.now()}`,
+          name: 'Custom SMS Volume Pack',
+          credits: 10000,
+          ratePerSms: 0.20,
+          price: 2000,
+          popular: false,
+          desc: '10,000 High-Speed Transactional SMS • Instant Delivery',
+        },
+      ],
+    }));
+  };
+
   const handleApplyTargetMargin = (targetMarginPct) => {
     const cost = Number(otpPricing.wholesaleCostPerSms) || 0.125;
     const marginFrac = targetMarginPct / 100;
