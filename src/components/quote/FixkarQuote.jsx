@@ -22,28 +22,30 @@ import {
   Search,
   X,
   PhoneCall,
-  RotateCcw
+  RotateCcw,
+  Smartphone,
+  Mail,
 } from 'lucide-react';
 
 export function FixkarQuote({ onBookSprint, prefilledScope }) {
   const { t } = useLanguage();
 
   // Active Category Tab
-  const [activeTab, setActiveTab] = useState('scope'); // 'scope' | 'hosting' | 'features' | 'ai'
+  const [activeTab, setActiveTab] = useState('scope'); // 'scope' | 'hosting' | 'features' | 'messaging' | 'ai'
 
   // Selected State
   const [siteType, setSiteType] = useState(() => prefilledScope?.siteType || 'business');
   const [pageCount, setPageCount] = useState(() => prefilledScope?.pageCount || 5);
   const [hostingPlan, setHostingPlan] = useState(() => prefilledScope?.hostingPlan || 'standard_cloud');
   const [domainOption, setDomainOption] = useState(() => prefilledScope?.domainOption || 'dot_in');
+  const [messagingPack, setMessagingPack] = useState(() => prefilledScope?.messagingPack || 'growth');
+  const [customEmailPack, setCustomEmailPack] = useState(() => prefilledScope?.customEmailPack || 'none');
   const [aiOption, setAiOption] = useState(() => prefilledScope?.aiOption || 'none');
   const [seoNeeded, setSeoNeeded] = useState(() => prefilledScope?.seoNeeded !== undefined ? prefilledScope.seoNeeded : true);
   
   const [features, setFeatures] = useState(() => prefilledScope?.features || {
     whatsapp: true,
     contactForm: true,
-    smsEmailGateway: false,
-    businessEmail: false,
     bookingCalendar: false,
     priceCalculator: false,
     paymentGateway: false,
@@ -155,14 +157,33 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
     return [
       { id: 'whatsapp', title: '1-Click WhatsApp Button', price: 0, desc: 'Direct 1-tap mobile WhatsApp chat for instant customer inquiries.' },
       { id: 'contactForm', title: 'Smart Contact Form', price: 0, desc: 'Collects visitor details & sends instant email alerts.' },
-      { id: 'smsEmailGateway', title: 'Fixkar SMS OTP & Transactional Email Engine', price: 1499, desc: 'Fixkar Sovereign Cloud Messaging Matrix for user OTP logins, order alerts & high-deliverability email receipts (+1,000 Credits included).' },
-      { id: 'businessEmail', title: 'Professional Business Email (info@yourbrand.com)', price: 999, desc: 'Custom domain mailboxes with verified SPF, DKIM, and Cloudflare MX email routing.' },
       { id: 'bookingCalendar', title: 'Online Appointment Booking', price: 1799, desc: 'Clients choose date & time slots online automatically.' },
       { id: 'priceCalculator', title: 'Interactive Menu/Price Estimator', price: 2199, desc: 'Instant cost estimator for services, catering, or salons.' },
       { id: 'paymentGateway', title: 'UPI & Card Payment Gateway', price: 2499, desc: 'Accept advance payments via PhonePe, GPay, Paytm, Cards.' },
       { id: 'gallery', title: 'Photo & Video Gallery', price: 899, desc: 'High-res portfolio albums with category filters.' },
       { id: 'multiLanguage', title: 'Hindi + English Switcher', price: 1299, desc: 'Bilingual toggle so visitors can read in Hindi or English.' },
       { id: 'adminDashboard', title: 'Admin Login (Self-Edit Content)', price: 2999, desc: 'Password-protected panel to change text, photos & prices yourself.' },
+    ];
+  }, [dynamicConfig]);
+
+  // Messaging Packs (SMS OTP + Transactional Email Dispatches)
+  const messagingPacks = useMemo(() => {
+    if (dynamicConfig?.messagingPacks && dynamicConfig.messagingPacks.length > 0) return dynamicConfig.messagingPacks;
+    return [
+      { id: 'none', title: 'No SMS/Email Credits (Free Alerts Only)', price: 0, credits: 0, specs: 'Standard free contact form email alerts to your personal inbox', desc: 'Best for simple informational websites without client login or OTP verification.' },
+      { id: 'starter', title: 'Starter Messaging Pack (+1,000 Credits)', price: 249, credits: 1000, specs: '1,000 unified SMS OTP & Transactional Email Dispatches', desc: 'Ideal for new businesses requiring mobile OTP verification and order email receipts.' },
+      { id: 'growth', title: 'Growth Messaging Pack (+5,000 Credits)', price: 999, credits: 5000, popular: true, specs: '5,000 unified SMS OTP & Transactional Email Dispatches (High Delivery Priority)', desc: 'Most popular for e-commerce stores, client portals, and daily customer notifications.' },
+      { id: 'enterprise', title: 'Enterprise Messaging Pack (+25,000 Credits)', price: 3999, credits: 25000, specs: '25,000 unified SMS OTP & Transactional Email Dispatches (Dedicated DLT Route)', desc: 'High-volume throughput for institutions, coaching academies, and large user bases.' },
+    ];
+  }, [dynamicConfig]);
+
+  // Custom Domain Email Mailboxes
+  const customEmailPacks = useMemo(() => {
+    if (dynamicConfig?.customEmailPacks && dynamicConfig.customEmailPacks.length > 0) return dynamicConfig.customEmailPacks;
+    return [
+      { id: 'none', title: 'No Custom Mailbox (Use Gmail/Personal)', price: 0, specs: 'Free contact alerts forwarded to your existing email', desc: 'You can use your regular Gmail/Yahoo address to receive customer leads.' },
+      { id: 'single', title: '1 Professional Mailbox (info@yourbrand.com)', price: 999, specs: '1 Verified Custom Domain Mailbox • SPF / DKIM / DMARC Anti-Spam', desc: 'Builds trust and looks far more professional than sending business proposals from Gmail.' },
+      { id: 'team', title: '5 Team Mailboxes (info@, sales@, support@, etc.)', price: 2499, specs: '5 Verified Team Mailboxes • Webmail & Mobile Sync • Cloudflare MX', desc: 'Complete corporate business mail suite for your management, sales, and support staff.' },
     ];
   }, [dynamicConfig]);
 
@@ -219,6 +240,20 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
       items.push({ name: `✨ Custom: ${cf.title}`, price: p, isCustom: true });
     });
 
+    // SMS OTP & Transactional Email Pack
+    const activeMsg = messagingPacks.find((m) => m.id === messagingPack);
+    if (activeMsg && activeMsg.price > 0) {
+      total += activeMsg.price;
+      items.push({ name: activeMsg.title, price: activeMsg.price });
+    }
+
+    // Custom Domain Business Email Pack
+    const activeMail = customEmailPacks.find((e) => e.id === customEmailPack);
+    if (activeMail && activeMail.price > 0) {
+      total += activeMail.price;
+      items.push({ name: activeMail.title, price: activeMail.price });
+    }
+
     const activeAi = aiOptions.find((a) => a.id === aiOption);
     if (activeAi && activeAi.price > 0) {
       total += activeAi.price;
@@ -243,7 +278,7 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
     }
 
     return { totalInvestment: total, breakdownItems: items };
-  }, [siteType, pageCount, features, customFeatures, aiOption, hostingPlan, domainOption, seoNeeded, siteTypes, featureList, aiOptions, hostingPlans, domainOptions, extraPageRate]);
+  }, [siteType, pageCount, features, customFeatures, messagingPack, customEmailPack, aiOption, hostingPlan, domainOption, seoNeeded, siteTypes, featureList, messagingPacks, customEmailPacks, aiOptions, hostingPlans, domainOptions, extraPageRate]);
 
   const toggleFeature = (id) => {
     setFeatures((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -524,7 +559,7 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
+                gridTemplateColumns: 'repeat(5, 1fr)',
                 gap: '6px',
                 background: 'rgba(0, 0, 0, 0.35)',
                 padding: '5px',
@@ -536,7 +571,8 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
                 { id: 'scope', label: '1. Scope', icon: Globe },
                 { id: 'hosting', label: '2. Cloud & Domain', icon: Server },
                 { id: 'features', label: '3. Features', icon: Layers },
-                { id: 'ai', label: '4. AI & SEO', icon: Bot },
+                { id: 'messaging', label: '4. SMS & Email', icon: Smartphone },
+                { id: 'ai', label: '5. AI & SEO', icon: Bot },
               ].map((tab) => {
                 const isActive = activeTab === tab.id;
                 const TabIcon = tab.icon;
@@ -992,6 +1028,143 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
                   </button>
                   <button
                     type="button"
+                    onClick={() => setActiveTab('messaging')}
+                    style={{ background: 'linear-gradient(135deg, #38BDF8 0%, #2563EB 100%)', border: 'none', color: '#fff', padding: '8px 18px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                  >
+                    <span>Next: SMS &amp; Email</span>
+                    <ArrowRight size={14} />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ──────── TAB 4: SMS & EMAIL PACKS ──────── */}
+            {activeTab === 'messaging' && (
+              <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* 1. SMS OTP & Transactional Email Credits */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <div style={{ fontSize: '0.84rem', fontWeight: 800, color: '#fff', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <Smartphone size={15} color="#38BDF8" />
+                      <span>SMS OTP &amp; Transactional Email Dispatches:</span>
+                    </div>
+                    <span style={{ fontSize: '0.66rem', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.12)', border: '1px solid rgba(74, 222, 128, 0.3)', padding: '2px 8px', borderRadius: '6px', fontWeight: 700 }}>
+                      ⚡ Fixkar Telecom Cloud
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px' }}>
+                    {messagingPacks.map((mp) => {
+                      const isSelected = messagingPack === mp.id;
+                      return (
+                        <div
+                          key={mp.id}
+                          onClick={() => setMessagingPack(mp.id)}
+                          style={{
+                            background: isSelected ? 'rgba(37, 99, 235, 0.2)' : 'rgba(255, 255, 255, 0.02)',
+                            border: isSelected ? '2px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.08)',
+                            borderRadius: '12px',
+                            padding: '12px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            gap: '8px',
+                            position: 'relative',
+                            transition: 'all 0.15s ease',
+                          }}
+                        >
+                          {mp.popular && (
+                            <span style={{ position: 'absolute', top: '-8px', right: '10px', background: '#38BDF8', color: '#000', fontSize: '0.6rem', fontWeight: 900, padding: '1px 6px', borderRadius: '4px', letterSpacing: '0.04em' }}>
+                              MOST POPULAR
+                            </span>
+                          )}
+
+                          <div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <strong style={{ fontSize: '0.84rem', color: isSelected ? '#fff' : '#CBD5E1' }}>
+                                {mp.title}
+                              </strong>
+                              {isSelected && <Check size={14} color="#38BDF8" strokeWidth={3} />}
+                            </div>
+                            <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '3px', lineHeight: 1.3 }}>
+                              {mp.specs || mp.desc}
+                            </div>
+                          </div>
+
+                          <div style={{ fontSize: '0.88rem', fontWeight: 800, color: mp.price === 0 ? '#4ADE80' : '#FDE047', fontFamily: 'monospace' }}>
+                            {mp.price === 0 ? 'FREE / Included' : `+₹${mp.price.toLocaleString('en-IN')}`}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* 2. Professional Custom Domain Business Mailboxes */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <div style={{ fontSize: '0.84rem', fontWeight: 800, color: '#fff', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <Mail size={15} color="#38BDF8" />
+                      <span>Custom Domain Business Email Mailboxes:</span>
+                    </div>
+                    <span style={{ fontSize: '0.66rem', color: '#38BDF8', background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.3)', padding: '2px 8px', borderRadius: '6px', fontWeight: 700 }}>
+                      Verified SPF / DKIM
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px' }}>
+                    {customEmailPacks.map((ep) => {
+                      const isSelected = customEmailPack === ep.id;
+                      return (
+                        <div
+                          key={ep.id}
+                          onClick={() => setCustomEmailPack(ep.id)}
+                          style={{
+                            background: isSelected ? 'rgba(37, 99, 235, 0.2)' : 'rgba(255, 255, 255, 0.02)',
+                            border: isSelected ? '2px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.08)',
+                            borderRadius: '12px',
+                            padding: '12px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            gap: '8px',
+                            transition: 'all 0.15s ease',
+                          }}
+                        >
+                          <div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <strong style={{ fontSize: '0.84rem', color: isSelected ? '#fff' : '#CBD5E1' }}>
+                                {ep.title}
+                              </strong>
+                              {isSelected && <Check size={14} color="#38BDF8" strokeWidth={3} />}
+                            </div>
+                            <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '3px', lineHeight: 1.3 }}>
+                              {ep.specs || ep.desc}
+                            </div>
+                          </div>
+
+                          <div style={{ fontSize: '0.88rem', fontWeight: 800, color: ep.price === 0 ? '#4ADE80' : '#FDE047', fontFamily: 'monospace' }}>
+                            {ep.price === 0 ? 'FREE / Personal Gmail' : `+₹${ep.price.toLocaleString('en-IN')} / yr`}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Navigation Buttons */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('features')}
+                    style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#CBD5E1', padding: '8px 14px', borderRadius: '8px', fontSize: '0.78rem', cursor: 'pointer' }}
+                  >
+                    ← Back to Features
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => setActiveTab('ai')}
                     style={{ background: 'linear-gradient(135deg, #38BDF8 0%, #2563EB 100%)', border: 'none', color: '#fff', padding: '8px 18px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
                   >
@@ -1002,22 +1175,22 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
               </div>
             )}
 
-            {/* ──────── TAB 4: AI & SEO ──────── */}
+            {/* ──────── TAB 5: AI & SEO ──────── */}
             {activeTab === 'ai' && (
               <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <div>
                   <div style={{ fontSize: '0.84rem', fontWeight: 800, color: '#fff', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Bot size={15} color="#38BDF8" />
-                    <span>Choose AI Assistant Model:</span>
+                    <span>Choose AI Integration:</span>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
-                    {aiOptions.map((opt) => {
-                      const isSelected = aiOption === opt.id;
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px' }}>
+                    {aiOptions.map((a) => {
+                      const isSelected = aiOption === a.id;
                       return (
                         <div
-                          key={opt.id}
-                          onClick={() => setAiOption(opt.id)}
+                          key={a.id}
+                          onClick={() => setAiOption(a.id)}
                           style={{
                             background: isSelected ? 'rgba(37, 99, 235, 0.2)' : 'rgba(255, 255, 255, 0.02)',
                             border: isSelected ? '2px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.08)',
@@ -1033,17 +1206,17 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
                           <div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <strong style={{ fontSize: '0.82rem', color: isSelected ? '#fff' : '#CBD5E1' }}>
-                                {opt.title}
+                                {a.title}
                               </strong>
                               {isSelected && <Check size={14} color="#38BDF8" strokeWidth={3} />}
                             </div>
-                            <p style={{ fontSize: '0.7rem', color: '#94A3B8', margin: '3px 0 0', lineHeight: 1.3 }}>
-                              {opt.desc}
-                            </p>
+                            <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '2px', lineHeight: 1.3 }}>
+                              {a.desc}
+                            </div>
                           </div>
 
-                          <div style={{ fontSize: '0.84rem', fontWeight: 800, color: opt.price === 0 ? '#4ADE80' : '#FDE047', fontFamily: 'monospace' }}>
-                            {opt.price === 0 ? '₹0 (No AI)' : `+₹${opt.price.toLocaleString('en-IN')}`}
+                          <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#FDE047', fontFamily: 'monospace' }}>
+                            {a.price === 0 ? '₹0' : `+₹${a.price.toLocaleString('en-IN')}`}
                           </div>
                         </div>
                       );
@@ -1051,7 +1224,7 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
                   </div>
                 </div>
 
-                {/* Google SEO Switch */}
+                {/* Google SEO & Maps Checkbox */}
                 <div
                   onClick={() => setSeoNeeded(!seoNeeded)}
                   style={{
@@ -1063,6 +1236,8 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
+                    gap: '10px',
+                    transition: 'all 0.15s ease',
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -1098,10 +1273,10 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
                 <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '4px' }}>
                   <button
                     type="button"
-                    onClick={() => setActiveTab('features')}
+                    onClick={() => setActiveTab('messaging')}
                     style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#CBD5E1', padding: '8px 14px', borderRadius: '8px', fontSize: '0.78rem', cursor: 'pointer' }}
                   >
-                    ← Back to Features
+                    ← Back to SMS &amp; Email
                   </button>
                 </div>
               </div>
