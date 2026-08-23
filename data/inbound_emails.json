@@ -8,7 +8,21 @@
     "html": "<div dir=\"auto\" style=\"color: #fff; font-size: 1.05rem; padding: 6px 0;\">Hii</div>",
     "status": "READ",
     "receivedAt": "2026-08-23T07:48:00.597Z",
-    "timestamp": "23/8/2026, 1:18:00 pm"
+    "timestamp": "23/8/2026, 1:18:00 pm",
+    "replies": [
+      {
+        "id": "reply_1787488678914",
+        "recipient": "chaurasiadivyansh86@gmail.com",
+        "from": "support@fixkar.co.in",
+        "subject": "Re: Client Inquiry (Hii)",
+        "message": "hii",
+        "inReplyToId": "in_1787471280596_uwn5x",
+        "status": "DELIVERED",
+        "engine": "Resend (support@fixkar.co.in)",
+        "timestamp": "2026-08-23T12:37:58.914Z",
+        "formattedTime": "23/8/2026, 6:07:58 pm"
+      }
+    ]
   },
   {
     "id": "in_1787468524735_4m7ih",
