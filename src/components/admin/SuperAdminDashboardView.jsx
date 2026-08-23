@@ -2782,42 +2782,48 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
               <>
                 {/* 1. UPSTREAM SMS GATEWAY CREDENTIALS & INFRASTRUCTURE */}
                 <div className="fixkar-panel">
-                  <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
-                    <div className="fixkar-panel-title">
+                  <div className="fixkar-panel-head" style={{ marginBottom: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                    <div className="fixkar-panel-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', minWidth: '220px' }}>
                       <Server size={15} color="#38BDF8" />
-                      <span>1. Upstream SMS Gateway Credentials &amp; Infrastructure</span>
-                      <span style={{ fontSize: '0.66rem', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.12)', border: '1px solid rgba(74, 222, 128, 0.3)', padding: '2px 8px', borderRadius: '12px', fontWeight: 700, marginLeft: '6px' }}>
+                      <span style={{ fontWeight: 800 }}>1. Upstream SMS Gateway Infrastructure</span>
+                      <span style={{ fontSize: '0.66rem', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.12)', border: '1px solid rgba(74, 222, 128, 0.3)', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>
                         ● {gatewayConfig.status || 'Connected'}
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexShrink: 0 }}>
                       <button
                         type="button"
                         onClick={handleSyncGatewayBalance}
                         disabled={gatewaySyncing}
+                        title="Fetch Realtime Carrier Balance"
                         style={{
                           background: 'rgba(255, 255, 255, 0.05)',
-                          border: '1px solid rgba(255, 255, 255, 0.12)',
+                          border: '1px solid rgba(255, 255, 255, 0.14)',
                           color: '#CBD5E1',
-                          padding: '5px 12px',
+                          padding: '6px 12px',
                           borderRadius: '6px',
-                          fontSize: '0.72rem',
+                          fontSize: '0.74rem',
                           fontWeight: 700,
                           cursor: gatewaySyncing ? 'wait' : 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '5px',
+                          gap: '6px',
+                          whiteSpace: 'nowrap',
+                          height: '32px',
+                          boxSizing: 'border-box',
+                          transition: 'all 0.15s ease',
                         }}
                       >
-                        <RefreshCw size={12} className={gatewaySyncing ? 'animate-spin' : ''} />
-                        <span>{gatewaySyncing ? 'Detecting & Syncing...' : 'Sync Balance'}</span>
+                        <RefreshCw size={13} className={gatewaySyncing ? 'animate-spin' : ''} color={gatewaySyncing ? '#38BDF8' : '#CBD5E1'} />
+                        <span>Sync Balance</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={handleSaveOtpPricing}
                         disabled={pricingSaving || gatewaySaving}
+                        title="Save Gateway Credentials & Pricing"
                         style={{
                           background: 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)',
                           border: 'none',
@@ -2826,15 +2832,18 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                           borderRadius: '6px',
                           fontSize: '0.74rem',
                           fontWeight: 800,
-                          cursor: pricingSaving ? 'wait' : 'pointer',
+                          cursor: (pricingSaving || gatewaySaving) ? 'wait' : 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: '6px',
-                          boxShadow: '0 2px 10px rgba(22, 163, 74, 0.35)',
+                          whiteSpace: 'nowrap',
+                          height: '32px',
+                          boxSizing: 'border-box',
+                          boxShadow: '0 2px 8px rgba(22, 163, 74, 0.3)',
                         }}
                       >
-                        <Save size={13} />
-                        <span>{pricingSaving ? 'Saving...' : 'Save & Publish SMS Pricing'}</span>
+                        <Save size={13} className={(pricingSaving || gatewaySaving) ? 'animate-pulse' : ''} />
+                        <span>Save Gateway</span>
                       </button>
                     </div>
                   </div>
@@ -3375,42 +3384,48 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                   {/* 1. UPSTREAM EMAIL CREDENTIALS & INFRASTRUCTURE */}
                   <div className="fixkar-panel">
-                    <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
-                      <div className="fixkar-panel-title">
+                    <div className="fixkar-panel-head" style={{ marginBottom: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                      <div className="fixkar-panel-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', minWidth: '220px' }}>
                         <Server size={15} color="#38BDF8" />
-                        <span>1. Upstream Email Gateway Credentials &amp; Infrastructure</span>
-                        <span style={{ fontSize: '0.66rem', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.12)', border: '1px solid rgba(74, 222, 128, 0.3)', padding: '2px 8px', borderRadius: '12px', fontWeight: 700, marginLeft: '6px' }}>
+                        <span style={{ fontWeight: 800 }}>1. Upstream Email Gateway Infrastructure</span>
+                        <span style={{ fontSize: '0.66rem', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.12)', border: '1px solid rgba(74, 222, 128, 0.3)', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>
                           ● {emailGatewayConfig.status || 'Connected'}
                         </span>
                       </div>
 
-                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexShrink: 0 }}>
                         <button
                           type="button"
                           onClick={handleSyncEmailGatewayQuota}
                           disabled={emailGatewaySyncing}
+                          title="Fetch Realtime Brevo/Resend Account Quota"
                           style={{
                             background: 'rgba(255, 255, 255, 0.05)',
-                            border: '1px solid rgba(255, 255, 255, 0.12)',
+                            border: '1px solid rgba(255, 255, 255, 0.14)',
                             color: '#CBD5E1',
-                            padding: '5px 12px',
+                            padding: '6px 12px',
                             borderRadius: '6px',
-                            fontSize: '0.72rem',
+                            fontSize: '0.74rem',
                             fontWeight: 700,
                             cursor: emailGatewaySyncing ? 'wait' : 'pointer',
                             display: 'inline-flex',
                             alignItems: 'center',
-                            gap: '5px',
+                            gap: '6px',
+                            whiteSpace: 'nowrap',
+                            height: '32px',
+                            boxSizing: 'border-box',
+                            transition: 'all 0.15s ease',
                           }}
                         >
-                          <RefreshCw size={12} className={emailGatewaySyncing ? 'animate-spin' : ''} />
-                          <span>{emailGatewaySyncing ? 'Syncing...' : 'Sync Quota & Domain'}</span>
+                          <RefreshCw size={13} className={emailGatewaySyncing ? 'animate-spin' : ''} color={emailGatewaySyncing ? '#38BDF8' : '#CBD5E1'} />
+                          <span>Sync Quota</span>
                         </button>
 
                         <button
                           type="button"
                           onClick={handleSaveEmailGatewayConfig}
                           disabled={emailGatewaySaving}
+                          title="Save Email Credentials & Pricing"
                           style={{
                             background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
                             border: 'none',
@@ -3423,11 +3438,14 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: '6px',
-                            boxShadow: '0 2px 10px rgba(2, 132, 199, 0.35)',
+                            whiteSpace: 'nowrap',
+                            height: '32px',
+                            boxSizing: 'border-box',
+                            boxShadow: '0 2px 8px rgba(2, 132, 199, 0.3)',
                           }}
                         >
-                          <Save size={13} />
-                          <span>{emailGatewaySaving ? 'Saving...' : 'Save & Publish Email Gateway'}</span>
+                          <Save size={13} className={emailGatewaySaving ? 'animate-pulse' : ''} />
+                          <span>Save Gateway</span>
                         </button>
                       </div>
                     </div>
