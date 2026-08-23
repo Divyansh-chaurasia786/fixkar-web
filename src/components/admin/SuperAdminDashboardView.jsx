@@ -194,6 +194,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
     utrNumber: '',
     notes: 'Top-Up recharge',
   });
+  const [clientApiSearchQuery, setClientApiSearchQuery] = useState('');
 
   // SMS / OTP Pricing & Pack Rate Engine State
   const [otpPricing, setOtpPricing] = useState({
@@ -4210,262 +4211,321 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
         {/* ═════════════════════════════════════════════════════════════════
             TAB 2: CLIENT API STUDIO (ISOLATED TOKENS FOR CLIENT PORTALS)
             ═════════════════════════════════════════════════════════════════ */}
-        {activeTab === 'client-apis' && (
-          <div className="fixkar-panel" style={{ padding: '0', overflow: 'hidden' }}>
-            <div className="fixkar-panel-head" style={{ padding: '16px 20px', margin: 0 }}>
-              <div className="fixkar-panel-title">
-                <KeyRound size={16} color="#38BDF8" />
-                <span>Client-Specific Isolated API Keys ({clientApiKeys.length})</span>
+        {activeTab === 'client-apis' && (() => {
+          const filteredKeys = clientApiKeys.filter((k) => {
+            if (!clientApiSearchQuery) return true;
+            const q = clientApiSearchQuery.toLowerCase();
+            return (
+              (k.clientName || '').toLowerCase().includes(q) ||
+              (k.clientCode || '').toLowerCase().includes(q) ||
+              (k.dltSenderId || '').toLowerCase().includes(q) ||
+              (k.apiKey || '').toLowerCase().includes(q)
+            );
+          });
+
+          const activeCount = clientApiKeys.filter(k => k.status === 'Active').length;
+          const totalDispatches = clientApiKeys.reduce((acc, k) => acc + (k.totalRequests || 0), 0);
+          const totalCredits = clientApiKeys.reduce((acc, k) => acc + (k.availableCredits || 0), 0);
+
+          return (
+            <div className="fixkar-panel" style={{ padding: '0', overflow: 'hidden' }}>
+              {/* Panel Header */}
+              <div className="fixkar-panel-head" style={{ padding: '14px 20px', margin: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                <div className="fixkar-panel-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                  <KeyRound size={16} color="#38BDF8" />
+                  <span style={{ fontWeight: 800 }}>Client Sovereign API Studio</span>
+                  <span style={{ fontSize: '0.68rem', color: '#38BDF8', background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.25)', padding: '2px 8px', borderRadius: '10px', fontWeight: 800 }}>
+                    {activeCount} Active &bull; {clientApiKeys.length} Provisioned
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsGenerateApiKeyModalOpen(true)}
+                  style={{
+                    background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
+                    border: 'none',
+                    color: '#fff',
+                    padding: '7px 16px',
+                    borderRadius: '8px',
+                    fontSize: '0.78rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    boxShadow: '0 4px 14px rgba(2, 132, 199, 0.35)',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  <Plus size={14} />
+                  <span>Generate Client API Key</span>
+                </button>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setIsGenerateApiKeyModalOpen(true)}
-                style={{
-                  background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
-                  border: 'none',
-                  color: '#fff',
-                  padding: '7px 16px',
-                  borderRadius: '8px',
-                  fontSize: '0.78rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  boxShadow: '0 4px 15px rgba(37, 99, 235, 0.4)',
-                }}
-              >
-                <Plus size={14} />
-                <span>+ Generate Client API Key</span>
-              </button>
-            </div>
+              {/* Search & Quick Stats Toolbar */}
+              <div style={{ padding: '10px 18px', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', background: 'rgba(0, 0, 0, 0.2)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+                <div style={{ position: 'relative', width: '100%', maxWidth: '380px' }}>
+                  <Search size={13} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                  <input
+                    type="text"
+                    value={clientApiSearchQuery}
+                    onChange={(e) => setClientApiSearchQuery(e.target.value)}
+                    placeholder="Filter by client name, code, or DLT header..."
+                    style={{
+                      width: '100%',
+                      padding: '6px 10px 6px 30px',
+                      background: '#0B1120',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '6px',
+                      color: '#fff',
+                      fontSize: '0.76rem',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                </div>
 
-            {clientApiKeys.length === 0 ? (
-              <div style={{ padding: '40px 20px', textAlign: 'center', color: '#94A3B8' }}>
-                <KeyRound size={32} color="#64748B" style={{ margin: '0 auto 10px' }} />
-                <div style={{ fontWeight: 700, color: '#fff', fontSize: '0.94rem' }}>No Client API Keys Provisioned Yet</div>
-                <div style={{ fontSize: '0.76rem', marginTop: '4px' }}>Click "+ Generate Client API Key" to issue a secure token.</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                  <div style={{ fontSize: '0.72rem', color: '#CBD5E1', background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', padding: '4px 10px', borderRadius: '6px' }}>
+                    Dispatches: <strong style={{ color: '#FDE047', fontFamily: 'monospace' }}>{totalDispatches}</strong> OTPs
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: '#CBD5E1', background: 'rgba(74, 222, 128, 0.08)', border: '1px solid rgba(74, 222, 128, 0.2)', padding: '4px 10px', borderRadius: '6px' }}>
+                    Total Credits: <strong style={{ color: '#4ADE80', fontFamily: 'monospace' }}>{totalCredits.toLocaleString()}</strong> SMS
+                  </div>
+                </div>
               </div>
-            ) : (
-              <div style={{ overflowX: 'auto', overflowY: 'auto', maxHeight: '380px', width: '100%', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <table className="fixkar-table" style={{ minWidth: '820px', width: '100%' }}>
-                  <thead style={{ position: 'sticky', top: 0, zIndex: 5, background: 'rgba(10, 15, 29, 0.98)', backdropFilter: 'blur(10px)' }}>
-                    <tr>
-                      <th style={{ width: '22%' }}>CLIENT</th>
-                      <th style={{ width: '32%' }}>ISOLATED API KEY</th>
-                      <th style={{ width: '12%' }}>DLT HEADER</th>
-                      <th style={{ width: '12%' }}>WALLET CREDITS</th>
-                      <th style={{ width: '10%' }}>DISPATCHES</th>
-                      <th style={{ width: '12%' }}>STATUS</th>
-                      <th style={{ textAlign: 'right', width: '20%' }}>ACTIONS</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {clientApiKeys.map((k) => {
-                      const isVisible = visibleKeyIds[k.id];
-                      const isCopied = copiedKeyId === k.id;
-                      return (
-                        <tr key={k.id}>
-                          <td>
-                            <div style={{ fontWeight: 700, color: '#fff', fontSize: '0.84rem' }}>{k.clientName}</div>
-                            <div style={{ fontSize: '0.68rem', color: '#38BDF8', fontFamily: 'monospace', background: 'rgba(56, 189, 248, 0.1)', padding: '1px 6px', borderRadius: '4px', display: 'inline-block', marginTop: '3px' }}>
-                              {k.clientCode}
-                            </div>
-                          </td>
 
-                          <td>
-                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                              <span
-                                style={{
-                                  fontFamily: 'monospace',
-                                  fontSize: '0.74rem',
-                                  color: '#FDE047',
-                                  background: 'rgba(0, 0, 0, 0.6)',
-                                  padding: '4px 8px',
-                                  borderRadius: '6px',
-                                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                                  maxWidth: '200px',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                  display: 'inline-block',
-                                }}
-                                title={k.apiKey}
-                              >
-                                {isVisible ? k.apiKey : `${k.apiKey.slice(0, 16)}••••••••`}
+              {filteredKeys.length === 0 ? (
+                <div style={{ padding: '40px 20px', textAlign: 'center', color: '#94A3B8' }}>
+                  <KeyRound size={32} color="#64748B" style={{ margin: '0 auto 10px' }} />
+                  <div style={{ fontWeight: 700, color: '#fff', fontSize: '0.94rem' }}>No Client API Keys Found</div>
+                  <div style={{ fontSize: '0.76rem', marginTop: '4px' }}>
+                    {clientApiSearchQuery ? 'No matching keys found for this search filter.' : 'Click "Generate Client API Key" to issue a secure token.'}
+                  </div>
+                </div>
+              ) : (
+                <div style={{ width: '100%', overflowX: 'auto' }}>
+                  <table className="fixkar-table" style={{ width: '100%', tableLayout: 'fixed', margin: 0, minWidth: '920px' }}>
+                    <thead>
+                      <tr>
+                        <th style={{ width: '22%', padding: '10px 14px' }}>CLIENT / BUSINESS</th>
+                        <th style={{ width: '28%', padding: '10px 14px' }}>ISOLATED SUB-KEY</th>
+                        <th style={{ width: '11%', padding: '10px 14px' }}>DLT HEADER</th>
+                        <th style={{ width: '13%', padding: '10px 14px' }}>CREDITS</th>
+                        <th style={{ width: '9%', padding: '10px 14px' }}>DISPATCHES</th>
+                        <th style={{ width: '8%', padding: '10px 14px' }}>STATUS</th>
+                        <th style={{ width: '9%', padding: '10px 14px', textAlign: 'right' }}>ACTIONS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredKeys.map((k) => {
+                        const isVisible = visibleKeyIds[k.id];
+                        const isCopied = copiedKeyId === k.id;
+                        return (
+                          <tr key={k.id}>
+                            <td style={{ padding: '10px 14px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.82rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                {k.clientName}
+                              </div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                                <span style={{ fontSize: '0.66rem', color: '#38BDF8', fontFamily: 'monospace', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.25)', padding: '1px 6px', borderRadius: '4px' }}>
+                                  {k.clientCode}
+                                </span>
+                                <span style={{ fontSize: '0.64rem', color: '#64748B' }}>
+                                  {k.createdTimestamp ? k.createdTimestamp.split(',')[0] : 'Active'}
+                                </span>
+                              </div>
+                            </td>
+
+                            <td style={{ padding: '10px 14px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                <div
+                                  style={{
+                                    fontFamily: 'monospace',
+                                    fontSize: '0.72rem',
+                                    color: '#FDE047',
+                                    background: 'rgba(0, 0, 0, 0.5)',
+                                    padding: '4px 8px',
+                                    borderRadius: '6px',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    flex: 1,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                  }}
+                                  title={k.apiKey}
+                                >
+                                  {isVisible ? k.apiKey : `${k.apiKey.slice(0, 14)}••••••••`}
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => setVisibleKeyIds({ ...visibleKeyIds, [k.id]: !isVisible })}
+                                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#CBD5E1', padding: '4px 6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.72rem', flexShrink: 0 }}
+                                  title={isVisible ? 'Hide key' : 'Reveal key'}
+                                >
+                                  {isVisible ? '👁️' : '👁️‍🗨️'}
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    navigator.clipboard.writeText(k.apiKey);
+                                    setCopiedKeyId(k.id);
+                                    setTimeout(() => setCopiedKeyId(null), 2500);
+                                  }}
+                                  style={{
+                                    background: isCopied ? '#16A34A' : 'rgba(56, 189, 248, 0.12)',
+                                    border: `1px solid ${isCopied ? '#16A34A' : 'rgba(56, 189, 248, 0.3)'}`,
+                                    color: isCopied ? '#fff' : '#38BDF8',
+                                    padding: '4px 8px',
+                                    borderRadius: '4px',
+                                    fontSize: '0.68rem',
+                                    fontWeight: 700,
+                                    cursor: 'pointer',
+                                    flexShrink: 0,
+                                    transition: 'all 0.15s ease',
+                                  }}
+                                >
+                                  {isCopied ? '✓' : 'Copy'}
+                                </button>
+                              </div>
+                            </td>
+
+                            <td style={{ padding: '10px 14px' }}>
+                              <span style={{ fontSize: '0.72rem', fontFamily: 'monospace', fontWeight: 800, background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.25)', color: '#93C5FD', padding: '3px 8px', borderRadius: '5px' }}>
+                                {k.dltSenderId || 'FIXKAR'}
                               </span>
-                              <button
-                                type="button"
-                                onClick={() => setVisibleKeyIds({ ...visibleKeyIds, [k.id]: !isVisible })}
-                                style={{ background: 'rgba(255,255,255,0.06)', border: 'none', color: '#CBD5E1', padding: '4px 6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.72rem' }}
-                                title={isVisible ? 'Hide key' : 'Reveal key'}
-                              >
-                                {isVisible ? '👁️' : '👁️‍🗨️'}
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  navigator.clipboard.writeText(k.apiKey);
-                                  setCopiedKeyId(k.id);
-                                  setTimeout(() => setCopiedKeyId(null), 3000);
-                                }}
-                                style={{
-                                  background: isCopied ? '#16A34A' : 'rgba(56, 189, 248, 0.15)',
-                                  border: `1px solid ${isCopied ? '#16A34A' : 'rgba(56, 189, 248, 0.35)'}`,
-                                  color: isCopied ? '#fff' : '#38BDF8',
-                                  padding: '3px 8px',
-                                  borderRadius: '5px',
-                                  fontSize: '0.68rem',
-                                  fontWeight: 700,
-                                  cursor: 'pointer',
-                                }}
-                              >
-                                {isCopied ? '✓' : 'Copy'}
-                              </button>
-                            </div>
-                          </td>
+                            </td>
 
-                          <td>
-                            <span style={{ fontSize: '0.72rem', fontFamily: 'monospace', fontWeight: 800, background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#93C5FD', padding: '3px 8px', borderRadius: '5px' }}>
-                              {k.dltSenderId || 'FIXKAR'}
-                            </span>
-                          </td>
+                            <td style={{ padding: '10px 14px' }}>
+                              <div style={{ fontWeight: 800, fontSize: '0.82rem', color: (k.availableCredits || 0) < 500 ? '#F43F5E' : '#4ADE80', fontFamily: 'monospace' }}>
+                                {(k.availableCredits || 0).toLocaleString()} <span style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 600 }}>SMS</span>
+                              </div>
+                            </td>
 
-                          <td>
-                            <strong style={{ fontSize: '0.84rem', color: (k.availableCredits || 0) < 500 ? '#F43F5E' : '#4ADE80', fontFamily: 'monospace' }}>
-                              {(k.availableCredits || 0).toLocaleString()} Credits
-                            </strong>
-                          </td>
+                            <td style={{ padding: '10px 14px' }}>
+                              <span style={{ fontSize: '0.74rem', color: '#E2E8F0', fontFamily: 'monospace', fontWeight: 700 }}>
+                                {k.totalRequests || 0} <span style={{ fontSize: '0.66rem', color: '#94A3B8' }}>OTPs</span>
+                              </span>
+                            </td>
 
-                          <td>
-                            <span style={{ fontSize: '0.76rem', color: '#CBD5E1', fontFamily: 'monospace' }}>
-                              {k.totalRequests || 0} OTPs
-                            </span>
-                          </td>
+                            <td style={{ padding: '10px 14px' }}>
+                              <span style={{
+                                fontSize: '0.66rem',
+                                fontWeight: 800,
+                                padding: '2px 8px',
+                                borderRadius: '12px',
+                                background: k.status === 'Active' ? 'rgba(74, 222, 128, 0.12)' : 'rgba(251, 191, 36, 0.12)',
+                                border: `1px solid ${k.status === 'Active' ? 'rgba(74, 222, 128, 0.3)' : 'rgba(251, 191, 36, 0.3)'}`,
+                                color: k.status === 'Active' ? '#4ADE80' : '#FBBF24',
+                                display: 'inline-block',
+                                whiteSpace: 'nowrap'
+                              }}>
+                                ● {k.status}
+                              </span>
+                            </td>
 
-                          <td>
-                            <span className={`fixkar-status-chip ${k.status === 'Active' ? 'success' : 'danger'}`}>
-                              ● {k.status}
-                            </span>
-                          </td>
+                            <td style={{ padding: '10px 14px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                              <div style={{ display: 'inline-flex', gap: '4px', alignItems: 'center' }}>
+                                <button
+                                  type="button"
+                                  onClick={() => setSelectedApiKeyForSnippet(k)}
+                                  title="Integration Code Snippet"
+                                  style={{
+                                    background: 'rgba(56, 189, 248, 0.12)',
+                                    border: '1px solid rgba(56, 189, 248, 0.3)',
+                                    color: '#38BDF8',
+                                    padding: '4px 7px',
+                                    borderRadius: '5px',
+                                    fontSize: '0.7rem',
+                                    fontWeight: 700,
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '3px',
+                                  }}
+                                >
+                                  <Terminal size={11} />
+                                  <span>Code</span>
+                                </button>
 
-                          <td style={{ textAlign: 'right' }}>
-                            <div style={{ display: 'inline-flex', gap: '5px', alignItems: 'center' }}>
-                              <button
-                                type="button"
-                                onClick={() => setSelectedApiKeyForSnippet(k)}
-                                style={{
-                                  background: 'rgba(56, 189, 248, 0.15)',
-                                  border: '1px solid rgba(56, 189, 248, 0.35)',
-                                  color: '#38BDF8',
-                                  padding: '4px 8px',
-                                  borderRadius: '6px',
-                                  fontSize: '0.7rem',
-                                  fontWeight: 700,
-                                  cursor: 'pointer',
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: '3px',
-                                }}
-                              >
-                                <Terminal size={11} />
-                                <span>Code</span>
-                              </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setTopupModalKey(k);
+                                    setTopupForm({
+                                      packId: 'otp_1000',
+                                      credits: 1000,
+                                      price: 250,
+                                      allocationType: 'BANK_TRANSFER',
+                                      utrNumber: '',
+                                      notes: `Top-up for ${k.clientName}`,
+                                    });
+                                  }}
+                                  title={`Top-Up SMS credits on same API key for ${k.clientName}`}
+                                  style={{
+                                    background: 'rgba(74, 222, 128, 0.12)',
+                                    border: '1px solid rgba(74, 222, 128, 0.3)',
+                                    color: '#4ADE80',
+                                    padding: '4px 7px',
+                                    borderRadius: '5px',
+                                    fontSize: '0.7rem',
+                                    fontWeight: 700,
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '2px',
+                                  }}
+                                >
+                                  <Plus size={11} />
+                                  <span>Top-Up</span>
+                                </button>
 
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setTopupModalKey(k);
-                                  setTopupForm({
-                                    packId: 'otp_1000',
-                                    credits: 1000,
-                                    price: 250,
-                                    allocationType: 'BANK_TRANSFER',
-                                    utrNumber: '',
-                                    notes: `Top-up for ${k.clientName}`,
-                                  });
-                                }}
-                                style={{
-                                  background: 'rgba(74, 222, 128, 0.15)',
-                                  border: '1px solid rgba(74, 222, 128, 0.35)',
-                                  color: '#4ADE80',
-                                  padding: '4px 8px',
-                                  borderRadius: '6px',
-                                  fontSize: '0.7rem',
-                                  fontWeight: 700,
-                                  cursor: 'pointer',
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: '3px',
-                                }}
-                                title={`Top-up SMS credits on same API key for ${k.clientName}`}
-                              >
-                                <Plus size={11} />
-                                <span>Top-Up</span>
-                              </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleToggleClientApiKey(k.id, k.status)}
+                                  title={k.status === 'Active' ? 'Pause API Key' : 'Resume API Key'}
+                                  style={{
+                                    background: k.status === 'Active' ? 'rgba(251, 191, 36, 0.12)' : 'rgba(74, 222, 128, 0.12)',
+                                    border: `1px solid ${k.status === 'Active' ? 'rgba(251, 191, 36, 0.3)' : 'rgba(74, 222, 128, 0.3)'}`,
+                                    color: k.status === 'Active' ? '#FBBF24' : '#4ADE80',
+                                    padding: '4px 6px',
+                                    borderRadius: '5px',
+                                    fontSize: '0.68rem',
+                                    fontWeight: 700,
+                                    cursor: 'pointer',
+                                  }}
+                                >
+                                  {k.status === 'Active' ? 'Pause' : 'Resume'}
+                                </button>
 
-                              <button
-                                type="button"
-                                onClick={() => handleToggleClientApiKey(k.id, k.status)}
-                                style={{
-                                  background: k.status === 'Active' ? 'rgba(251, 191, 36, 0.15)' : 'rgba(74, 222, 128, 0.15)',
-                                  border: `1px solid ${k.status === 'Active' ? 'rgba(251, 191, 36, 0.35)' : 'rgba(74, 222, 128, 0.35)'}`,
-                                  color: k.status === 'Active' ? '#FBBF24' : '#4ADE80',
-                                  padding: '4px 8px',
-                                  borderRadius: '6px',
-                                  fontSize: '0.7rem',
-                                  fontWeight: 700,
-                                  cursor: 'pointer',
-                                }}
-                              >
-                                {k.status === 'Active' ? 'Pause' : 'Resume'}
-                              </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteClientApiKey(k.id, k.clientName)}
+                                  title="Revoke & Delete Key"
+                                  style={{
+                                    background: 'rgba(244, 63, 94, 0.12)',
+                                    border: '1px solid rgba(244, 63, 94, 0.3)',
+                                    color: '#FDA4AF',
+                                    padding: '4px 6px',
+                                    borderRadius: '5px',
+                                    fontSize: '0.68rem',
+                                    cursor: 'pointer',
+                                  }}
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
 
-                              <button
-                                type="button"
-                                onClick={() => handleRotateClientApiKey(k.id, k.clientName)}
-                                style={{
-                                  background: 'rgba(255, 255, 255, 0.05)',
-                                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                                  color: '#CBD5E1',
-                                  padding: '4px 8px',
-                                  borderRadius: '6px',
-                                  fontSize: '0.7rem',
-                                  cursor: 'pointer',
-                                }}
-                                title="Rotate Key"
-                              >
-                                Rotate
-                              </button>
-
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteClientApiKey(k.id, k.clientName)}
-                                style={{
-                                  background: 'rgba(244, 63, 94, 0.12)',
-                                  border: '1px solid rgba(244, 63, 94, 0.35)',
-                                  color: '#FDA4AF',
-                                  padding: '4px 8px',
-                                  borderRadius: '6px',
-                                  fontSize: '0.7rem',
-                                  cursor: 'pointer',
-                                }}
-                                title="Revoke Key"
-                              >
-                                ✕
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            {/* Code Snippet Drawer */}
+              {/* Code Snippet Drawer */}
             {selectedApiKeyForSnippet && (
               <div
                 style={{
@@ -4636,7 +4696,8 @@ echo $response;
               </div>
             )}
           </div>
-        )}
+        );
+      })()}
 
         {/* ═════════════════════════════════════════════════════════════════
             TAB 3: 48-HOUR PROVISIONAL BANK RECONCILIATION RADAR
