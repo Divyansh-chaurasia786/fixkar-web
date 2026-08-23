@@ -660,7 +660,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
   };
 
   const handleApplyTargetMargin = (targetMarginPct) => {
-    const cost = Number(otpPricing.wholesaleCostPerSms) || 0.125;
+    const cost = Number(otpPricing.wholesaleCostPerSms) || 0.25;
     const marginFrac = targetMarginPct / 100;
     if (marginFrac >= 1) return;
     const calculatedBaseRate = Number((cost / (1 - marginFrac)).toFixed(3));
@@ -668,26 +668,31 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
   };
 
   const handleRecalculatePacksFromBaseRate = (newBaseRate, autoSave = false) => {
-    const base = parseFloat(newBaseRate) || 0.25;
+    const cost = Number(otpPricing.wholesaleCostPerSms) || 0.25;
+    const base = parseFloat(newBaseRate) || Number((cost * 1.4).toFixed(3));
+
     const defaultPacks = [
       { id: 'otp_500', name: 'Starter Micro Pack', credits: 500, tierMultiplier: 1.0, popular: false, desc: 'Quick top-up for small portals & testing' },
       { id: 'otp_1000', name: 'Starter Pro Pack', credits: 1000, tierMultiplier: 1.0, popular: false, desc: 'Ideal for coaching institute student logins and attendance alerts.' },
-      { id: 'otp_2500', name: 'Growth Lite Pack', credits: 2500, tierMultiplier: 0.92, popular: false, desc: 'Great for growing academy & clinic booking portals.' },
+      { id: 'otp_2500', name: 'Growth Lite Pack', credits: 2500, tierMultiplier: 0.94, popular: false, desc: 'Great for growing academy & clinic booking portals.' },
       { id: 'otp_5000', name: 'Growth Business Pack', credits: 5000, tierMultiplier: 0.88, popular: true, desc: 'Best value for high-volume exam portals and member booking notifications.' },
-      { id: 'otp_10000', name: 'Enterprise Scale Pack', credits: 10000, tierMultiplier: 0.80, popular: false, desc: 'Maximum savings with dedicated high-throughput DLT SMS routing.' },
-      { id: 'otp_25000', name: 'Mega Enterprise Pack', credits: 25000, tierMultiplier: 0.72, popular: false, desc: 'Ultra-low bulk volume rate for large institutions.' },
+      { id: 'otp_10000', name: 'Enterprise Scale Pack', credits: 10000, tierMultiplier: 0.82, popular: false, desc: 'Maximum savings with dedicated high-throughput DLT SMS routing.' },
+      { id: 'otp_25000', name: 'Mega Enterprise Pack', credits: 25000, tierMultiplier: 0.76, popular: false, desc: 'Ultra-low bulk volume rate for large institutions.' },
     ];
 
     const currentPacks = (otpPricing.packages && otpPricing.packages.length === 6) ? otpPricing.packages : defaultPacks;
 
     const updatedPackages = currentPacks.map((pkg) => {
       let tierMultiplier = 1.0;
-      if (pkg.credits >= 25000) tierMultiplier = 0.72;
-      else if (pkg.credits >= 10000) tierMultiplier = 0.80;
+      if (pkg.credits >= 25000) tierMultiplier = 0.76;
+      else if (pkg.credits >= 10000) tierMultiplier = 0.82;
       else if (pkg.credits >= 5000) tierMultiplier = 0.88;
-      else if (pkg.credits >= 2500) tierMultiplier = 0.92;
+      else if (pkg.credits >= 2500) tierMultiplier = 0.94;
 
-      const ratePerSms = Number((base * tierMultiplier).toFixed(3));
+      let rawRate = base * tierMultiplier;
+      if (rawRate < cost) rawRate = cost + 0.02;
+
+      const ratePerSms = Number(rawRate.toFixed(3));
       const price = Math.round(pkg.credits * ratePerSms);
 
       return {
@@ -699,6 +704,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
 
     const newPricingObj = {
       ...otpPricing,
+      wholesaleCostPerSms: cost,
       baseRetailRatePerSms: base,
       packages: updatedPackages,
     };
@@ -962,9 +968,12 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
           status: data.status,
           lastSyncedTimestamp: data.lastSyncedTimestamp,
         }));
-        if (data.pricing?.wholesaleCostPerSms) {
-          setWholesaleCostPerSms(data.pricing.wholesaleCostPerSms);
-        }
+        const newCost = Number(data.wholesaleCostPerSms || data.pricing?.wholesaleCostPerSms || data.wholesaleCost || 0.25);
+        setOtpPricing((prev) => ({
+          ...prev,
+          wholesaleCostPerSms: newCost,
+          ...(data.pricing ? data.pricing : {})
+        }));
         setPricingNotice(data.message || '✅ SMS Gateway Synced & Verified!');
         setTimeout(() => setPricingNotice(null), 8000);
       } else {
