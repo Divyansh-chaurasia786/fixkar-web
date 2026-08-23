@@ -298,55 +298,55 @@
   "transactionalEmailPacks": [
     {
       "id": "email_5k",
-      "title": "Starter 5K Pack",
+      "title": "Starter Cloud Pack",
       "price": 319,
       "credits": 5000,
       "popular": false,
       "unitRate": "₹0.064 / email",
-      "specs": "5,000 High-Speed Transactional Emails • Brevo Matrix",
-      "desc": "5,000 High-Speed Transactional Emails • Verified Delivery (50% Margin)"
+      "specs": "5,000 High-Speed Transactional Emails",
+      "desc": "5,000 High-Speed Transactional Emails • Verified Inbox Delivery"
     },
     {
       "id": "email_10k",
-      "title": "Growth 10K Pack",
+      "title": "Growth Cloud Pack",
       "price": 625,
       "credits": 10000,
       "popular": true,
       "unitRate": "₹0.063 / email",
-      "specs": "10,000 High-Speed Transactional Emails • Brevo Matrix",
-      "desc": "10,000 High-Speed Transactional Emails • High Deliverability Queue (50% Margin)"
+      "specs": "10,000 High-Speed Transactional Emails",
+      "desc": "10,000 Transactional Emails • Priority Deliverability Queue"
     },
     {
       "id": "email_25k",
-      "title": "Business 25K Pack",
+      "title": "Business Scale Pack",
       "price": 1599,
       "credits": 25000,
       "popular": false,
       "unitRate": "₹0.064 / email",
-      "specs": "25,000 High-Speed Transactional Emails • Brevo Matrix",
-      "desc": "25,000 High-Speed Transactional Emails • Dedicated Deliverability (50% Margin)"
+      "specs": "25,000 High-Speed Transactional Emails",
+      "desc": "25,000 Transactional Emails • Dedicated IP Delivery"
     },
     {
       "id": "email_50k",
-      "title": "Scale 50K Pack",
+      "title": "Enterprise Cloud Pack",
       "price": 3125,
       "credits": 50000,
       "popular": false,
       "unitRate": "₹0.063 / email",
-      "specs": "50,000 High-Speed Transactional Emails • Brevo Matrix",
-      "desc": "50,000 High-Speed Transactional Emails • High-Volume SLA (50% Margin)"
+      "specs": "50,000 High-Speed Transactional Emails",
+      "desc": "50,000 Transactional Emails • High-Throughput SLA"
     },
     {
       "id": "email_100k",
-      "title": "Enterprise 100K Pack",
+      "title": "Infinity Sovereign Pack",
       "price": 6250,
       "credits": 100000,
       "popular": false,
       "unitRate": "₹0.063 / email",
-      "specs": "1,00,000 High-Speed Transactional Emails • Brevo Matrix",
-      "desc": "100,000 High-Speed Transactional Emails • Enterprise Deliverability (50% Margin)"
+      "specs": "1,00,000 High-Speed Transactional Emails",
+      "desc": "100,000 Transactional Emails • Enterprise Inbound/Outbound SLA"
     }
   ],
   "lastSyncedAt": "2026-08-23T20:15:00.000Z",
-  "lastUpdatedAt": "2026-08-23T18:34:42.013Z"
+  "lastUpdatedAt": "2026-08-23T18:37:49.599Z"
 }
