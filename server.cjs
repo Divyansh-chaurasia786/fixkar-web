@@ -1831,9 +1831,8 @@ function handleRequest(req, res) {
         }
       }
 
-      // Log the outbound email
-      const emailLogs = readDataJson('email_logs.json', []);
-      emailLogs.unshift({
+      // 1. Log the outbound email
+      const replyEntry = {
         id: `reply_${Date.now()}`,
         recipient: to,
         from: 'support@fixkar.co.in',
@@ -1844,8 +1843,20 @@ function handleRequest(req, res) {
         engine: resendApiKey ? 'Resend (support@fixkar.co.in)' : 'Mock Delivery',
         timestamp: new Date().toISOString(),
         formattedTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
-      });
+      };
+
+      const emailLogs = readDataJson('email_logs.json', []);
+      emailLogs.unshift(replyEntry);
       writeDataJson('email_logs.json', emailLogs);
+
+      // 2. Attach reply directly to the inbound email conversation
+      const inboundEmails = readDataJson('inbound_emails.json', []);
+      const targetEmail = inboundEmails.find(e => e.id === inReplyToId || (e.from && e.from.toLowerCase().includes(to.toLowerCase())));
+      if (targetEmail) {
+        targetEmail.replies = targetEmail.replies || [];
+        targetEmail.replies.push(replyEntry);
+        writeDataJson('inbound_emails.json', inboundEmails);
+      }
 
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify({
