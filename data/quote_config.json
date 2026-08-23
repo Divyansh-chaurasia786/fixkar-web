@@ -297,51 +297,46 @@
   ],
   "transactionalEmailPacks": [
     {
-      "id": "none",
-      "title": "No Email Pack (Free Basic Alerts)",
-      "price": 0,
-      "credits": 0,
-      "specs": "Standard contact form alerts sent to your personal email",
-      "desc": "Best for basic informational websites with low contact frequency."
-    },
-    {
       "id": "email_starter",
-      "title": "Starter Email Pack (+5,000 Emails)",
+      "title": "Starter Email Pack",
       "price": 499,
       "credits": 5000,
-      "unitRate": "₹0.10 / email",
-      "specs": "5,000 High-Speed Transactional Emails • Verified Delivery",
-      "desc": "Perfect for password resets, order invoices, and welcome emails."
+      "popular": false,
+      "unitRate": "₹0.100 / email",
+      "specs": "5,000 High-Speed Transactional Emails • Fixkar Mail Matrix",
+      "desc": "5,000 High-Speed Transactional Emails • Verified Delivery"
     },
     {
       "id": "email_growth",
-      "title": "Growth Email Pack (+25,000 Emails)",
+      "title": "Growth Email Pack",
       "price": 1499,
       "credits": 25000,
       "popular": true,
-      "unitRate": "₹0.06 / email",
-      "specs": "25,000 High-Speed Transactional Emails • High Deliverability Queue",
-      "desc": "Most popular for growing e-commerce stores, portals, and daily customer updates."
+      "unitRate": "₹0.060 / email",
+      "specs": "25,000 High-Speed Transactional Emails • Fixkar Mail Matrix",
+      "desc": "25,000 High-Speed Transactional Emails • High Deliverability Queue"
     },
     {
       "id": "email_scale",
-      "title": "Scale Email Pack (+50,000 Emails)",
+      "title": "Scale Email Pack",
       "price": 2499,
       "credits": 50000,
-      "unitRate": "₹0.05 / email",
-      "specs": "50,000 High-Speed Transactional Emails • Dedicated IP Routing",
-      "desc": "High-volume throughput for SaaS apps, booking platforms, and newsletters."
+      "popular": false,
+      "unitRate": "₹0.050 / email",
+      "specs": "50,000 High-Speed Transactional Emails • Fixkar Mail Matrix",
+      "desc": "50,000 High-Speed Transactional Emails • Dedicated IP Routing"
     },
     {
       "id": "email_enterprise",
-      "title": "Enterprise Email Pack (+100,000 Emails)",
+      "title": "Enterprise Email Pack",
       "price": 4499,
       "credits": 100000,
+      "popular": false,
       "unitRate": "₹0.045 / email",
-      "specs": "100,000 High-Speed Transactional Emails • Enterprise Deliverability SLA",
-      "desc": "Max volume for institutions, large communities, and high-frequency dispatch."
+      "specs": "1,00,000 High-Speed Transactional Emails • Fixkar Mail Matrix",
+      "desc": "100,000 High-Speed Transactional Emails • Enterprise Deliverability SLA"
     }
   ],
   "lastSyncedAt": "2026-08-23T20:15:00.000Z",
-  "lastUpdatedAt": "2026-08-23T20:15:00.000Z"
+  "lastUpdatedAt": "2026-08-23T17:00:36.819Z"
 }
