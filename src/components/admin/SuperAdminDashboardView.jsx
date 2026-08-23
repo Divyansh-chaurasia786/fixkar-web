@@ -215,6 +215,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
   const [showKillSwitchModal, setShowKillSwitchModal] = useState(false);
   const [killSwitchSuperPin, setKillSwitchSuperPin] = useState('');
   const [killSwitchAdminPass, setKillSwitchAdminPass] = useState('');
+  const [killSwitchVaultPassword, setKillSwitchVaultPassword] = useState('');
   const [killSwitchReason, setKillSwitchReason] = useState('');
   const [killSwitchSubmitting, setKillSwitchSubmitting] = useState(false);
   const [killSwitchError, setKillSwitchError] = useState('');
@@ -431,10 +432,14 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
       return;
     }
 
-    const actionText = isKillSwitchActive ? 'LIFT EMERGENCY LOCKDOWN' : 'ACTIVATE SYSTEM EMERGENCY KILL-SWITCH';
+    if (isKillSwitchActive && !killSwitchVaultPassword.trim()) {
+      setKillSwitchError('Auto-generated Vault Password from your security email is required to unlock and restore data.');
+      return;
+    }
+
     const confirmMsg = isKillSwitchActive 
-      ? '⚠️ CONFIRM STAND-DOWN PROTOCOL: Are you sure you want to lift the emergency lockdown and resume normal client OTP API dispatches?' 
-      : '🚨 CRITICAL CONFIRMATION: Are you 100% sure you want to trigger the System Emergency Kill-Switch?\n\n• All client OTP dispatches will be immediately FROZEN in real-time.\n• Emergency Security Alert emails will be dispatched to Super Admin and Admin.';
+      ? '🟢 CONFIRM RESTORATION PROTOCOL: Are you sure you want to unlock the encrypted vault, restore all client and project databases, and lift emergency lockdown?' 
+      : '🚨 CRITICAL EMERGENCY DATA QUARANTINE CONFIRMATION:\n\n• ALL essential website records (Clients, Projects, Invoices, Keys, Tickets) will be WRAPPED into an encrypted vault and WIPED from the live website in real-time.\n• The Auto-Generated Vault Password and Secure Download Link will be sent immediately to chaurasiadivyansh86@gmail.com.\n\nProceed with Emergency Quarantine?';
 
     if (!window.confirm(confirmMsg)) {
       return;
@@ -444,30 +449,60 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
     setKillSwitchError('');
 
     try {
-      const res = await fetch(`${API_BASE}/api/admin/super/kill-switch`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${adminToken}`,
-          'x-super-token': superAdminToken || '9835',
-        },
-        body: JSON.stringify({
-          superAdminPin: killSwitchSuperPin.trim(),
-          adminPassword: killSwitchAdminPass.trim(),
-          enable: !isKillSwitchActive,
-          reason: killSwitchReason.trim() || (isKillSwitchActive ? 'Emergency quarantine lifted' : 'Manual Emergency Quarantine Triggered'),
-        }),
-      });
+      if (isKillSwitchActive) {
+        // RESTORE ENDPOINT
+        const res = await fetch(`${API_BASE}/api/admin/super/kill-switch/restore`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${adminToken}`,
+            'x-super-token': superAdminToken || '9835',
+          },
+          body: JSON.stringify({
+            superAdminPin: killSwitchSuperPin.trim(),
+            adminPassword: killSwitchAdminPass.trim(),
+            vaultPassword: killSwitchVaultPassword.trim(),
+          }),
+        });
 
-      const data = await res.json();
-      if (data.success) {
-        setIsKillSwitchActive(data.isKillSwitchActive);
-        setToastMessage(data.message || (data.isKillSwitchActive ? '🚨 Emergency Lockdown Activated!' : '🟢 Lockdown Lifted.'));
-        setTimeout(() => setToastMessage(''), 6000);
-        setShowKillSwitchModal(false);
-        fetchAllSuperData();
+        const data = await res.json();
+        if (data.success) {
+          setIsKillSwitchActive(false);
+          setKillSwitchVaultPassword('');
+          setToastMessage(data.message || '🟢 All Data Successfully Restored & Lockdown Lifted!');
+          setTimeout(() => setToastMessage(''), 8000);
+          setShowKillSwitchModal(false);
+          fetchAllSuperData();
+        } else {
+          setKillSwitchError(data.message || data.error || 'Decryption / Authorization Failed.');
+        }
       } else {
-        setKillSwitchError(data.message || data.error || 'Dual-Key Authorization Failed.');
+        // ACTIVATE KILL-SWITCH (WRAP & WIPE)
+        const res = await fetch(`${API_BASE}/api/admin/super/kill-switch`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${adminToken}`,
+            'x-super-token': superAdminToken || '9835',
+          },
+          body: JSON.stringify({
+            superAdminPin: killSwitchSuperPin.trim(),
+            adminPassword: killSwitchAdminPass.trim(),
+            enable: true,
+            reason: killSwitchReason.trim() || 'Manual Emergency Quarantine Triggered — All Data Encrypted & Wiped',
+          }),
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          setIsKillSwitchActive(true);
+          setToastMessage(data.message || '🚨 Emergency Kill-Switch Activated! All Data Encrypted & Emailed.');
+          setTimeout(() => setToastMessage(''), 10000);
+          setShowKillSwitchModal(false);
+          fetchAllSuperData();
+        } else {
+          setKillSwitchError(data.message || data.error || 'Dual-Key Authorization Failed.');
+        }
       }
     } catch (err) {
       setKillSwitchError('Network Error: ' + err.message);
@@ -6274,11 +6309,11 @@ echo $response;
               >
                 {isKillSwitchActive ? (
                   <div>
-                    <strong>Quarantine Mode Currently Active:</strong> All outgoing client OTP API dispatches are paused. Authenticate below to lift lockdown and resume traffic.
+                    <strong>🔒 System Data Currently Quarantined & Wiped:</strong> All essential client databases, API keys, invoices, and records are secured in the encrypted vault. Enter your Super PIN, Admin Password, and the <strong>Auto-Generated Vault Password</strong> from your email (<code>chaurasiadivyansh86@gmail.com</code>) below to decrypt and restore all live data.
                   </div>
                 ) : (
                   <div>
-                    <strong>⚠️ HIGH-SEVERITY ACTION:</strong> Activating this will <strong>immediately freeze all client OTP API dispatches</strong> across all client websites in real-time. Automated security dispatches will be delivered to Super Admin and Admin emails.
+                    <strong>🚨 CRITICAL EMERGENCY DATA QUARANTINE:</strong> Activating this will <strong>wrap all essential website records into an encrypted security vault and wipe them from the live website</strong> in real-time. The auto-generated decryption password and secure download link will be dispatched immediately to <code>chaurasiadivyansh86@gmail.com</code>.
                   </div>
                 )}
               </div>
@@ -6343,30 +6378,59 @@ echo $response;
                 />
               </div>
 
-              {/* Reason / Incident Memo */}
-              <div>
-                <label style={{ display: 'block', fontSize: '0.74rem', color: '#CBD5E1', fontWeight: 700, marginBottom: '6px' }}>
-                  Incident Memo / Reason (Dispatched in Security Email)
-                </label>
-                <textarea
-                  rows={2}
-                  value={killSwitchReason}
-                  onChange={(e) => setKillSwitchReason(e.target.value)}
-                  placeholder="e.g. Suspicious traffic spikes detected / Security audit drill"
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px',
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '8px',
-                    color: '#CBD5E1',
-                    fontSize: '0.78rem',
-                    boxSizing: 'border-box',
-                    resize: 'none',
-                    outline: 'none',
-                  }}
-                />
-              </div>
+                  {/* Vault Password Input (Only when Quarantine is active) */}
+              {isKillSwitchActive ? (
+                <div>
+                  <label style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: '#4ADE80', fontWeight: 800, marginBottom: '6px' }}>
+                    <span>🔐 Key #3: Auto-Generated Vault Unlock Password *</span>
+                    <span style={{ fontSize: '0.66rem', color: '#86EFAC', fontFamily: 'monospace' }}>From Email</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={killSwitchVaultPassword}
+                    onChange={(e) => setKillSwitchVaultPassword(e.target.value)}
+                    placeholder="e.g. FXK-VAULT-8E29A1F4-99B72C80"
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      background: 'rgba(0, 0, 0, 0.7)',
+                      border: '1px solid rgba(74, 222, 128, 0.5)',
+                      borderRadius: '10px',
+                      color: '#4ADE80',
+                      fontSize: '0.85rem',
+                      fontFamily: 'monospace',
+                      letterSpacing: '0.08em',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                </div>
+              ) : (
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.74rem', color: '#CBD5E1', fontWeight: 700, marginBottom: '6px' }}>
+                    Incident Memo / Quarantine Reason (Dispatched in Security Email)
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={killSwitchReason}
+                    onChange={(e) => setKillSwitchReason(e.target.value)}
+                    placeholder="e.g. Suspicious traffic spikes detected / Security audit drill"
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      background: 'rgba(255, 255, 255, 0.04)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '8px',
+                      color: '#CBD5E1',
+                      fontSize: '0.78rem',
+                      boxSizing: 'border-box',
+                      resize: 'none',
+                      outline: 'none',
+                    }}
+                  />
+                </div>
+              )}
 
               {/* Action Buttons */}
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '6px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '16px' }}>
@@ -6413,10 +6477,10 @@ echo $response;
                   <Power size={15} />
                   <span>
                     {killSwitchSubmitting
-                      ? 'Verifying Dual-Keys & Dispatching Alerts...'
+                      ? 'Processing Dual-Key Quarantine Protocol...'
                       : isKillSwitchActive
-                      ? '🟢 VERIFY & LIFT LOCKDOWN'
-                      : '🚨 VERIFY & EXECUTE KILL-SWITCH'}
+                      ? '🟢 Unlock Vault & Restore All Data'
+                      : '🚨 Encrypt Data & Trigger Emergency Wipe'}
                   </span>
                 </button>
               </div>
