@@ -1333,28 +1333,22 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
   const handleGenerateClientApiKey = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
     if (!newApiKeyForm.clientCode) {
-      alert('Please select a client to generate their isolated API key');
+      setToastMessage('⚠️ Please select a client to generate their isolated API key');
+      setTimeout(() => setToastMessage(''), 4000);
       return;
     }
 
-    // 1. Strict Duplicate API Key Prevention
     const alreadyHasKey = (clientApiKeys || []).some(k => k.clientCode === newApiKeyForm.clientCode);
-    if (alreadyHasKey) {
-      alert(`⚠️ An API Key already exists for ${newApiKeyForm.clientName || 'this client'} (${newApiKeyForm.clientCode}).\n\nPlease click the "+ Top-Up" button in the table to add more SMS credits to their existing key instead of creating duplicate keys.`);
-      return;
-    }
+    if (alreadyHasKey) return;
 
-    // 2. Strict Master Telecom Reserve Stock Limit Check
     const masterStock = Number(gatewayConfig.smsBalance) || 200;
     const requested = Number(newApiKeyForm.credits) || 500;
-    if (requested > masterStock) {
-      alert(`⛔ Cannot Allocate Quota:\n\nRequested initial quota: ${requested.toLocaleString()} SMS\nAvailable Master Telecom Reserve: ${masterStock.toLocaleString()} SMS\n\nPlease recharge your Master Gateway first before allocating credits exceeding your master balance.`);
-      return;
-    }
+    if (requested > masterStock) return;
 
     const cleanUtr = (newApiKeyForm.utrNumber || '').trim();
     if (newApiKeyForm.allocationType === 'BANK_TRANSFER' && !cleanUtr) {
-      alert('⚠️ Please enter a valid 12-digit Bank / UPI UTR Transaction Reference Number.');
+      setToastMessage('⚠️ Please enter a valid Bank / UPI UTR Transaction Reference Number.');
+      setTimeout(() => setToastMessage(''), 4000);
       return;
     }
     try {
@@ -1409,17 +1403,14 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
     if (e && e.preventDefault) e.preventDefault();
     if (!topupModalKey?.clientCode) return;
 
-    // Strict Master Telecom Reserve Stock Limit Check on Top-Up
     const masterStock = Number(gatewayConfig.smsBalance) || 200;
     const requested = Number(topupForm.credits) || 500;
-    if (requested > masterStock) {
-      alert(`⛔ Cannot Top-Up:\n\nRequested top-up: ${requested.toLocaleString()} SMS\nAvailable Master Telecom Reserve: ${masterStock.toLocaleString()} SMS\n\nPlease recharge your Master Gateway first before granting credits exceeding your master balance.`);
-      return;
-    }
+    if (requested > masterStock) return;
 
     const cleanUtr = (topupForm.utrNumber || '').trim();
     if (topupForm.allocationType === 'BANK_TRANSFER' && !cleanUtr) {
-      alert('⚠️ Please enter a valid 12-digit Bank / UPI UTR Transaction Reference Number.');
+      setToastMessage('⚠️ Please enter a valid Bank / UPI UTR Transaction Reference Number.');
+      setTimeout(() => setToastMessage(''), 4000);
       return;
     }
     try {
@@ -6290,7 +6281,410 @@ echo $response;
       )}
 
       {/* ─── MODAL: GENERATE CLIENT API KEY ──────────────────────────────── */}
-      {isGenerateApiKeyModalOpen && (
+      {isGenerateApiKeyModalOpen && (() => {
+          const masterStock = Number(gatewayConfig.smsBalance) || 200;
+          const requestedCredits = Number(newApiKeyForm.credits) || 500;
+          const isOverStock = requestedCredits > masterStock;
+          const alreadyHasKey = Boolean(newApiKeyForm.clientCode && (clientApiKeys || []).some(k => k.clientCode === newApiKeyForm.clientCode));
+
+          return (
+            <div
+              style={{
+                position: 'fixed',
+                inset: 0,
+                zIndex: 99999,
+                background: 'rgba(3, 7, 18, 0.88)',
+                backdropFilter: 'blur(16px)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '16px',
+                overflowY: 'auto',
+              }}
+              onClick={(e) => {
+                if (e.target === e.currentTarget) setIsGenerateApiKeyModalOpen(false);
+              }}
+            >
+              <div
+                style={{
+                  width: '100%',
+                  maxWidth: '720px',
+                  maxHeight: 'min(90vh, 580px)',
+                  background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.98) 0%, rgba(10, 15, 28, 0.99) 100%)',
+                  border: '1px solid rgba(56, 189, 248, 0.35)',
+                  borderRadius: '16px',
+                  padding: '18px 22px',
+                  boxShadow: '0 25px 60px rgba(0, 0, 0, 0.9)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
+                  overflowY: 'auto',
+                  boxSizing: 'border-box',
+                }}
+              >
+                {/* Modal Header */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <KeyRound size={17} color="#38BDF8" />
+                    <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#fff', margin: 0 }}>
+                      Generate Unique Client API Key
+                    </h3>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsGenerateApiKeyModalOpen(false)}
+                    style={{ background: 'rgba(255, 255, 255, 0.06)', border: 'none', color: '#94A3B8', borderRadius: '50%', width: '26px', height: '26px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    <X size={15} />
+                  </button>
+                </div>
+
+                <form onSubmit={handleGenerateClientApiKey} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '14px', alignItems: 'start' }}>
+                    
+                    {/* LEFT COLUMN: Client Identity */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      <div>
+                        <label style={{ fontSize: '0.72rem', color: '#CBD5E1', display: 'block', marginBottom: '3px', fontWeight: 600 }}>
+                          Select Registered Client *
+                        </label>
+                        <select
+                          required
+                          value={newApiKeyForm.clientCode}
+                          onChange={(e) => {
+                            const selCode = e.target.value;
+                            const found = clients.find((c) => c.clientCode === selCode || c.id === selCode);
+                            if (found) {
+                              setNewApiKeyForm({
+                                clientCode: found.clientCode || selCode,
+                                clientName: found.businessName || found.contactPerson || 'Client Website',
+                                dltSenderId: found.dltSenderId || (found.clientCode ? found.clientCode.replace('FIX-', '').slice(0, 6) : 'FIXKAR').toUpperCase(),
+                              });
+                            } else {
+                              setNewApiKeyForm({ ...newApiKeyForm, clientCode: selCode });
+                            }
+                          }}
+                          style={{
+                            width: '100%',
+                            padding: '7px 10px',
+                            background: '#0D1323',
+                            border: '1px solid rgba(56, 189, 248, 0.4)',
+                            borderRadius: '7px',
+                            color: '#fff',
+                            fontSize: '0.78rem',
+                            fontWeight: 600,
+                            boxSizing: 'border-box',
+                          }}
+                        >
+                          <option value="">-- Choose Registered Client --</option>
+                          {clients.map((c) => (
+                            <option key={c.id || c.clientCode} value={c.clientCode || c.id}>
+                              {c.clientCode ? `[${c.clientCode}] ` : ''}{c.businessName} ({c.domain || c.contactPerson})
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div>
+                        <label style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block', marginBottom: '3px', fontWeight: 600 }}>
+                          Client Business Name *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={newApiKeyForm.clientName}
+                          onChange={(e) => setNewApiKeyForm({ ...newApiKeyForm, clientName: e.target.value })}
+                          placeholder="e.g. R.K. Computer Classes"
+                          style={{
+                            width: '100%',
+                            padding: '7px 10px',
+                            background: 'rgba(255, 255, 255, 0.04)',
+                            border: '1px solid rgba(255, 255, 255, 0.12)',
+                            borderRadius: '7px',
+                            color: '#fff',
+                            fontSize: '0.78rem',
+                            boxSizing: 'border-box',
+                          }}
+                        />
+                      </div>
+
+                      <div>
+                        <label style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block', marginBottom: '3px', fontWeight: 600 }}>
+                          DLT Sender Header (6 Characters) *
+                        </label>
+                        <input
+                          type="text"
+                          maxLength={6}
+                          value={newApiKeyForm.dltSenderId}
+                          onChange={(e) => setNewApiKeyForm({ ...newApiKeyForm, dltSenderId: e.target.value.toUpperCase() })}
+                          placeholder="e.g. RKCCPT"
+                          style={{
+                            width: '100%',
+                            padding: '7px 10px',
+                            background: 'rgba(255, 255, 255, 0.04)',
+                            border: '1px solid rgba(255, 255, 255, 0.12)',
+                            borderRadius: '7px',
+                            color: '#93C5FD',
+                            fontSize: '0.78rem',
+                            fontFamily: 'monospace',
+                            fontWeight: 700,
+                            boxSizing: 'border-box',
+                          }}
+                        />
+                      </div>
+
+                      <div style={{ background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.22)', borderRadius: '7px', padding: '8px 10px', display: 'flex', alignItems: 'flex-start', gap: '7px', marginTop: '2px' }}>
+                        <ShieldCheck size={14} color="#38BDF8" style={{ flexShrink: 0, marginTop: '2px' }} />
+                        <div style={{ fontSize: '0.68rem', color: '#CBD5E1', lineHeight: 1.35 }}>
+                          <strong>Zero-Leak Security:</strong> Key connects directly to proxy and routes dynamically without client disruption.
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* RIGHT COLUMN: Quota & Funding */}
+                    <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '10px', padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: '9px' }}>
+                      <div>
+                        <label style={{ fontSize: '0.72rem', color: '#FBBF24', display: 'flex', justifyContent: 'space-between', marginBottom: '3px', fontWeight: 700 }}>
+                          <span>Initial Recharge Pack *</span>
+                          <span style={{ color: '#86EFAC', fontFamily: 'monospace' }}>+{Number(newApiKeyForm.credits || 0).toLocaleString()} SMS</span>
+                        </label>
+                        <select
+                          value={newApiKeyForm.packId}
+                          onChange={(e) => {
+                            const selId = e.target.value;
+                            if (selId === 'otp_trial_100') {
+                              setNewApiKeyForm({ ...newApiKeyForm, packId: selId, credits: 100, price: 0 });
+                            } else if (selId === 'custom') {
+                              setNewApiKeyForm({ ...newApiKeyForm, packId: 'custom' });
+                            } else {
+                              const foundPack = (otpPricing.packages || []).find((p) => p.id === selId);
+                              if (foundPack) {
+                                setNewApiKeyForm({
+                                  ...newApiKeyForm,
+                                  packId: selId,
+                                  credits: foundPack.credits,
+                                  price: foundPack.price,
+                                });
+                              }
+                            }
+                          }}
+                          style={{
+                            width: '100%',
+                            padding: '7px 10px',
+                            background: '#0B1120',
+                            border: '1px solid rgba(251, 191, 36, 0.4)',
+                            borderRadius: '7px',
+                            color: '#fff',
+                            fontSize: '0.76rem',
+                            fontWeight: 600,
+                            boxSizing: 'border-box',
+                          }}
+                        >
+                          <option value="otp_trial_100">🎁 [Trial Starter] 100 Free Test Credits (₹0 Free)</option>
+                          {(otpPricing.packages || []).map((pkg) => (
+                            <option key={pkg.id} value={pkg.id}>
+                              ⚡ [{pkg.name}] {pkg.credits.toLocaleString()} SMS — ₹{pkg.price} (@ ₹{pkg.ratePerSms}/SMS)
+                            </option>
+                          ))}
+                          <option value="custom">⚙️ [Custom Quota] Enter Custom SMS Credits &amp; Amount</option>
+                        </select>
+                      </div>
+
+                      {newApiKeyForm.packId === 'custom' && (
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                          <div>
+                            <label style={{ fontSize: '0.66rem', color: '#94A3B8', display: 'block', marginBottom: '2px' }}>Credits</label>
+                            <input
+                              type="number"
+                              min="100"
+                              step="100"
+                              value={newApiKeyForm.credits}
+                              onChange={(e) => {
+                                const cr = Number(e.target.value) || 0;
+                                const pr = Math.round(cr * (Number(otpPricing.baseRetailRatePerSms) || 0.25));
+                                setNewApiKeyForm({ ...newApiKeyForm, credits: cr, price: pr });
+                              }}
+                              style={{ width: '100%', padding: '5px 8px', background: '#070C18', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '5px', color: '#38BDF8', fontFamily: 'monospace', fontWeight: 700, fontSize: '0.74rem', boxSizing: 'border-box' }}
+                            />
+                          </div>
+                          <div>
+                            <label style={{ fontSize: '0.66rem', color: '#94A3B8', display: 'block', marginBottom: '2px' }}>Price (₹)</label>
+                            <input
+                              type="number"
+                              min="0"
+                              step="10"
+                              value={newApiKeyForm.price}
+                              onChange={(e) => setNewApiKeyForm({ ...newApiKeyForm, price: Number(e.target.value) || 0 })}
+                              style={{ width: '100%', padding: '5px 8px', background: '#070C18', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '5px', color: '#4ADE80', fontFamily: 'monospace', fontWeight: 700, fontSize: '0.74rem', boxSizing: 'border-box' }}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Master Telecom Reserve Stock Info */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 8px', background: 'rgba(56, 189, 248, 0.06)', border: '1px solid rgba(56, 189, 248, 0.2)', borderRadius: '5px', fontSize: '0.68rem' }}>
+                        <span style={{ color: '#94A3B8' }}>Master Telecom Reserve:</span>
+                        <strong style={{ color: masterStock < requestedCredits ? '#FBBF24' : '#4ADE80', fontFamily: 'monospace' }}>
+                          {masterStock.toLocaleString()} SMS
+                        </strong>
+                      </div>
+
+                      {/* Allocation Mode Buttons */}
+                      <div>
+                        <label style={{ fontSize: '0.68rem', color: '#CBD5E1', display: 'block', marginBottom: '4px', fontWeight: 700 }}>
+                          Funding Allocation Mode *
+                        </label>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+                          <button
+                            type="button"
+                            onClick={() => setNewApiKeyForm({ ...newApiKeyForm, allocationType: 'COMPLIMENTARY' })}
+                            style={{
+                              background: newApiKeyForm.allocationType === 'COMPLIMENTARY' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                              border: `1px solid ${newApiKeyForm.allocationType === 'COMPLIMENTARY' ? '#38BDF8' : 'rgba(255, 255, 255, 0.1)'}`,
+                              color: newApiKeyForm.allocationType === 'COMPLIMENTARY' ? '#38BDF8' : '#94A3B8',
+                              padding: '5px 8px',
+                              borderRadius: '6px',
+                              fontSize: '0.7rem',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '4px',
+                            }}
+                          >
+                            <span>🎁 Complimentary</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => setNewApiKeyForm({ ...newApiKeyForm, allocationType: 'BANK_TRANSFER' })}
+                            style={{
+                              background: newApiKeyForm.allocationType === 'BANK_TRANSFER' ? 'rgba(74, 222, 128, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                              border: `1px solid ${newApiKeyForm.allocationType === 'BANK_TRANSFER' ? '#4ADE80' : 'rgba(255, 255, 255, 0.1)'}`,
+                              color: newApiKeyForm.allocationType === 'BANK_TRANSFER' ? '#4ADE80' : '#94A3B8',
+                              padding: '5px 8px',
+                              borderRadius: '6px',
+                              fontSize: '0.7rem',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '4px',
+                            }}
+                          >
+                            <span>🏦 Bank / UTR</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* UTR Reference Input */}
+                      {newApiKeyForm.allocationType === 'BANK_TRANSFER' && (
+                        <div style={{ background: 'rgba(74, 222, 128, 0.06)', border: '1px solid rgba(74, 222, 128, 0.25)', borderRadius: '6px', padding: '6px 8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <label style={{ fontSize: '0.66rem', color: '#86EFAC', display: 'block', fontWeight: 700 }}>
+                            Bank / UPI UTR Reference *
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            value={newApiKeyForm.utrNumber}
+                            onChange={(e) => setNewApiKeyForm({ ...newApiKeyForm, utrNumber: e.target.value })}
+                            placeholder="e.g. 423891002931"
+                            style={{
+                              width: '100%',
+                              padding: '5px 8px',
+                              background: '#050B14',
+                              border: '1px solid rgba(74, 222, 128, 0.4)',
+                              borderRadius: '5px',
+                              color: '#86EFAC',
+                              fontSize: '0.74rem',
+                              fontFamily: 'monospace',
+                              fontWeight: 700,
+                              boxSizing: 'border-box',
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* ─── INLINE VALIDATION ALERTS (ZERO POPUPS) ────────────────────────── */}
+                  {alreadyHasKey && (
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', padding: '10px 12px', background: 'rgba(251, 191, 36, 0.1)', border: '1px solid rgba(251, 191, 36, 0.35)', borderRadius: '8px', color: '#FDE047', fontSize: '0.72rem', lineHeight: 1.4 }}>
+                      <AlertTriangle size={15} color="#FBBF24" style={{ flexShrink: 0, marginTop: '2px' }} />
+                      <div>
+                        <strong>Client Already Has Key:</strong> An active API key already exists for <strong>{newApiKeyForm.clientName}</strong> ({newApiKeyForm.clientCode}). Please click the <strong>"+ Top-Up"</strong> button in the table to add more SMS credits to their existing key.
+                      </div>
+                    </div>
+                  )}
+
+                  {isOverStock && !alreadyHasKey && (
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', padding: '10px 12px', background: 'rgba(244, 63, 94, 0.1)', border: '1px solid rgba(244, 63, 94, 0.35)', borderRadius: '8px', color: '#FDA4AF', fontSize: '0.72rem', lineHeight: 1.4 }}>
+                      <ShieldAlert size={15} color="#F43F5E" style={{ flexShrink: 0, marginTop: '2px' }} />
+                      <div>
+                        <strong>Master Stock Deficit:</strong> Requested initial quota (+{requestedCredits.toLocaleString()} SMS) exceeds current Master Telecom Reserve ({masterStock.toLocaleString()} SMS). Please recharge Master Gateway before allocating this quota.
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Modal Footer Buttons */}
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '8px', marginTop: '4px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '10px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setIsGenerateApiKeyModalOpen(false)}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        color: '#94A3B8',
+                        padding: '7px 14px',
+                        borderRadius: '7px',
+                        fontSize: '0.78rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="submit"
+                      disabled={alreadyHasKey || isOverStock}
+                      style={{
+                        background: (alreadyHasKey || isOverStock) ? 'rgba(255, 255, 255, 0.08)' : 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
+                        border: (alreadyHasKey || isOverStock) ? '1px solid rgba(255, 255, 255, 0.12)' : 'none',
+                        color: (alreadyHasKey || isOverStock) ? '#64748B' : '#fff',
+                        padding: '7px 18px',
+                        borderRadius: '7px',
+                        fontSize: '0.8rem',
+                        fontWeight: 700,
+                        cursor: (alreadyHasKey || isOverStock) ? 'not-allowed' : 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        boxShadow: (alreadyHasKey || isOverStock) ? 'none' : '0 4px 15px rgba(37, 99, 235, 0.4)',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      <Sparkles size={13} />
+                      <span>{alreadyHasKey ? 'Key Already Exists' : isOverStock ? 'Insufficient Master Stock' : 'Generate Isolated API Key'}</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          );
+        })()}
+
+      {/* ═════════════════════════════════════════════════════════════════
+          MODAL: INSTANT TOP-UP SMS CREDITS (SAME API KEY GRANT)
+          ═════════════════════════════════════════════════════════════════ */}
+      {topupModalKey && (() => {
+        const masterStock = Number(gatewayConfig.smsBalance) || 200;
+        const requestedCredits = Number(topupForm.credits) || 500;
+        const isOverStock = requestedCredits > masterStock;
+
+        return (
           <div
             style={{
               position: 'fixed',
@@ -6305,16 +6699,16 @@ echo $response;
               overflowY: 'auto',
             }}
             onClick={(e) => {
-              if (e.target === e.currentTarget) setIsGenerateApiKeyModalOpen(false);
+              if (e.target === e.currentTarget) setTopupModalKey(null);
             }}
           >
             <div
               style={{
                 width: '100%',
-                maxWidth: '720px',
+                maxWidth: '520px',
                 maxHeight: 'min(90vh, 580px)',
                 background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.98) 0%, rgba(10, 15, 28, 0.99) 100%)',
-                border: '1px solid rgba(56, 189, 248, 0.35)',
+                border: '1px solid rgba(74, 222, 128, 0.35)',
                 borderRadius: '16px',
                 padding: '18px 22px',
                 boxShadow: '0 25px 60px rgba(0, 0, 0, 0.9)',
@@ -6325,304 +6719,220 @@ echo $response;
                 boxSizing: 'border-box',
               }}
             >
-              {/* Modal Header */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <KeyRound size={17} color="#38BDF8" />
-                  <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#fff', margin: 0 }}>
-                    Generate Unique Client API Key
-                  </h3>
+                  <Plus size={17} color="#4ADE80" />
+                  <div>
+                    <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#fff', margin: 0 }}>
+                      Top-Up SMS Credits on Same API Key
+                    </h3>
+                    <div style={{ fontSize: '0.7rem', color: '#93C5FD', fontFamily: 'monospace', marginTop: '1px' }}>
+                      Client: {topupModalKey.clientName} ({topupModalKey.clientCode})
+                    </div>
+                  </div>
                 </div>
                 <button
                   type="button"
-                  onClick={() => setIsGenerateApiKeyModalOpen(false)}
+                  onClick={() => setTopupModalKey(null)}
                   style={{ background: 'rgba(255, 255, 255, 0.06)', border: 'none', color: '#94A3B8', borderRadius: '50%', width: '26px', height: '26px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
                   <X size={15} />
                 </button>
               </div>
 
-              <form onSubmit={handleGenerateClientApiKey} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '14px', alignItems: 'start' }}>
-                  
-                  {/* LEFT COLUMN: Client Identity */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <div>
-                      <label style={{ fontSize: '0.72rem', color: '#CBD5E1', display: 'block', marginBottom: '3px', fontWeight: 600 }}>
-                        Select Registered Client *
-                      </label>
-                      <select
-                        required
-                        value={newApiKeyForm.clientCode}
-                        onChange={(e) => {
-                          const selCode = e.target.value;
-                          const found = clients.find((c) => c.clientCode === selCode || c.id === selCode);
-                          if (found) {
-                            setNewApiKeyForm({
-                              clientCode: found.clientCode || selCode,
-                              clientName: found.businessName || found.contactPerson || 'Client Website',
-                              dltSenderId: found.dltSenderId || (found.clientCode ? found.clientCode.replace('FIX-', '').slice(0, 6) : 'FIXKAR').toUpperCase(),
-                            });
-                          } else {
-                            setNewApiKeyForm({ ...newApiKeyForm, clientCode: selCode });
-                          }
-                        }}
-                        style={{
-                          width: '100%',
-                          padding: '7px 10px',
-                          background: '#0D1323',
-                          border: '1px solid rgba(56, 189, 248, 0.4)',
-                          borderRadius: '7px',
-                          color: '#fff',
-                          fontSize: '0.78rem',
-                          fontWeight: 600,
-                          boxSizing: 'border-box',
-                        }}
-                      >
-                        <option value="">-- Choose Registered Client --</option>
-                        {clients.map((c) => (
-                          <option key={c.id || c.clientCode} value={c.clientCode || c.id}>
-                            {c.clientCode ? `[${c.clientCode}] ` : ''}{c.businessName} ({c.domain || c.contactPerson})
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block', marginBottom: '3px', fontWeight: 600 }}>
-                        Client Business Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={newApiKeyForm.clientName}
-                        onChange={(e) => setNewApiKeyForm({ ...newApiKeyForm, clientName: e.target.value })}
-                        placeholder="e.g. R.K. Computer Classes"
-                        style={{
-                          width: '100%',
-                          padding: '7px 10px',
-                          background: 'rgba(255, 255, 255, 0.04)',
-                          border: '1px solid rgba(255, 255, 255, 0.12)',
-                          borderRadius: '7px',
-                          color: '#fff',
-                          fontSize: '0.78rem',
-                          boxSizing: 'border-box',
-                        }}
-                      />
-                    </div>
-
-                    <div>
-                      <label style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block', marginBottom: '3px', fontWeight: 600 }}>
-                        DLT Sender Header (6 Characters) *
-                      </label>
-                      <input
-                        type="text"
-                        maxLength={6}
-                        value={newApiKeyForm.dltSenderId}
-                        onChange={(e) => setNewApiKeyForm({ ...newApiKeyForm, dltSenderId: e.target.value.toUpperCase() })}
-                        placeholder="e.g. RKCCPT"
-                        style={{
-                          width: '100%',
-                          padding: '7px 10px',
-                          background: 'rgba(255, 255, 255, 0.04)',
-                          border: '1px solid rgba(255, 255, 255, 0.12)',
-                          borderRadius: '7px',
-                          color: '#93C5FD',
-                          fontSize: '0.78rem',
-                          fontFamily: 'monospace',
-                          fontWeight: 700,
-                          boxSizing: 'border-box',
-                        }}
-                      />
-                    </div>
-
-                    <div style={{ background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.22)', borderRadius: '7px', padding: '8px 10px', display: 'flex', alignItems: 'flex-start', gap: '7px', marginTop: '2px' }}>
-                      <ShieldCheck size={14} color="#38BDF8" style={{ flexShrink: 0, marginTop: '2px' }} />
-                      <div style={{ fontSize: '0.68rem', color: '#CBD5E1', lineHeight: 1.35 }}>
-                        <strong>Zero-Leak Security:</strong> Key connects directly to proxy and routes dynamically without client disruption.
-                      </div>
-                    </div>
+              <form onSubmit={handleTopUpClientWallet} style={{ display: 'flex', flexDirection: 'column', gap: '11px' }}>
+                {/* Existing API Key Token Banner */}
+                <div style={{ background: 'rgba(56, 189, 248, 0.06)', border: '1px solid rgba(56, 189, 248, 0.2)', borderRadius: '8px', padding: '8px 12px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.66rem', color: '#94A3B8', textTransform: 'uppercase', fontWeight: 700 }}>
+                      Permanent API Key
+                    </span>
+                    <span style={{ fontSize: '0.68rem', color: '#86EFAC', fontWeight: 700 }}>
+                      Current Balance: {(topupModalKey.availableCredits || 0).toLocaleString()} SMS
+                    </span>
                   </div>
-
-                  {/* RIGHT COLUMN: Quota & Funding */}
-                  <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '10px', padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: '9px' }}>
-                    <div>
-                      <label style={{ fontSize: '0.72rem', color: '#FBBF24', display: 'flex', justifyContent: 'space-between', marginBottom: '3px', fontWeight: 700 }}>
-                        <span>Initial Recharge Pack *</span>
-                        <span style={{ color: '#86EFAC', fontFamily: 'monospace' }}>+{Number(newApiKeyForm.credits || 0).toLocaleString()} SMS</span>
-                      </label>
-                      <select
-                        value={newApiKeyForm.packId}
-                        onChange={(e) => {
-                          const selId = e.target.value;
-                          if (selId === 'otp_trial_100') {
-                            setNewApiKeyForm({ ...newApiKeyForm, packId: selId, credits: 100, price: 0 });
-                          } else if (selId === 'custom') {
-                            setNewApiKeyForm({ ...newApiKeyForm, packId: 'custom' });
-                          } else {
-                            const foundPack = (otpPricing.packages || []).find((p) => p.id === selId);
-                            if (foundPack) {
-                              setNewApiKeyForm({
-                                ...newApiKeyForm,
-                                packId: selId,
-                                credits: foundPack.credits,
-                                price: foundPack.price,
-                              });
-                            }
-                          }
-                        }}
-                        style={{
-                          width: '100%',
-                          padding: '7px 10px',
-                          background: '#0B1120',
-                          border: '1px solid rgba(251, 191, 36, 0.4)',
-                          borderRadius: '7px',
-                          color: '#fff',
-                          fontSize: '0.76rem',
-                          fontWeight: 600,
-                          boxSizing: 'border-box',
-                        }}
-                      >
-                        <option value="otp_trial_100">🎁 [Trial Starter] 100 Free Test Credits (₹0 Free)</option>
-                        {(otpPricing.packages || []).map((pkg) => (
-                          <option key={pkg.id} value={pkg.id}>
-                            ⚡ [{pkg.name}] {pkg.credits.toLocaleString()} SMS — ₹{pkg.price} (@ ₹{pkg.ratePerSms}/SMS)
-                          </option>
-                        ))}
-                        <option value="custom">⚙️ [Custom Quota] Enter Custom SMS Credits &amp; Amount</option>
-                      </select>
-                    </div>
-
-                    {newApiKeyForm.packId === 'custom' && (
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                        <div>
-                          <label style={{ fontSize: '0.66rem', color: '#94A3B8', display: 'block', marginBottom: '2px' }}>Credits</label>
-                          <input
-                            type="number"
-                            min="100"
-                            step="100"
-                            value={newApiKeyForm.credits}
-                            onChange={(e) => {
-                              const cr = Number(e.target.value) || 0;
-                              const pr = Math.round(cr * (Number(otpPricing.baseRetailRatePerSms) || 0.25));
-                              setNewApiKeyForm({ ...newApiKeyForm, credits: cr, price: pr });
-                            }}
-                            style={{ width: '100%', padding: '5px 8px', background: '#070C18', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '5px', color: '#38BDF8', fontFamily: 'monospace', fontWeight: 700, fontSize: '0.74rem', boxSizing: 'border-box' }}
-                          />
-                        </div>
-                        <div>
-                          <label style={{ fontSize: '0.66rem', color: '#94A3B8', display: 'block', marginBottom: '2px' }}>Price (₹)</label>
-                          <input
-                            type="number"
-                            min="0"
-                            step="10"
-                            value={newApiKeyForm.price}
-                            onChange={(e) => setNewApiKeyForm({ ...newApiKeyForm, price: Number(e.target.value) || 0 })}
-                            style={{ width: '100%', padding: '5px 8px', background: '#070C18', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '5px', color: '#4ADE80', fontFamily: 'monospace', fontWeight: 700, fontSize: '0.74rem', boxSizing: 'border-box' }}
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Master Telecom Reserve Stock Info */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 8px', background: 'rgba(56, 189, 248, 0.06)', border: '1px solid rgba(56, 189, 248, 0.2)', borderRadius: '5px', fontSize: '0.68rem' }}>
-                      <span style={{ color: '#94A3B8' }}>Master Reserve:</span>
-                      <strong style={{ color: (gatewayConfig.smsBalance || 200) < Number(newApiKeyForm.credits || 0) ? '#FBBF24' : '#4ADE80', fontFamily: 'monospace' }}>
-                        {(gatewayConfig.smsBalance || 200).toLocaleString()} SMS
-                      </strong>
-                    </div>
-
-                    {Number(newApiKeyForm.credits || 0) > (gatewayConfig.smsBalance || 200) && (
-                      <div style={{ padding: '6px 8px', background: 'rgba(251, 191, 36, 0.08)', border: '1px solid rgba(251, 191, 36, 0.3)', borderRadius: '5px', fontSize: '0.66rem', color: '#FDE047', lineHeight: 1.3 }}>
-                        ⚠️ <strong>Notice:</strong> Quota (+{Number(newApiKeyForm.credits || 0).toLocaleString()} SMS) exceeds Master Reserve ({(gatewayConfig.smsBalance || 200).toLocaleString()} SMS). Replenish master carrier stock before client initiates dispatches.
-                      </div>
-                    )}
-
-                    {/* Allocation Mode Buttons */}
-                    <div>
-                      <label style={{ fontSize: '0.68rem', color: '#CBD5E1', display: 'block', marginBottom: '4px', fontWeight: 700 }}>
-                        Funding Allocation Mode *
-                      </label>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
-                        <button
-                          type="button"
-                          onClick={() => setNewApiKeyForm({ ...newApiKeyForm, allocationType: 'COMPLIMENTARY' })}
-                          style={{
-                            background: newApiKeyForm.allocationType === 'COMPLIMENTARY' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                            border: `1px solid ${newApiKeyForm.allocationType === 'COMPLIMENTARY' ? '#38BDF8' : 'rgba(255, 255, 255, 0.1)'}`,
-                            color: newApiKeyForm.allocationType === 'COMPLIMENTARY' ? '#38BDF8' : '#94A3B8',
-                            padding: '5px 8px',
-                            borderRadius: '6px',
-                            fontSize: '0.7rem',
-                            fontWeight: 700,
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '4px',
-                          }}
-                        >
-                          <span>🎁 Complimentary</span>
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setNewApiKeyForm({ ...newApiKeyForm, allocationType: 'BANK_TRANSFER' })}
-                          style={{
-                            background: newApiKeyForm.allocationType === 'BANK_TRANSFER' ? 'rgba(74, 222, 128, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                            border: `1px solid ${newApiKeyForm.allocationType === 'BANK_TRANSFER' ? '#4ADE80' : 'rgba(255, 255, 255, 0.1)'}`,
-                            color: newApiKeyForm.allocationType === 'BANK_TRANSFER' ? '#4ADE80' : '#94A3B8',
-                            padding: '5px 8px',
-                            borderRadius: '6px',
-                            fontSize: '0.7rem',
-                            fontWeight: 700,
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '4px',
-                          }}
-                        >
-                          <span>🏦 Bank / UTR</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* UTR Reference Input */}
-                    {newApiKeyForm.allocationType === 'BANK_TRANSFER' && (
-                      <div style={{ background: 'rgba(74, 222, 128, 0.06)', border: '1px solid rgba(74, 222, 128, 0.25)', borderRadius: '6px', padding: '6px 8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        <label style={{ fontSize: '0.66rem', color: '#86EFAC', display: 'block', fontWeight: 700 }}>
-                          Bank / UPI UTR Reference *
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={newApiKeyForm.utrNumber}
-                          onChange={(e) => setNewApiKeyForm({ ...newApiKeyForm, utrNumber: e.target.value })}
-                          placeholder="e.g. 423891002931"
-                          style={{
-                            width: '100%',
-                            padding: '5px 8px',
-                            background: '#050B14',
-                            border: '1px solid rgba(74, 222, 128, 0.4)',
-                            borderRadius: '5px',
-                            color: '#86EFAC',
-                            fontSize: '0.74rem',
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            boxSizing: 'border-box',
-                          }}
-                        />
-                      </div>
-                    )}
+                  <div style={{ fontSize: '0.74rem', color: '#FDE047', fontFamily: 'monospace', fontWeight: 700, marginTop: '2px' }}>
+                    {topupModalKey.apiKey ? `${topupModalKey.apiKey.slice(0, 20)}••••••••` : 'Active Key'}
                   </div>
                 </div>
 
-                {/* Modal Footer Buttons */}
+                {/* Select Recharge Pack */}
+                <div>
+                  <label style={{ fontSize: '0.72rem', color: '#CBD5E1', display: 'flex', justifyContent: 'space-between', marginBottom: '3px', fontWeight: 700 }}>
+                    <span>Select Top-Up SMS Pack *</span>
+                    <span style={{ color: '#86EFAC', fontFamily: 'monospace' }}>+{requestedCredits.toLocaleString()} SMS</span>
+                  </label>
+                  <select
+                    value={topupForm.packId}
+                    onChange={(e) => {
+                      const selId = e.target.value;
+                      if (selId === 'custom') {
+                        setTopupForm({ ...topupForm, packId: 'custom' });
+                      } else {
+                        const foundPack = (otpPricing.packages || []).find((p) => p.id === selId);
+                        if (foundPack) {
+                          setTopupForm({
+                            ...topupForm,
+                            packId: selId,
+                            credits: foundPack.credits,
+                            price: foundPack.price,
+                          });
+                        }
+                      }
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: '7px 10px',
+                      background: '#0B1120',
+                      border: '1px solid rgba(74, 222, 128, 0.4)',
+                      borderRadius: '7px',
+                      color: '#fff',
+                      fontSize: '0.78rem',
+                      fontWeight: 600,
+                      boxSizing: 'border-box',
+                    }}
+                  >
+                    {(otpPricing.packages || []).map((pkg) => (
+                      <option key={pkg.id} value={pkg.id}>
+                        ⚡ [{pkg.name}] {pkg.credits.toLocaleString()} SMS — ₹{pkg.price} (@ ₹{pkg.ratePerSms}/SMS)
+                      </option>
+                    ))}
+                    <option value="custom">⚙️ [Custom Quota] Enter Custom SMS Credits &amp; Amount</option>
+                  </select>
+                </div>
+
+                {topupForm.packId === 'custom' && (
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                    <div>
+                      <label style={{ fontSize: '0.66rem', color: '#94A3B8', display: 'block', marginBottom: '2px' }}>Credits</label>
+                      <input
+                        type="number"
+                        min="100"
+                        step="100"
+                        value={topupForm.credits}
+                        onChange={(e) => {
+                          const cr = Number(e.target.value) || 0;
+                          const pr = Math.round(cr * (Number(otpPricing.baseRetailRatePerSms) || 0.25));
+                          setTopupForm({ ...topupForm, credits: cr, price: pr });
+                        }}
+                        style={{ width: '100%', padding: '5px 8px', background: '#070C18', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '5px', color: '#38BDF8', fontFamily: 'monospace', fontWeight: 700, fontSize: '0.74rem', boxSizing: 'border-box' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.66rem', color: '#94A3B8', display: 'block', marginBottom: '2px' }}>Price (₹)</label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="10"
+                        value={topupForm.price}
+                        onChange={(e) => setTopupForm({ ...topupForm, price: Number(e.target.value) || 0 })}
+                        style={{ width: '100%', padding: '5px 8px', background: '#070C18', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '5px', color: '#4ADE80', fontFamily: 'monospace', fontWeight: 700, fontSize: '0.74rem', boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Master Stock Indicator */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 8px', background: 'rgba(56, 189, 248, 0.06)', border: '1px solid rgba(56, 189, 248, 0.2)', borderRadius: '5px', fontSize: '0.68rem' }}>
+                  <span style={{ color: '#94A3B8' }}>Master Telecom Reserve:</span>
+                  <strong style={{ color: isOverStock ? '#FBBF24' : '#4ADE80', fontFamily: 'monospace' }}>
+                    {masterStock.toLocaleString()} SMS
+                  </strong>
+                </div>
+
+                {/* Inline Overstock Warning */}
+                {isOverStock && (
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', padding: '9px 12px', background: 'rgba(244, 63, 94, 0.1)', border: '1px solid rgba(244, 63, 94, 0.35)', borderRadius: '7px', color: '#FDA4AF', fontSize: '0.72rem', lineHeight: 1.35 }}>
+                    <ShieldAlert size={15} color="#F43F5E" style={{ flexShrink: 0, marginTop: '1px' }} />
+                    <div>
+                      <strong>Master Stock Deficit:</strong> Top-up quota (+{requestedCredits.toLocaleString()} SMS) exceeds current Master Reserve ({masterStock.toLocaleString()} SMS). Please recharge Master Gateway before issuing this top-up.
+                    </div>
+                  </div>
+                )}
+
+                {/* Payment Mode Toggle */}
+                <div>
+                  <label style={{ fontSize: '0.68rem', color: '#CBD5E1', display: 'block', marginBottom: '4px', fontWeight: 700 }}>
+                    Funding Allocation Mode *
+                  </label>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setTopupForm({ ...topupForm, allocationType: 'BANK_TRANSFER' })}
+                      style={{
+                        background: topupForm.allocationType === 'BANK_TRANSFER' ? 'rgba(74, 222, 128, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                        border: `1px solid ${topupForm.allocationType === 'BANK_TRANSFER' ? '#4ADE80' : 'rgba(255, 255, 255, 0.1)'}`,
+                        color: topupForm.allocationType === 'BANK_TRANSFER' ? '#4ADE80' : '#94A3B8',
+                        padding: '5px 8px',
+                        borderRadius: '6px',
+                        fontSize: '0.7rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '4px',
+                      }}
+                    >
+                      <span>🏦 Bank / UTR</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setTopupForm({ ...topupForm, allocationType: 'COMPLIMENTARY' })}
+                      style={{
+                        background: topupForm.allocationType === 'COMPLIMENTARY' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                        border: `1px solid ${topupForm.allocationType === 'COMPLIMENTARY' ? '#38BDF8' : 'rgba(255, 255, 255, 0.1)'}`,
+                        color: topupForm.allocationType === 'COMPLIMENTARY' ? '#38BDF8' : '#94A3B8',
+                        padding: '5px 8px',
+                        borderRadius: '6px',
+                        fontSize: '0.7rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '4px',
+                      }}
+                    >
+                      <span>🎁 Complimentary</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* UTR Input */}
+                {topupForm.allocationType === 'BANK_TRANSFER' && (
+                  <div style={{ background: 'rgba(74, 222, 128, 0.06)', border: '1px solid rgba(74, 222, 128, 0.25)', borderRadius: '6px', padding: '6px 8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <label style={{ fontSize: '0.66rem', color: '#86EFAC', display: 'block', fontWeight: 700 }}>
+                      Bank / UPI UTR Reference *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={topupForm.utrNumber}
+                      onChange={(e) => setTopupForm({ ...topupForm, utrNumber: e.target.value })}
+                      placeholder="e.g. 423891002931"
+                      style={{
+                        width: '100%',
+                        padding: '5px 8px',
+                        background: '#050B14',
+                        border: '1px solid rgba(74, 222, 128, 0.4)',
+                        borderRadius: '5px',
+                        color: '#86EFAC',
+                        fontSize: '0.74rem',
+                        fontFamily: 'monospace',
+                        fontWeight: 700,
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+                )}
+
+                {/* Modal Buttons */}
                 <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '8px', marginTop: '4px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '10px' }}>
                   <button
                     type="button"
-                    onClick={() => setIsGenerateApiKeyModalOpen(false)}
+                    onClick={() => setTopupModalKey(null)}
                     style={{
                       background: 'rgba(255, 255, 255, 0.05)',
                       border: '1px solid rgba(255, 255, 255, 0.15)',
@@ -6639,301 +6949,32 @@ echo $response;
 
                   <button
                     type="submit"
+                    disabled={isOverStock}
                     style={{
-                      background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
-                      border: 'none',
-                      color: '#fff',
+                      background: isOverStock ? 'rgba(255, 255, 255, 0.08)' : 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)',
+                      border: isOverStock ? '1px solid rgba(255, 255, 255, 0.12)' : 'none',
+                      color: isOverStock ? '#64748B' : '#fff',
                       padding: '7px 18px',
                       borderRadius: '7px',
                       fontSize: '0.8rem',
                       fontWeight: 700,
-                      cursor: 'pointer',
+                      cursor: isOverStock ? 'not-allowed' : 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '5px',
-                      boxShadow: '0 4px 15px rgba(37, 99, 235, 0.4)',
+                      boxShadow: isOverStock ? 'none' : '0 4px 15px rgba(22, 163, 74, 0.4)',
+                      transition: 'all 0.15s ease',
                     }}
                   >
-                    <Sparkles size={13} />
-                    <span>Generate Isolated API Key</span>
+                    <Plus size={13} />
+                    <span>{isOverStock ? 'Insufficient Master Stock' : `Grant +${requestedCredits.toLocaleString()} SMS Credits`}</span>
                   </button>
                 </div>
               </form>
             </div>
           </div>
-        )}
-
-      {/* ═════════════════════════════════════════════════════════════════
-          MODAL: INSTANT TOP-UP SMS CREDITS (SAME API KEY GRANT)
-          ═════════════════════════════════════════════════════════════════ */}
-      {topupModalKey && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 99999,
-            background: 'rgba(3, 7, 18, 0.88)',
-            backdropFilter: 'blur(16px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-          }}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setTopupModalKey(null);
-          }}
-        >
-          <div
-            style={{
-              width: '100%',
-              maxWidth: '520px',
-              background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.98) 0%, rgba(10, 15, 28, 0.99) 100%)',
-              border: '1px solid rgba(74, 222, 128, 0.4)',
-              borderRadius: '18px',
-              padding: '24px',
-              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.9)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '16px',
-            }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Plus size={18} color="#4ADE80" />
-                <div>
-                  <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#fff', margin: 0 }}>
-                    Top-Up SMS Credits on Same API Key
-                  </h3>
-                  <div style={{ fontSize: '0.72rem', color: '#93C5FD', fontFamily: 'monospace', marginTop: '2px' }}>
-                    Client: {topupModalKey.clientName} ({topupModalKey.clientCode})
-                  </div>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setTopupModalKey(null)}
-                style={{ background: 'rgba(255, 255, 255, 0.06)', border: 'none', color: '#94A3B8', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            <form onSubmit={handleTopUpClientWallet} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {/* Existing API Key Token Banner */}
-              <div style={{ background: 'rgba(56, 189, 248, 0.06)', border: '1px solid rgba(56, 189, 248, 0.2)', borderRadius: '10px', padding: '10px 14px' }}>
-                <div style={{ fontSize: '0.68rem', color: '#94A3B8', textTransform: 'uppercase', fontWeight: 700 }}>
-                  Permanent Client API Key (Unchanged)
-                </div>
-                <div style={{ fontSize: '0.78rem', color: '#FDE047', fontFamily: 'monospace', fontWeight: 700, marginTop: '3px' }}>
-                  {topupModalKey.apiKey ? `${topupModalKey.apiKey.slice(0, 24)}••••••••` : 'Active Key'}
-                </div>
-                <div style={{ fontSize: '0.68rem', color: '#86EFAC', marginTop: '4px' }}>
-                  ● Current Balance: <strong>{(topupModalKey.availableCredits || 0).toLocaleString()} Credits</strong>
-                </div>
-              </div>
-
-              {/* Select Recharge Pack */}
-              <div>
-                <label style={{ fontSize: '0.74rem', color: '#CBD5E1', display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontWeight: 700 }}>
-                  <span>Select Top-Up SMS Pack *</span>
-                  <span style={{ color: '#86EFAC', fontFamily: 'monospace' }}>+{Number(topupForm.credits || 0).toLocaleString()} Credits</span>
-                </label>
-                <select
-                  value={topupForm.packId}
-                  onChange={(e) => {
-                    const selId = e.target.value;
-                    if (selId === 'custom') {
-                      setTopupForm({ ...topupForm, packId: 'custom' });
-                    } else {
-                      const foundPack = (otpPricing.packages || []).find((p) => p.id === selId);
-                      if (foundPack) {
-                        setTopupForm({
-                          ...topupForm,
-                          packId: selId,
-                          credits: foundPack.credits,
-                          price: foundPack.price,
-                        });
-                      }
-                    }
-                  }}
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px',
-                    background: '#0B1120',
-                    border: '1px solid rgba(74, 222, 128, 0.4)',
-                    borderRadius: '8px',
-                    color: '#fff',
-                    fontSize: '0.82rem',
-                    fontWeight: 600,
-                  }}
-                >
-                  {(otpPricing.packages || []).map((pkg) => (
-                    <option key={pkg.id} value={pkg.id}>
-                      ⚡ [{pkg.name}] {pkg.credits.toLocaleString()} SMS — ₹{pkg.price} (@ ₹{pkg.ratePerSms}/SMS)
-                    </option>
-                  ))}
-                  <option value="custom">⚙️ [Custom Quota] Enter Custom SMS Credits &amp; Amount</option>
-                </select>
-              </div>
-
-              {topupForm.packId === 'custom' && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                  <div>
-                    <label style={{ fontSize: '0.7rem', color: '#94A3B8', display: 'block', marginBottom: '3px' }}>Credits (SMS)</label>
-                    <input
-                      type="number"
-                      min="100"
-                      step="100"
-                      value={topupForm.credits}
-                      onChange={(e) => {
-                        const cr = Number(e.target.value) || 0;
-                        const pr = Math.round(cr * (Number(otpPricing.baseRetailRatePerSms) || 0.25));
-                        setTopupForm({ ...topupForm, credits: cr, price: pr });
-                      }}
-                      style={{ width: '100%', padding: '6px 10px', background: '#070C18', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '6px', color: '#38BDF8', fontFamily: 'monospace', fontWeight: 700 }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ fontSize: '0.7rem', color: '#94A3B8', display: 'block', marginBottom: '3px' }}>Price (₹)</label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="10"
-                      value={topupForm.price}
-                      onChange={(e) => setTopupForm({ ...topupForm, price: Number(e.target.value) || 0 })}
-                      style={{ width: '100%', padding: '6px 10px', background: '#070C18', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '6px', color: '#4ADE80', fontFamily: 'monospace', fontWeight: 700 }}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Payment Mode Toggle */}
-              <div>
-                <label style={{ fontSize: '0.72rem', color: '#CBD5E1', display: 'block', marginBottom: '6px', fontWeight: 700 }}>
-                  Funding &amp; Allocation Mode *
-                </label>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                  <button
-                    type="button"
-                    onClick={() => setTopupForm({ ...topupForm, allocationType: 'BANK_TRANSFER' })}
-                    style={{
-                      background: topupForm.allocationType === 'BANK_TRANSFER' ? 'rgba(74, 222, 128, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                      border: `1px solid ${topupForm.allocationType === 'BANK_TRANSFER' ? '#4ADE80' : 'rgba(255, 255, 255, 0.1)'}`,
-                      color: topupForm.allocationType === 'BANK_TRANSFER' ? '#4ADE80' : '#94A3B8',
-                      padding: '7px 10px',
-                      borderRadius: '8px',
-                      fontSize: '0.74rem',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                    }}
-                  >
-                    <span>🏦 Bank Transfer / UTR</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setTopupForm({ ...topupForm, allocationType: 'COMPLIMENTARY' })}
-                    style={{
-                      background: topupForm.allocationType === 'COMPLIMENTARY' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                      border: `1px solid ${topupForm.allocationType === 'COMPLIMENTARY' ? '#38BDF8' : 'rgba(255, 255, 255, 0.1)'}`,
-                      color: topupForm.allocationType === 'COMPLIMENTARY' ? '#38BDF8' : '#94A3B8',
-                      padding: '7px 10px',
-                      borderRadius: '8px',
-                      fontSize: '0.74rem',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                    }}
-                  >
-                    <span>🎁 Complimentary Grant</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* UTR Input */}
-              {topupForm.allocationType === 'BANK_TRANSFER' && (
-                <div style={{ background: 'rgba(74, 222, 128, 0.06)', border: '1px solid rgba(74, 222, 128, 0.25)', borderRadius: '8px', padding: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <div>
-                    <label style={{ fontSize: '0.72rem', color: '#86EFAC', display: 'block', marginBottom: '3px', fontWeight: 700 }}>
-                      Bank / UPI UTR Transaction Reference No. *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={topupForm.utrNumber}
-                      onChange={(e) => setTopupForm({ ...topupForm, utrNumber: e.target.value })}
-                      placeholder="e.g. 423891002931 or IMPS-9835"
-                      style={{
-                        width: '100%',
-                        padding: '7px 10px',
-                        background: '#050B14',
-                        border: '1px solid rgba(74, 222, 128, 0.4)',
-                        borderRadius: '6px',
-                        color: '#86EFAC',
-                        fontSize: '0.82rem',
-                        fontFamily: 'monospace',
-                        fontWeight: 700,
-                        boxSizing: 'border-box',
-                      }}
-                    />
-                  </div>
-                  <div style={{ fontSize: '0.66rem', color: '#94A3B8' }}>
-                    ● Auto-records verified recharge of <strong>₹{topupForm.price}</strong> into 48h Bank Radar &amp; Client Ledger.
-                  </div>
-                </div>
-              )}
-
-              {/* Modal Buttons */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '8px', marginTop: '6px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '14px' }}>
-                <button
-                  type="button"
-                  onClick={() => setTopupModalKey(null)}
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    color: '#94A3B8',
-                    padding: '8px 16px',
-                    borderRadius: '8px',
-                    fontSize: '0.8rem',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
-                >
-                  Cancel
-                </button>
-
-                <button
-                  type="submit"
-                  style={{
-                    background: 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)',
-                    border: 'none',
-                    color: '#fff',
-                    padding: '8px 20px',
-                    borderRadius: '8px',
-                    fontSize: '0.82rem',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    boxShadow: '0 4px 15px rgba(22, 163, 74, 0.4)',
-                  }}
-                >
-                  <Sparkles size={14} />
-                  <span>Grant +{Number(topupForm.credits || 0).toLocaleString()} SMS Credits</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* ═════════════════════════════════════════════════════════════════
           MODAL: CREATE NEW TOP-UP PLAN (MANUAL PLAN BUILDER)
