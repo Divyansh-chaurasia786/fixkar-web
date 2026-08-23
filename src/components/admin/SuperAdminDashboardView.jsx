@@ -262,6 +262,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
   const [emailLogs, setEmailLogs] = useState([]);
   const [emailLogsLoading, setEmailLogsLoading] = useState(false);
   const [emailSearchQuery, setEmailSearchQuery] = useState('');
+  const [selectedEmailForModal, setSelectedEmailForModal] = useState(null);
   const [selectedInboundEmailModal, setSelectedInboundEmailModal] = useState(null);
   const [showInboundReplyComposer, setShowInboundReplyComposer] = useState(false);
   const [inboundReplyText, setInboundReplyText] = useState('');
