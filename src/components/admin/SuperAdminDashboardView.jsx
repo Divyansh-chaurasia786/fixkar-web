@@ -845,7 +845,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
         headers,
         body: JSON.stringify({
           superAdminKey: superAdminToken || '9835',
-          provider: targetGateway.provider || 'Fast2SMS Enterprise DLT Gateway',
+          provider: targetGateway.provider || 'Telecom SMS Gateway',
           apiKey: targetGateway.apiKey || '',
           senderId: targetGateway.senderId || 'FIXKAR',
           route: targetGateway.route || 'dlt_manual',
@@ -870,7 +870,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
       const pData = await pRes.json();
 
       if (pRes.ok && pData.success) {
-        setPricingNotice(`✅ Master Fast2SMS Gateway credentials & all ${(targetPricing.packages || []).length} SMS recharge pack prices published live!`);
+        setPricingNotice(`✅ Master ${targetGateway.provider ? targetGateway.provider.split(' ')[0] : 'SMS'} Gateway credentials & all ${(targetPricing.packages || []).length} SMS recharge pack prices published live!`);
         setTimeout(() => setPricingNotice(null), 6000);
         if (pData.pricing) setOtpPricing(pData.pricing);
       } else {
@@ -1761,7 +1761,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
             <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#fff', margin: '2px 0 0', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '10px' }}>
               {activeTab === 'dashboard' && 'Super Admin Command & Telemetry Matrix'}
               {activeTab === 'projects-governance' && 'Project QA Testing & Live Release Governance (Master Gate)'}
-              {activeTab === 'gateway' && (gatewaySubTab === 'email' ? 'Client Email Gateway & Resend Cloud Pool' : 'Master SMS Gateway & Fast2SMS Upstream Hub')}
+              {activeTab === 'gateway' && (gatewaySubTab === 'email' ? `${emailGatewayConfig.provider || 'Master Email Gateway'} & Cloud Pool` : `${gatewayConfig.provider || 'Master SMS Gateway'} & Upstream Hub`)}
               {activeTab === 'client-apis' && 'Client-Specific Isolated API Provisioning'}
               {activeTab === 'provisional' && '48-Hour Bank Statement Reconciliation Radar'}
               {activeTab === 'renewals' && 'Server & Domain Renewal Radar — All Clients'}
@@ -1939,12 +1939,12 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.78rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                     <span style={{ color: '#94A3B8' }}>Provider:</span>
-                    <span style={{ color: '#fff', fontWeight: 600 }}>{gatewayConfig.provider || 'Fast2SMS Enterprise DLT Gateway'}</span>
+                    <span style={{ color: '#fff', fontWeight: 600 }}>{gatewayConfig.provider || 'Auto-Detected SMS Gateway'}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                     <span style={{ color: '#94A3B8' }}>Delivery Route:</span>
                     <span style={{ color: '#93C5FD', fontFamily: 'monospace' }}>
-                      {gatewayConfig.route === 'otp' ? 'Quick OTP Route (Instant Verification)' : gatewayConfig.route === 'v3' ? 'Fast2SMS v3 Route' : 'DLT Manual Approved Templates'}
+                      {gatewayConfig.route === 'otp' ? 'Quick OTP Route (Instant Verification)' : gatewayConfig.route === 'v3' ? 'High-Speed Transactional Route' : 'DLT Manual Approved Templates'}
                     </span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0' }}>
@@ -2055,7 +2055,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
                     <div style={{ background: 'rgba(253, 224, 71, 0.04)', padding: '14px', borderRadius: '10px', border: '1px solid rgba(253, 224, 71, 0.15)' }}>
-                      <div style={{ fontSize: '0.65rem', color: '#94A3B8', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.06em' }}>Wholesale Fast2SMS Cost</div>
+                      <div style={{ fontSize: '0.65rem', color: '#94A3B8', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.06em' }}>Wholesale Carrier Cost</div>
                       <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#FDE047', fontFamily: 'monospace', margin: '5px 0 3px' }}>
                         ₹{wholesale.toFixed(3)} <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>/ OTP</span>
                       </div>
@@ -2654,7 +2654,12 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 }}
               >
                 <Globe size={13} />
-                <span>SMS Gateway (Fast2SMS)</span>
+                <span>Master SMS Gateway</span>
+                {gatewayConfig.provider && (
+                  <span style={{ fontSize: '0.64rem', background: 'rgba(56, 189, 248, 0.18)', color: '#38BDF8', padding: '1px 6px', borderRadius: '8px', fontWeight: 800 }}>
+                    {gatewayConfig.provider.split(' ')[0]}
+                  </span>
+                )}
               </button>
 
               <button
@@ -2676,7 +2681,12 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 }}
               >
                 <Mail size={13} />
-                <span>Email Gateway (Resend)</span>
+                <span>Master Email Gateway</span>
+                {emailGatewayConfig.provider && (
+                  <span style={{ fontSize: '0.64rem', background: 'rgba(2, 132, 199, 0.2)', color: '#38BDF8', padding: '1px 6px', borderRadius: '8px', fontWeight: 800 }}>
+                    {emailGatewayConfig.provider.split(' ')[0]}
+                  </span>
+                )}
               </button>
 
               <button
@@ -2703,16 +2713,16 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
             </div>
 
             {/* ═════════════════════════════════════════════════════════════
-                SUBTAB 1: SMS GATEWAY & FAST2SMS UPSTREAM POOL
+                SUBTAB 1: SMS GATEWAY & TELECOM UPSTREAM POOL
                 ═════════════════════════════════════════════════════════════ */}
             {gatewaySubTab === 'sms' && (
               <>
-                {/* 1. UPSTREAM FAST2SMS CREDENTIALS & INFRASTRUCTURE */}
+                {/* 1. UPSTREAM SMS GATEWAY CREDENTIALS & INFRASTRUCTURE */}
                 <div className="fixkar-panel">
                   <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
                     <div className="fixkar-panel-title">
                       <Server size={15} color="#38BDF8" />
-                      <span>1. Upstream Fast2SMS Gateway Credentials &amp; Infrastructure</span>
+                      <span>1. Upstream SMS Gateway Credentials &amp; Infrastructure</span>
                       <span style={{ fontSize: '0.66rem', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.12)', border: '1px solid rgba(74, 222, 128, 0.3)', padding: '2px 8px', borderRadius: '12px', fontWeight: 700, marginLeft: '6px' }}>
                         ● {gatewayConfig.status || 'Connected'}
                       </span>
@@ -2738,7 +2748,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                         }}
                       >
                         <RefreshCw size={12} className={gatewaySyncing ? 'animate-spin' : ''} />
-                        <span>{gatewaySyncing ? 'Syncing...' : 'Sync Balance'}</span>
+                        <span>{gatewaySyncing ? 'Detecting & Syncing...' : 'Sync Balance'}</span>
                       </button>
 
                       <button
@@ -2770,11 +2780,11 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                     {/* Gateway Provider */}
                     <div>
                       <label style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, display: 'block', marginBottom: '4px', textTransform: 'uppercase' }}>
-                        Gateway Provider
+                        Gateway Provider (Auto-Detected)
                       </label>
                       <input
                         type="text"
-                        value={gatewayConfig.provider || 'Fast2SMS Enterprise DLT Gateway'}
+                        value={gatewayConfig.provider || 'Auto-Detecting SMS Gateway...'}
                         onChange={(e) => setGatewayConfig({ ...gatewayConfig, provider: e.target.value })}
                         style={{
                           width: '100%',
@@ -2790,11 +2800,11 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                       />
                     </div>
 
-                    {/* Master Fast2SMS API Key */}
+                    {/* Master SMS API Key */}
                     <div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
                         <label style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase' }}>
-                          Master Fast2SMS API Key
+                          Master SMS API Key
                         </label>
                         <button
                           type="button"
@@ -2808,7 +2818,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                         type={showMasterApiKey ? 'text' : 'password'}
                         value={gatewayConfig.apiKey || ''}
                         onChange={(e) => setGatewayConfig({ ...gatewayConfig, apiKey: e.target.value })}
-                        placeholder="Enter Fast2SMS Master API Key"
+                        placeholder="Paste SMS API Key (Fast2SMS, MSG91, Textlocal, 2Factor, Twilio...)"
                         style={{
                           width: '100%',
                           padding: '7px 10px',
@@ -2870,17 +2880,17 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                       >
                         <option value="dlt_manual">DLT Manual SMS (Approved)</option>
                         <option value="otp">Quick OTP Route (Instant)</option>
-                        <option value="v3">Fast2SMS v3 Route</option>
+                        <option value="v3">High-Speed Transactional Route</option>
                       </select>
                     </div>
                   </div>
 
-                  {/* Fast2SMS Wallet Balance Bar */}
+                  {/* Upstream Carrier Wallet Balance Bar */}
                   <div style={{ marginTop: '10px', padding: '8px 12px', background: 'rgba(56, 189, 248, 0.05)', border: '1px solid rgba(56, 189, 248, 0.15)', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <Smartphone size={14} color="#38BDF8" />
                       <span style={{ fontSize: '0.72rem', color: '#CBD5E1' }}>
-                        Live Fast2SMS Carrier Balance: <strong style={{ color: '#4ADE80', fontFamily: 'monospace' }}>{gatewayConfig.upstreamWalletAmount || '₹4,850.00'}</strong> ({gatewayConfig.upstreamBalance?.toLocaleString() || '24,250'} SMS Available)
+                        Live Upstream Carrier Balance: <strong style={{ color: '#4ADE80', fontFamily: 'monospace' }}>{gatewayConfig.upstreamWalletAmount || '₹0.00'}</strong> ({gatewayConfig.upstreamBalance?.toLocaleString() || '0'} SMS Available)
                       </span>
                     </div>
                     <span style={{ fontSize: '0.66rem', color: '#94A3B8' }}>
@@ -3300,14 +3310,14 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
 
               return (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  {/* 1. UPSTREAM RESEND CREDENTIALS & INFRASTRUCTURE */}
+                  {/* 1. UPSTREAM EMAIL CREDENTIALS & INFRASTRUCTURE */}
                   <div className="fixkar-panel">
                     <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
                       <div className="fixkar-panel-title">
                         <Server size={15} color="#38BDF8" />
-                        <span>1. Upstream Resend Gateway Credentials &amp; Infrastructure</span>
+                        <span>1. Upstream Email Gateway Credentials &amp; Infrastructure</span>
                         <span style={{ fontSize: '0.66rem', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.12)', border: '1px solid rgba(74, 222, 128, 0.3)', padding: '2px 8px', borderRadius: '12px', fontWeight: 700, marginLeft: '6px' }}>
-                          ● {emailGatewayConfig.status || 'Client Pool Connected'}
+                          ● {emailGatewayConfig.status || 'Connected'}
                         </span>
                       </div>
 
@@ -3341,11 +3351,11 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                       {/* Gateway Provider */}
                       <div>
                         <label style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, display: 'block', marginBottom: '4px', textTransform: 'uppercase' }}>
-                          Gateway Provider
+                          Gateway Provider (Auto-Detected)
                         </label>
                         <input
                           type="text"
-                          value={emailGatewayConfig.provider || 'Resend Enterprise Cloud Engine'}
+                          value={emailGatewayConfig.provider || 'Transactional Cloud Mail Engine'}
                           onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, provider: e.target.value })}
                           style={{
                             width: '100%',
@@ -3361,11 +3371,11 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                         />
                       </div>
 
-                      {/* Master Resend API Key */}
+                      {/* Master Email API Key */}
                       <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
                           <label style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase' }}>
-                            Master Resend API Key
+                            Master Email API Key
                           </label>
                           <button
                             type="button"
@@ -3379,7 +3389,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                           type={showMasterEmailApiKey ? 'text' : 'password'}
                           value={emailGatewayConfig.apiKey || ''}
                           onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, apiKey: e.target.value })}
-                          placeholder="Enter Resend Master API Key"
+                          placeholder="Paste Email API Key (Resend, SendGrid, Amazon SES, Postmark...)"
                           style={{
                             width: '100%',
                             padding: '7px 10px',
@@ -3445,16 +3455,16 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                       </div>
                     </div>
 
-                    {/* Resend Carrier Status Bar */}
+                    {/* Email Carrier Status Bar */}
                     <div style={{ marginTop: '10px', padding: '8px 12px', background: 'rgba(56, 189, 248, 0.05)', border: '1px solid rgba(56, 189, 248, 0.15)', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <Mail size={14} color="#38BDF8" />
                         <span style={{ fontSize: '0.72rem', color: '#CBD5E1' }}>
-                          Live Resend Cloud Carrier Pool: <strong style={{ color: '#4ADE80', fontFamily: 'monospace' }}>50,000 Free / Unlimited Pro Engine</strong> (Active &amp; Verified)
+                          Live Cloud Mail Carrier Pool: <strong style={{ color: '#4ADE80', fontFamily: 'monospace' }}>Verified Enterprise Engine</strong> (High Deliverability SLA)
                         </span>
                       </div>
                       <span style={{ fontSize: '0.66rem', color: '#94A3B8' }}>
-                        Last Synced: <strong style={{ color: '#CBD5E1' }}>Recent</strong>
+                        Last Synced: <strong style={{ color: '#CBD5E1' }}>{emailGatewayConfig.lastSyncedAt ? new Date(emailGatewayConfig.lastSyncedAt).toLocaleDateString('en-IN') : 'Recent'}</strong>
                       </span>
                     </div>
                   </div>
@@ -3570,7 +3580,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                           <span style={{ color: '#F59E0B', fontWeight: 900, fontSize: '1.2rem', fontFamily: 'monospace' }}>
                             ₹{Number(emailGatewayConfig.wholesaleCostPerEmail || 0.034).toFixed(3)}
                           </span>
-                          <span style={{ color: '#94A3B8', fontSize: '0.68rem' }}>/Email (Resend Pro)</span>
+                          <span style={{ color: '#94A3B8', fontSize: '0.68rem' }}>/Email (Cloud Enterprise)</span>
                         </div>
                       </div>
 
