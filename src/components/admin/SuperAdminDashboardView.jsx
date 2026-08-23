@@ -131,15 +131,15 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
 
   // Gateway Config State
   const [gatewayConfig, setGatewayConfig] = useState({
-    provider: 'Fast2SMS Enterprise DLT Gateway',
-    apiKey: 'f2s_live_sample_master_key_9835',
+    provider: '',
+    apiKey: '',
     senderId: 'FIXKAR',
     route: 'dlt_manual',
-    upstreamWalletAmount: '₹4,850.00',
-    upstreamBalance: 24250,
-    status: 'Connected (Active Upstream)',
-    lastSyncedTimestamp: '20/8/2026, 2:00:00 pm',
-    alertThreshold: 500
+    upstreamWalletAmount: '',
+    upstreamBalance: 0,
+    status: 'Connecting...',
+    lastSyncedTimestamp: '',
+    alertThreshold: 500,
   });
   const [gatewaySyncing, setGatewaySyncing] = useState(false);
   const [gatewaySaving, setGatewaySaving] = useState(false);
