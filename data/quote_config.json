@@ -297,28 +297,18 @@
   ],
   "transactionalEmailPacks": [
     {
-      "id": "email_2500",
-      "title": "Starter Micro Pack",
-      "price": 159,
-      "credits": 2500,
-      "popular": false,
-      "unitRate": "₹0.064 / email",
-      "specs": "2,500 High-Speed Transactional Emails • Brevo Matrix",
-      "desc": "2,500 High-Speed Transactional Emails • Verified Delivery (50.9% Margin)"
-    },
-    {
-      "id": "email_starter",
-      "title": "Starter Pro Pack",
+      "id": "email_5k",
+      "title": "Starter 5K Pack",
       "price": 319,
       "credits": 5000,
       "popular": false,
       "unitRate": "₹0.064 / email",
       "specs": "5,000 High-Speed Transactional Emails • Brevo Matrix",
-      "desc": "5,000 High-Speed Transactional Emails • Verified Delivery (51.1% Margin)"
+      "desc": "5,000 High-Speed Transactional Emails • Verified Delivery (50% Margin)"
     },
     {
       "id": "email_10k",
-      "title": "Growth Lite Pack",
+      "title": "Growth 10K Pack",
       "price": 625,
       "credits": 10000,
       "popular": true,
@@ -327,18 +317,18 @@
       "desc": "10,000 High-Speed Transactional Emails • High Deliverability Queue (50% Margin)"
     },
     {
-      "id": "email_growth",
-      "title": "Growth Business Pack",
-      "price": 1250,
-      "credits": 20000,
+      "id": "email_25k",
+      "title": "Business 25K Pack",
+      "price": 1599,
+      "credits": 25000,
       "popular": false,
-      "unitRate": "₹0.063 / email",
-      "specs": "20,000 High-Speed Transactional Emails • Brevo Matrix",
-      "desc": "20,000 High-Speed Transactional Emails • Dedicated Deliverability (50% Margin)"
+      "unitRate": "₹0.064 / email",
+      "specs": "25,000 High-Speed Transactional Emails • Brevo Matrix",
+      "desc": "25,000 High-Speed Transactional Emails • Dedicated Deliverability (50% Margin)"
     },
     {
-      "id": "email_scale",
-      "title": "Scale Enterprise Pack",
+      "id": "email_50k",
+      "title": "Scale 50K Pack",
       "price": 3125,
       "credits": 50000,
       "popular": false,
@@ -347,8 +337,8 @@
       "desc": "50,000 High-Speed Transactional Emails • High-Volume SLA (50% Margin)"
     },
     {
-      "id": "email_enterprise",
-      "title": "Mega Enterprise Pack",
+      "id": "email_100k",
+      "title": "Enterprise 100K Pack",
       "price": 6250,
       "credits": 100000,
       "popular": false,
@@ -358,5 +348,5 @@
     }
   ],
   "lastSyncedAt": "2026-08-23T20:15:00.000Z",
-  "lastUpdatedAt": "2026-08-23T18:31:51.085Z"
+  "lastUpdatedAt": "2026-08-23T18:34:42.013Z"
 }
