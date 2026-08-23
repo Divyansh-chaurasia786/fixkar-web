@@ -2597,857 +2597,685 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
               </div>
             )}
 
-            {/* UNIFIED MESSAGING & CLOUD GATEWAYS TOP SWITCHER */}
-            <div style={{ display: 'flex', gap: '6px', background: 'rgba(10, 15, 29, 0.75)', backdropFilter: 'blur(12px)', padding: '5px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)' }}>
+                        {/* SUBTAB NAVIGATION SWITCHER */}
+            <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
               <button
                 type="button"
                 onClick={() => setGatewaySubTab('sms')}
                 style={{
-                  flex: 1,
-                  padding: '9px 16px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: gatewaySubTab === 'sms' ? 'linear-gradient(135deg, #1E40AF 0%, #1D4ED8 100%)' : 'transparent',
-                  color: gatewaySubTab === 'sms' ? '#fff' : '#94A3B8',
-                  fontSize: '0.8rem',
-                  fontWeight: 800,
+                  background: gatewaySubTab === 'sms' ? 'rgba(56, 189, 248, 0.12)' : 'transparent',
+                  border: gatewaySubTab === 'sms' ? '1px solid rgba(56, 189, 248, 0.35)' : '1px solid transparent',
+                  color: gatewaySubTab === 'sms' ? '#38BDF8' : '#94A3B8',
+                  padding: '6px 14px',
+                  borderRadius: '6px',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
                   cursor: 'pointer',
-                  display: 'flex',
+                  display: 'inline-flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  boxShadow: gatewaySubTab === 'sms' ? '0 2px 12px rgba(37, 99, 235, 0.4)' : 'none',
+                  gap: '6px',
                   transition: 'all 0.15s ease',
                 }}
               >
-                <Globe size={14} color={gatewaySubTab === 'sms' ? '#fff' : 'currentColor'} />
-                <span>SMS Gateway &amp; Fast2SMS Pool</span>
+                <Globe size={13} />
+                <span>SMS Gateway (Fast2SMS)</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setGatewaySubTab('email')}
                 style={{
-                  flex: 1,
-                  padding: '9px 16px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: gatewaySubTab === 'email' ? 'linear-gradient(135deg, #0369A1 0%, #0284C7 100%)' : 'transparent',
-                  color: gatewaySubTab === 'email' ? '#fff' : '#94A3B8',
-                  fontSize: '0.8rem',
-                  fontWeight: 800,
+                  background: gatewaySubTab === 'email' ? 'rgba(2, 132, 199, 0.15)' : 'transparent',
+                  border: gatewaySubTab === 'email' ? '1px solid rgba(2, 132, 199, 0.35)' : '1px solid transparent',
+                  color: gatewaySubTab === 'email' ? '#38BDF8' : '#94A3B8',
+                  padding: '6px 14px',
+                  borderRadius: '6px',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
                   cursor: 'pointer',
-                  display: 'flex',
+                  display: 'inline-flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  boxShadow: gatewaySubTab === 'email' ? '0 2px 12px rgba(2, 132, 199, 0.4)' : 'none',
+                  gap: '6px',
                   transition: 'all 0.15s ease',
                 }}
               >
-                <Mail size={14} color={gatewaySubTab === 'email' ? '#fff' : 'currentColor'} />
-                <span>Email Gateway &amp; Resend Pool</span>
+                <Mail size={13} />
+                <span>Email Gateway (Resend)</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('client-apis')}
                 style={{
-                  flex: 1,
-                  padding: '9px 16px',
-                  borderRadius: '8px',
-                  border: 'none',
                   background: 'transparent',
+                  border: '1px solid transparent',
                   color: '#94A3B8',
-                  fontSize: '0.8rem',
-                  fontWeight: 800,
+                  padding: '6px 14px',
+                  borderRadius: '6px',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
                   cursor: 'pointer',
-                  display: 'flex',
+                  display: 'inline-flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
+                  gap: '6px',
                   transition: 'all 0.15s ease',
                 }}
               >
-                <KeyRound size={14} color="currentColor" />
+                <KeyRound size={13} />
                 <span>Client API Studio</span>
               </button>
             </div>
 
+            {/* ═════════════════════════════════════════════════════════════
+                SUBTAB 1: SMS GATEWAY & FAST2SMS UPSTREAM POOL
+                ═════════════════════════════════════════════════════════════ */}
             {gatewaySubTab === 'sms' && (
               <>
-            {/* 1. MASTER GATEWAY & PRICING TOP CONTROLLER BAR */}
-            <div className="fixkar-panel" style={{ padding: '18px 22px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <Globe size={20} color="#FBBF24" />
-                    <h2 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#fff', margin: 0 }}>
-                      Master SMS Gateway &amp; Live Pack Pricing Engine
-                    </h2>
-                  </div>
-                  <p style={{ fontSize: '0.78rem', color: '#94A3B8', margin: '4px 0 0' }}>
-                    Configure upstream Fast2SMS credentials, establish wholesale margins, and set retail SMS pack rates for all client portals.
-                  </p>
-                </div>
+                {/* 1. UPSTREAM FAST2SMS CREDENTIALS & INFRASTRUCTURE */}
+                <div className="fixkar-panel">
+                  <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
+                    <div className="fixkar-panel-title">
+                      <Server size={15} color="#38BDF8" />
+                      <span>1. Upstream Fast2SMS Gateway Credentials &amp; Infrastructure</span>
+                      <span style={{ fontSize: '0.66rem', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.12)', border: '1px solid rgba(74, 222, 128, 0.3)', padding: '2px 8px', borderRadius: '12px', fontWeight: 700, marginLeft: '6px' }}>
+                        ● {gatewayConfig.status || 'Connected'}
+                      </span>
+                    </div>
 
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-                  <button
-                    type="button"
-                    onClick={handleSyncGatewayBalance}
-                    disabled={gatewaySyncing}
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      color: '#CBD5E1',
-                      padding: '8px 14px',
-                      borderRadius: '8px',
-                      fontSize: '0.76rem',
-                      fontWeight: 700,
-                      cursor: gatewaySyncing ? 'wait' : 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                    }}
-                  >
-                    <RefreshCw size={13} className={gatewaySyncing ? 'animate-spin' : ''} />
-                    <span>{gatewaySyncing ? 'Syncing...' : 'Sync Fast2SMS Balance'}</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleSaveOtpPricing}
-                    disabled={pricingSaving || gatewaySaving}
-                    style={{
-                      background: 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)',
-                      border: 'none',
-                      color: '#fff',
-                      padding: '9px 20px',
-                      borderRadius: '8px',
-                      fontSize: '0.82rem',
-                      fontWeight: 900,
-                      cursor: pricingSaving ? 'wait' : 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      boxShadow: '0 4px 18px rgba(22, 163, 74, 0.45)',
-                    }}
-                  >
-                    <Save size={15} />
-                    <span>{pricingSaving ? 'Publishing Live...' : 'Save & Publish Live Pricing'}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* 2. SECTION 1: UPSTREAM FAST2SMS CREDENTIALS & SENDER ID */}
-            <div className="fixkar-panel">
-              <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
-                <div className="fixkar-panel-title">
-                  <Server size={16} color="#38BDF8" />
-                  <span>1. Upstream Fast2SMS Gateway Credentials &amp; Infrastructure</span>
-                </div>
-                <span style={{ fontSize: '0.72rem', color: '#4ADE80', fontFamily: 'monospace', fontWeight: 700 }}>
-                  ● Upstream Carrier Status: {gatewayConfig.status || 'Connected'}
-                </span>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px' }}>
-                {/* Gateway Provider */}
-                <div>
-                  <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700, display: 'block', marginBottom: '5px' }}>
-                    Gateway Provider
-                  </label>
-                  <input
-                    type="text"
-                    value={gatewayConfig.provider || 'Fast2SMS Enterprise DLT Gateway'}
-                    onChange={(e) => setGatewayConfig({ ...gatewayConfig, provider: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '8px 12px',
-                      background: 'rgba(255, 255, 255, 0.04)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '8px',
-                      color: '#fff',
-                      fontSize: '0.8rem',
-                      fontFamily: 'monospace',
-                      boxSizing: 'border-box',
-                    }}
-                  />
-                </div>
-
-                {/* Master Fast2SMS API Key */}
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
-                    <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700 }}>
-                      Master Fast2SMS API Key
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => setShowMasterApiKey(!showMasterApiKey)}
-                      style={{ background: 'none', border: 'none', color: '#38BDF8', fontSize: '0.68rem', cursor: 'pointer', fontWeight: 700 }}
-                    >
-                      {showMasterApiKey ? 'Hide 👁️' : 'Show 👁️'}
-                    </button>
-                  </div>
-                  <input
-                    type={showMasterApiKey ? 'text' : 'password'}
-                    value={gatewayConfig.apiKey || ''}
-                    onChange={(e) => setGatewayConfig({ ...gatewayConfig, apiKey: e.target.value })}
-                    placeholder="Enter Fast2SMS Master API Key"
-                    style={{
-                      width: '100%',
-                      padding: '8px 12px',
-                      background: 'rgba(255, 255, 255, 0.04)',
-                      border: '1px solid rgba(56, 189, 248, 0.4)',
-                      borderRadius: '8px',
-                      color: '#FDE047',
-                      fontSize: '0.8rem',
-                      fontFamily: 'monospace',
-                      fontWeight: 700,
-                      boxSizing: 'border-box',
-                    }}
-                  />
-                </div>
-
-                {/* Master Header Sender ID */}
-                <div>
-                  <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700, display: 'block', marginBottom: '5px' }}>
-                    Header Sender ID (6 Letters)
-                  </label>
-                  <input
-                    type="text"
-                    maxLength={6}
-                    value={gatewayConfig.senderId || 'FIXKAR'}
-                    onChange={(e) => setGatewayConfig({ ...gatewayConfig, senderId: e.target.value.toUpperCase() })}
-                    style={{
-                      width: '100%',
-                      padding: '8px 12px',
-                      background: 'rgba(255, 255, 255, 0.04)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '8px',
-                      color: '#93C5FD',
-                      fontSize: '0.8rem',
-                      fontFamily: 'monospace',
-                      fontWeight: 800,
-                      boxSizing: 'border-box',
-                    }}
-                  />
-                </div>
-
-                {/* SMS Route Mode */}
-                <div>
-                  <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700, display: 'block', marginBottom: '5px' }}>
-                    SMS Delivery Route
-                  </label>
-                  <select
-                    value={gatewayConfig.route || 'dlt_manual'}
-                    onChange={(e) => setGatewayConfig({ ...gatewayConfig, route: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '8px 12px',
-                      background: '#0D1323',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '8px',
-                      color: '#fff',
-                      fontSize: '0.8rem',
-                      boxSizing: 'border-box',
-                    }}
-                  >
-                    <option value="dlt_manual">DLT Manual SMS (DLT Approved Templates)</option>
-                    <option value="otp">Quick OTP Route (Instant Verification)</option>
-                    <option value="v3">Fast2SMS v3 Route</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Fast2SMS Wallet Balance Bar */}
-              <div style={{ marginTop: '14px', padding: '10px 14px', background: 'rgba(56, 189, 248, 0.06)', border: '1px solid rgba(56, 189, 248, 0.2)', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <Smartphone size={16} color="#38BDF8" />
-                  <span style={{ fontSize: '0.76rem', color: '#CBD5E1' }}>
-                    Live Fast2SMS Carrier Balance: <strong style={{ color: '#4ADE80', fontFamily: 'monospace' }}>{gatewayConfig.upstreamWalletAmount || '₹4,850.00'}</strong> ({gatewayConfig.upstreamBalance?.toLocaleString() || '24,250'} SMS Available)
-                  </span>
-                </div>
-                <span style={{ fontSize: '0.7rem', color: '#94A3B8' }}>
-                  Last Synced: <strong style={{ color: '#CBD5E1' }}>{gatewayConfig.lastSyncedTimestamp || 'Recent'}</strong>
-                </span>
-              </div>
-            </div>
-
-            {/* 3. SECTION 2: MASTER RETAIL PRICE & PROFIT MARGIN CONTROLLERS */}
-            <div className="fixkar-panel">
-              <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
-                <div className="fixkar-panel-title">
-                  <DollarSign size={16} color="#FBBF24" />
-                  <span>2. Master Pricing Architecture &amp; Dynamic Profit Margins</span>
-                </div>
-                <span style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
-                  Upstream cost auto-gathered from Fast2SMS API. Adjust base rate or pick target margin presets.
-                </span>
-              </div>
-
-              {/* Dynamic Target Margin Preset Buttons */}
-              <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '12px', padding: '10px 14px', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-                <span style={{ fontSize: '0.74rem', color: '#CBD5E1', fontWeight: 700 }}>
-                  ⚡ Quick Target Margin Presets (Auto-Calculates Base Price &amp; All Packs):
-                </span>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  {[40, 50, 60, 70].map((m) => {
-                    const cost = Number(otpPricing.wholesaleCostPerSms) || 0.125;
-                    const calculatedRate = (cost / (1 - m / 100)).toFixed(3);
-                    const isCurrent = Math.abs((((Number(otpPricing.baseRetailRatePerSms) || 0.25) - cost) / (Number(otpPricing.baseRetailRatePerSms) || 0.25)) * 100 - m) < 1.5;
-                    return (
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                       <button
-                        key={m}
                         type="button"
-                        onClick={() => handleApplyTargetMargin(m)}
+                        onClick={handleSyncGatewayBalance}
+                        disabled={gatewaySyncing}
                         style={{
-                          background: isCurrent ? 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)' : 'rgba(255, 255, 255, 0.05)',
-                          border: `1px solid ${isCurrent ? '#38BDF8' : 'rgba(255, 255, 255, 0.12)'}`,
-                          color: isCurrent ? '#fff' : '#CBD5E1',
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          border: '1px solid rgba(255, 255, 255, 0.12)',
+                          color: '#CBD5E1',
                           padding: '5px 12px',
                           borderRadius: '6px',
                           fontSize: '0.72rem',
-                          fontWeight: 800,
-                          cursor: 'pointer',
+                          fontWeight: 700,
+                          cursor: gatewaySyncing ? 'wait' : 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '4px',
+                          gap: '5px',
                         }}
-                        title={`Set profit margin to ${m}% (Base rate will be ₹${calculatedRate}/SMS)`}
                       >
-                        <span>🎯 {m}% Margin</span>
-                        <span style={{ fontSize: '0.64rem', color: isCurrent ? '#BAE6FD' : '#94A3B8' }}>
-                          (₹{calculatedRate})
-                        </span>
+                        <RefreshCw size={12} className={gatewaySyncing ? 'animate-spin' : ''} />
+                        <span>{gatewaySyncing ? 'Syncing...' : 'Sync Balance'}</span>
                       </button>
-                    );
-                  })}
-                </div>
-              </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px', marginBottom: '16px' }}>
-                {/* 1. Base Retail Rate per SMS */}
-                <div style={{ background: 'rgba(56, 189, 248, 0.05)', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: '14px', padding: '16px 18px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                    <label style={{ fontSize: '0.72rem', color: '#93C5FD', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                      Base Retail Price Per SMS (₹)
-                    </label>
-                    <span style={{ fontSize: '0.64rem', color: '#38BDF8', fontWeight: 700 }}>Selling Rate</span>
+                      <button
+                        type="button"
+                        onClick={handleSaveOtpPricing}
+                        disabled={pricingSaving || gatewaySaving}
+                        style={{
+                          background: 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)',
+                          border: 'none',
+                          color: '#fff',
+                          padding: '6px 14px',
+                          borderRadius: '6px',
+                          fontSize: '0.74rem',
+                          fontWeight: 800,
+                          cursor: pricingSaving ? 'wait' : 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          boxShadow: '0 2px 10px rgba(22, 163, 74, 0.35)',
+                        }}
+                      >
+                        <Save size={13} />
+                        <span>{pricingSaving ? 'Saving...' : 'Save & Publish SMS Pricing'}</span>
+                      </button>
+                    </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                    <div style={{ position: 'relative', flex: 1 }}>
-                      <span style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#38BDF8', fontWeight: 800, fontSize: '0.9rem' }}>₹</span>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+                    {/* Gateway Provider */}
+                    <div>
+                      <label style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, display: 'block', marginBottom: '4px', textTransform: 'uppercase' }}>
+                        Gateway Provider
+                      </label>
                       <input
-                        type="number"
-                        step="0.01"
-                        min="0.05"
-                        max="2.00"
-                        value={otpPricing.baseRetailRatePerSms ?? 0.25}
-                        onChange={(e) => {
-                          const val = e.target.value === '' ? '' : parseFloat(e.target.value);
-                          setOtpPricing((prev) => ({ ...prev, baseRetailRatePerSms: val }));
-                        }}
-                        onBlur={(e) => {
-                          const val = parseFloat(e.target.value) || 0.25;
-                          handleRecalculatePacksFromBaseRate(val);
-                        }}
+                        type="text"
+                        value={gatewayConfig.provider || 'Fast2SMS Enterprise DLT Gateway'}
+                        onChange={(e) => setGatewayConfig({ ...gatewayConfig, provider: e.target.value })}
                         style={{
                           width: '100%',
-                          padding: '8px 10px 8px 24px',
+                          padding: '7px 10px',
                           background: '#0B1120',
-                          border: '1px solid rgba(56, 189, 248, 0.4)',
-                          borderRadius: '8px',
-                          color: '#38BDF8',
-                          fontSize: '1rem',
-                          fontWeight: 900,
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          borderRadius: '6px',
+                          color: '#fff',
+                          fontSize: '0.78rem',
                           fontFamily: 'monospace',
                           boxSizing: 'border-box',
                         }}
                       />
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => handleRecalculatePacksFromBaseRate(otpPricing.baseRetailRatePerSms || 0.25)}
-                      style={{
-                        background: 'rgba(56, 189, 248, 0.18)',
-                        border: '1px solid rgba(56, 189, 248, 0.4)',
-                        color: '#38BDF8',
-                        padding: '8px 12px',
-                        borderRadius: '8px',
-                        fontSize: '0.74rem',
-                        fontWeight: 800,
-                        cursor: 'pointer',
-                        whiteSpace: 'nowrap',
-                      }}
-                      title="Cascade this base rate across all 6 standard packs with volume discounts"
-                    >
-                      ⚡ Auto-Sync Packs
-                    </button>
-                  </div>
-                  <span style={{ fontSize: '0.68rem', color: '#94A3B8', marginTop: '6px', display: 'block' }}>
-                    Standard unit rate before volume discounts
-                  </span>
-                </div>
 
-                {/* 2. Upstream Fast2SMS Wholesale Cost (Locked / Auto-Gathered from Gateway API) */}
-                <div style={{ background: 'rgba(245, 158, 11, 0.05)', border: '1px solid rgba(245, 158, 11, 0.35)', borderRadius: '14px', padding: '16px 18px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                      <label style={{ fontSize: '0.72rem', color: '#FDE047', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Carrier Wholesale Cost (₹)
-                      </label>
-                      <span style={{ fontSize: '0.62rem', background: 'rgba(74, 222, 128, 0.18)', color: '#86EFAC', padding: '2px 7px', borderRadius: '4px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                        🔒 Auto-API
-                      </span>
+                    {/* Master Fast2SMS API Key */}
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                        <label style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase' }}>
+                          Master Fast2SMS API Key
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setShowMasterApiKey(!showMasterApiKey)}
+                          style={{ background: 'none', border: 'none', color: '#38BDF8', fontSize: '0.64rem', cursor: 'pointer', fontWeight: 700 }}
+                        >
+                          {showMasterApiKey ? 'Hide 👁️' : 'Show 👁️'}
+                        </button>
+                      </div>
+                      <input
+                        type={showMasterApiKey ? 'text' : 'password'}
+                        value={gatewayConfig.apiKey || ''}
+                        onChange={(e) => setGatewayConfig({ ...gatewayConfig, apiKey: e.target.value })}
+                        placeholder="Enter Fast2SMS Master API Key"
+                        style={{
+                          width: '100%',
+                          padding: '7px 10px',
+                          background: '#0B1120',
+                          border: '1px solid rgba(56, 189, 248, 0.35)',
+                          borderRadius: '6px',
+                          color: '#FDE047',
+                          fontSize: '0.78rem',
+                          fontFamily: 'monospace',
+                          fontWeight: 700,
+                          boxSizing: 'border-box',
+                        }}
+                      />
                     </div>
 
-                    <div style={{ background: '#0B1120', border: '1px solid rgba(245, 158, 11, 0.25)', borderRadius: '8px', padding: '8px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    {/* Master Header Sender ID */}
+                    <div>
+                      <label style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, display: 'block', marginBottom: '4px', textTransform: 'uppercase' }}>
+                        Header Sender ID (6 Letters)
+                      </label>
+                      <input
+                        type="text"
+                        maxLength={6}
+                        value={gatewayConfig.senderId || 'FIXKAR'}
+                        onChange={(e) => setGatewayConfig({ ...gatewayConfig, senderId: e.target.value.toUpperCase() })}
+                        style={{
+                          width: '100%',
+                          padding: '7px 10px',
+                          background: '#0B1120',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          borderRadius: '6px',
+                          color: '#93C5FD',
+                          fontSize: '0.78rem',
+                          fontFamily: 'monospace',
+                          fontWeight: 800,
+                          boxSizing: 'border-box',
+                        }}
+                      />
+                    </div>
+
+                    {/* SMS Route Mode */}
+                    <div>
+                      <label style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, display: 'block', marginBottom: '4px', textTransform: 'uppercase' }}>
+                        SMS Delivery Route
+                      </label>
+                      <select
+                        value={gatewayConfig.route || 'dlt_manual'}
+                        onChange={(e) => setGatewayConfig({ ...gatewayConfig, route: e.target.value })}
+                        style={{
+                          width: '100%',
+                          padding: '7px 10px',
+                          background: '#0B1120',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          borderRadius: '6px',
+                          color: '#fff',
+                          fontSize: '0.78rem',
+                          boxSizing: 'border-box',
+                        }}
+                      >
+                        <option value="dlt_manual">DLT Manual SMS (Approved)</option>
+                        <option value="otp">Quick OTP Route (Instant)</option>
+                        <option value="v3">Fast2SMS v3 Route</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Fast2SMS Wallet Balance Bar */}
+                  <div style={{ marginTop: '10px', padding: '8px 12px', background: 'rgba(56, 189, 248, 0.05)', border: '1px solid rgba(56, 189, 248, 0.15)', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Smartphone size={14} color="#38BDF8" />
+                      <span style={{ fontSize: '0.72rem', color: '#CBD5E1' }}>
+                        Live Fast2SMS Carrier Balance: <strong style={{ color: '#4ADE80', fontFamily: 'monospace' }}>{gatewayConfig.upstreamWalletAmount || '₹4,850.00'}</strong> ({gatewayConfig.upstreamBalance?.toLocaleString() || '24,250'} SMS Available)
+                      </span>
+                    </div>
+                    <span style={{ fontSize: '0.66rem', color: '#94A3B8' }}>
+                      Last Synced: <strong style={{ color: '#CBD5E1' }}>{gatewayConfig.lastSyncedTimestamp || 'Recent'}</strong>
+                    </span>
+                  </div>
+                </div>
+
+                {/* 2. MASTER PRICING ARCHITECTURE & PROFIT MARGINS */}
+                <div className="fixkar-panel">
+                  <div className="fixkar-panel-head" style={{ marginBottom: '12px' }}>
+                    <div className="fixkar-panel-title">
+                      <DollarSign size={15} color="#FBBF24" />
+                      <span>2. Master Pricing Architecture &amp; Dynamic Profit Margins</span>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '5px', alignItems: 'center', flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: '0.68rem', color: '#94A3B8', marginRight: '4px' }}>Margin Presets:</span>
+                      {[40, 50, 60, 70].map((m) => {
+                        const cost = Number(otpPricing.wholesaleCostPerSms) || 0.125;
+                        const calculatedRate = (cost / (1 - m / 100)).toFixed(3);
+                        const isCurrent = Math.abs((((Number(otpPricing.baseRetailRatePerSms) || 0.25) - cost) / (Number(otpPricing.baseRetailRatePerSms) || 0.25)) * 100 - m) < 1.5;
+                        return (
+                          <button
+                            key={m}
+                            type="button"
+                            onClick={() => handleApplyTargetMargin(m)}
+                            style={{
+                              background: isCurrent ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                              border: `1px solid ${isCurrent ? '#38BDF8' : 'rgba(255, 255, 255, 0.1)'}`,
+                              color: isCurrent ? '#fff' : '#CBD5E1',
+                              padding: '3px 8px',
+                              borderRadius: '5px',
+                              fontSize: '0.68rem',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                            }}
+                          >
+                            {m}% (₹{calculatedRate})
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+                    {/* Card 1: Base Retail Price */}
+                    <div style={{ background: 'rgba(56, 189, 248, 0.04)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '10px', padding: '12px 14px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                        <span style={{ fontSize: '0.68rem', color: '#93C5FD', fontWeight: 800, textTransform: 'uppercase' }}>
+                          Base Retail Price / SMS
+                        </span>
+                        <span style={{ fontSize: '0.6rem', color: '#38BDF8', fontWeight: 700 }}>Selling Rate</span>
+                      </div>
+                      <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                        <div style={{ position: 'relative', flex: 1 }}>
+                          <span style={{ position: 'absolute', left: '8px', top: '50%', transform: 'translateY(-50%)', color: '#38BDF8', fontWeight: 800, fontSize: '0.82rem' }}>₹</span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            min="0.05"
+                            max="2.00"
+                            value={otpPricing.baseRetailRatePerSms ?? 0.25}
+                            onChange={(e) => {
+                              const val = e.target.value === '' ? '' : parseFloat(e.target.value);
+                              setOtpPricing((prev) => ({ ...prev, baseRetailRatePerSms: val }));
+                            }}
+                            onBlur={(e) => {
+                              const val = parseFloat(e.target.value) || 0.25;
+                              handleRecalculatePacksFromBaseRate(val);
+                            }}
+                            style={{
+                              width: '100%',
+                              padding: '6px 8px 6px 20px',
+                              background: '#0B1120',
+                              border: '1px solid rgba(56, 189, 248, 0.35)',
+                              borderRadius: '6px',
+                              color: '#38BDF8',
+                              fontSize: '0.9rem',
+                              fontWeight: 900,
+                              fontFamily: 'monospace',
+                              boxSizing: 'border-box',
+                            }}
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRecalculatePacksFromBaseRate(otpPricing.baseRetailRatePerSms || 0.25)}
+                          style={{
+                            background: 'rgba(56, 189, 248, 0.15)',
+                            border: '1px solid rgba(56, 189, 248, 0.35)',
+                            color: '#38BDF8',
+                            padding: '6px 10px',
+                            borderRadius: '6px',
+                            fontSize: '0.68rem',
+                            fontWeight: 800,
+                            cursor: 'pointer',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          ⚡ Sync
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Card 2: Carrier Wholesale Cost */}
+                    <div style={{ background: 'rgba(245, 158, 11, 0.04)', border: '1px solid rgba(245, 158, 11, 0.25)', borderRadius: '10px', padding: '12px 14px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                        <span style={{ fontSize: '0.68rem', color: '#FDE047', fontWeight: 800, textTransform: 'uppercase' }}>
+                          Carrier Wholesale Cost
+                        </span>
+                        <span style={{ fontSize: '0.58rem', background: 'rgba(74, 222, 128, 0.18)', color: '#86EFAC', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>
+                          🔒 Auto-API
+                        </span>
+                      </div>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
                         <span style={{ color: '#F59E0B', fontWeight: 900, fontSize: '1.2rem', fontFamily: 'monospace' }}>
                           ₹{Number(otpPricing.wholesaleCostPerSms || 0.125).toFixed(3)}
                         </span>
-                        <span style={{ color: '#94A3B8', fontSize: '0.72rem', fontWeight: 700 }}>/SMS</span>
+                        <span style={{ color: '#94A3B8', fontSize: '0.68rem' }}>/SMS (DLT Route)</span>
                       </div>
-                      <span style={{ fontSize: '0.66rem', color: '#FDE047', background: 'rgba(245, 158, 11, 0.15)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>
-                        DLT Route
-                      </span>
                     </div>
-                  </div>
 
-                  <span style={{ fontSize: '0.68rem', color: '#94A3B8', marginTop: '8px', display: 'block' }}>
-                    Auto-gathered via Fast2SMS DLT gateway API (Non-editable carrier cost)
-                  </span>
-                </div>
-
-                {/* 3. Dynamic Studio Gross Margin Telemetry */}
-                <div style={{ background: 'rgba(74, 222, 128, 0.08)', border: '1px solid rgba(74, 222, 128, 0.3)', borderRadius: '14px', padding: '16px 18px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.72rem', color: '#86EFAC', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                      Dynamic Gross Margin
-                    </span>
-                    <span style={{ fontSize: '0.64rem', color: '#4ADE80', fontWeight: 700 }}>Real-Time</span>
-                  </div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#4ADE80', fontFamily: 'monospace', margin: '4px 0 2px' }}>
+                    {/* Card 3: Dynamic Gross Margin */}
                     {(() => {
-                      const base = Number(otpPricing.baseRetailRatePerSms) || 0.25;
-                      const cost = Number(otpPricing.wholesaleCostPerSms) || 0.125;
-                      const marginPct = ((base - cost) / base) * 100;
-                      return `${marginPct.toFixed(1)}%`;
+                      const baseVal = Number(otpPricing.baseRetailRatePerSms) || 0.25;
+                      const costVal = Number(otpPricing.wholesaleCostPerSms) || 0.125;
+                      const marginPct = baseVal > 0 ? (((baseVal - costVal) / baseVal) * 100).toFixed(1) : '0.0';
+                      const profitPerSms = (baseVal - costVal).toFixed(3);
+                      return (
+                        <div style={{ background: 'rgba(16, 185, 129, 0.04)', border: '1px solid rgba(16, 185, 129, 0.25)', borderRadius: '10px', padding: '12px 14px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                            <span style={{ fontSize: '0.68rem', color: '#6EE7B7', fontWeight: 800, textTransform: 'uppercase' }}>
+                              Dynamic Gross Margin
+                            </span>
+                            <span style={{ fontSize: '0.68rem', color: '#A7F3D0', fontWeight: 700 }}>
+                              +₹{profitPerSms}/SMS Profit
+                            </span>
+                          </div>
+                          <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#4ADE80', fontFamily: 'monospace', lineHeight: 1 }}>
+                            {marginPct}%
+                          </div>
+                        </div>
+                      );
                     })()}
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: '#CBD5E1' }}>
-                    Net Studio Profit: <strong style={{ color: '#4ADE80' }}>+₹{((Number(otpPricing.baseRetailRatePerSms) || 0.25) - (Number(otpPricing.wholesaleCostPerSms) || 0.125)).toFixed(3)}</strong> per SMS
-                  </div>
                 </div>
-              </div>
 
-              {/* 4. SECTION 3: RECHARGE PACKAGES & DIRECT OVERRIDES MATRIX */}
-              <div style={{ marginBottom: '10px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
-                  <div>
-                    <h4 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#fff', margin: 0 }}>
-                      3. Recharge Package Matrix &amp; Plan Management ({otpPricing.packages?.length || 0} Plans Active)
-                    </h4>
-                    <span style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
-                      Add new plans, remove unwanted plans, or edit names, credits, rates, and descriptions directly.
-                    </span>
-                  </div>
+                {/* 3. RECHARGE PACKAGE MATRIX */}
+                <div className="fixkar-panel">
+                  <div className="fixkar-panel-head" style={{ marginBottom: '12px' }}>
+                    <div className="fixkar-panel-title">
+                      <Layers size={15} color="#38BDF8" />
+                      <span>3. Recharge Package Matrix</span>
+                      <span style={{ fontSize: '0.66rem', background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', padding: '2px 7px', borderRadius: '10px', fontWeight: 800, marginLeft: '6px' }}>
+                        {(otpPricing.packages || []).length} Plans
+                      </span>
+                    </div>
 
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                     <button
                       type="button"
-                      onClick={handleOpenAddPlanModal}
+                      onClick={handleAddNewPack}
                       style={{
-                        background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
-                        border: 'none',
-                        color: '#fff',
-                        padding: '8px 18px',
-                        borderRadius: '8px',
-                        fontSize: '0.78rem',
+                        background: 'rgba(56, 189, 248, 0.15)',
+                        border: '1px solid rgba(56, 189, 248, 0.35)',
+                        color: '#38BDF8',
+                        padding: '5px 12px',
+                        borderRadius: '6px',
+                        fontSize: '0.72rem',
                         fontWeight: 800,
                         cursor: 'pointer',
                         display: 'inline-flex',
                         alignItems: 'center',
-                        gap: '6px',
-                        boxShadow: '0 4px 16px rgba(37, 99, 235, 0.4)',
+                        gap: '4px',
                       }}
                     >
-                      <Plus size={15} />
-                      <span>+ Create &amp; Add Custom Plan</span>
+                      <Plus size={12} />
+                      <span>+ Add Plan</span>
                     </button>
                   </div>
-                </div>
 
-                <div style={{ overflowX: 'auto', overflowY: 'auto', maxHeight: '440px', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px' }}>
-                  <table className="fixkar-table" style={{ fontSize: '0.78rem', width: '100%' }}>
-                    <thead style={{ position: 'sticky', top: 0, zIndex: 5, background: 'rgba(10, 15, 29, 0.98)', backdropFilter: 'blur(10px)' }}>
-                      <tr>
-                        <th style={{ width: '24%' }}>PACKAGE NAME &amp; DESCRIPTION</th>
-                        <th style={{ width: '12%' }}>CREDITS (SMS)</th>
-                        <th style={{ width: '14%' }}>RETAIL RATE / SMS</th>
-                        <th style={{ width: '13%' }}>PACK PRICE (₹)</th>
-                        <th style={{ width: '11%' }}>WHOLESALE COST</th>
-                        <th style={{ width: '12%' }}>NET PROFIT</th>
-                        <th style={{ width: '8%', textAlign: 'center' }}>POPULAR</th>
-                        <th style={{ width: '6%', textAlign: 'center' }}>ACTION</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(otpPricing.packages || []).map((pkg, idx) => {
-                        const credits = Number(pkg.credits) || 1000;
-                        const cost = credits * (Number(otpPricing.wholesaleCostPerSms) || 0.125);
-                        const profit = (pkg.price || 0) - cost;
-                        const marginPct = (pkg.price || 0) > 0 ? (profit / pkg.price) * 100 : 0;
+                  <div style={{ overflowX: 'auto', width: '100%' }}>
+                    <table className="fixkar-table" style={{ width: '100%', minWidth: '800px' }}>
+                      <thead>
+                        <tr>
+                          <th style={{ width: '25%' }}>PLAN NAME &amp; SUBTITLE</th>
+                          <th style={{ width: '13%' }}>CREDITS</th>
+                          <th style={{ width: '14%' }}>RATE / SMS</th>
+                          <th style={{ width: '14%' }}>PRICE (₹)</th>
+                          <th style={{ width: '12%' }}>WHOLESALE</th>
+                          <th style={{ width: '10%' }}>PROFIT</th>
+                          <th style={{ width: '7%', textAlign: 'center' }}>POPULAR</th>
+                          <th style={{ width: '5%', textAlign: 'right' }}>ACTION</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(otpPricing.packages || []).map((pkg, idx) => {
+                          const credits = Number(pkg.credits) || 0;
+                          const price = Number(pkg.price) || 0;
+                          const cost = credits * wholesaleCost;
+                          const profit = price - cost;
+                          const marginPct = price > 0 ? ((profit / price) * 100).toFixed(1) : '0.0';
+                          const unitRate = credits > 0 ? (price / credits).toFixed(3) : '0.000';
 
-                        return (
-                          <tr key={pkg.id || idx}>
-                            {/* 1. Name & Description */}
-                            <td>
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          return (
+                            <tr key={pkg.id || idx}>
+                              <td>
                                 <input
                                   type="text"
                                   value={pkg.name}
                                   onChange={(e) => handleUpdatePackField(idx, 'name', e.target.value)}
-                                  placeholder="Plan Name"
                                   style={{
-                                    background: 'rgba(255, 255, 255, 0.04)',
-                                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                                    borderRadius: '6px',
-                                    padding: '4px 8px',
-                                    color: '#fff',
-                                    fontSize: '0.78rem',
-                                    fontWeight: 700,
                                     width: '100%',
-                                    boxSizing: 'border-box',
+                                    padding: '4px 6px',
+                                    background: '#0B1120',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    borderRadius: '5px',
+                                    color: '#fff',
+                                    fontSize: '0.76rem',
+                                    fontWeight: 700,
                                   }}
                                 />
                                 <input
                                   type="text"
                                   value={pkg.desc || ''}
+                                  placeholder="Subtitle..."
                                   onChange={(e) => handleUpdatePackField(idx, 'desc', e.target.value)}
-                                  placeholder="Short description for client portal..."
                                   style={{
-                                    background: 'rgba(255, 255, 255, 0.02)',
-                                    border: '1px solid rgba(255, 255, 255, 0.06)',
-                                    borderRadius: '4px',
-                                    padding: '3px 6px',
-                                    color: '#94A3B8',
-                                    fontSize: '0.68rem',
                                     width: '100%',
-                                    boxSizing: 'border-box',
+                                    padding: '2px 6px',
+                                    marginTop: '3px',
+                                    background: 'transparent',
+                                    border: '1px solid rgba(255, 255, 255, 0.05)',
+                                    borderRadius: '4px',
+                                    color: '#94A3B8',
+                                    fontSize: '0.66rem',
                                   }}
                                 />
-                              </div>
-                            </td>
-
-                            {/* 2. Credits (Editable) */}
-                            <td>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              </td>
+                              <td>
                                 <input
                                   type="number"
-                                  step="500"
-                                  min="100"
-                                  max="1000000"
                                   value={pkg.credits}
-                                  onChange={(e) => handleUpdatePackField(idx, 'credits', e.target.value)}
+                                  onChange={(e) => handleUpdatePackField(idx, 'credits', Number(e.target.value))}
                                   style={{
-                                    background: '#0B1120',
-                                    border: '1px solid rgba(56, 189, 248, 0.3)',
-                                    borderRadius: '6px',
+                                    width: '100%',
                                     padding: '4px 6px',
-                                    color: '#38BDF8',
-                                    fontSize: '0.8rem',
-                                    fontFamily: 'monospace',
-                                    fontWeight: 800,
-                                    width: '75px',
-                                  }}
-                                />
-                                <span style={{ color: '#64748B', fontSize: '0.68rem' }}>SMS</span>
-                              </div>
-                            </td>
-
-                            {/* 3. Rate / SMS */}
-                            <td>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                <span style={{ color: '#94A3B8', fontSize: '0.75rem' }}>₹</span>
-                                <input
-                                  type="number"
-                                  step="0.005"
-                                  min="0.01"
-                                  max="2.00"
-                                  value={pkg.ratePerSms}
-                                  onChange={(e) => handleUpdatePackField(idx, 'ratePerSms', e.target.value)}
-                                  style={{
                                     background: '#0B1120',
-                                    border: '1px solid rgba(56, 189, 248, 0.3)',
-                                    borderRadius: '6px',
-                                    padding: '4px 6px',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    borderRadius: '5px',
                                     color: '#38BDF8',
-                                    fontSize: '0.8rem',
+                                    fontSize: '0.76rem',
                                     fontFamily: 'monospace',
                                     fontWeight: 700,
-                                    width: '70px',
                                   }}
                                 />
-                                <span style={{ color: '#64748B', fontSize: '0.68rem' }}>/SMS</span>
-                              </div>
-                            </td>
-
-                            {/* 4. Pack Price */}
-                            <td>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                <span style={{ color: '#4ADE80', fontWeight: 800 }}>₹</span>
-                                <input
-                                  type="number"
-                                  step="5"
-                                  min="10"
-                                  max="100000"
-                                  value={pkg.price}
-                                  onChange={(e) => handleUpdatePackField(idx, 'price', e.target.value)}
+                              </td>
+                              <td>
+                                <span style={{ fontSize: '0.74rem', color: '#93C5FD', fontFamily: 'monospace', fontWeight: 700 }}>
+                                  ₹{unitRate}
+                                </span>
+                              </td>
+                              <td>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                                  <span style={{ color: '#FDE047', fontWeight: 800, fontSize: '0.74rem' }}>₹</span>
+                                  <input
+                                    type="number"
+                                    value={pkg.price}
+                                    onChange={(e) => handleUpdatePackField(idx, 'price', Number(e.target.value))}
+                                    style={{
+                                      width: '100%',
+                                      padding: '4px 6px',
+                                      background: '#0B1120',
+                                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                                      borderRadius: '5px',
+                                      color: '#FDE047',
+                                      fontSize: '0.76rem',
+                                      fontFamily: 'monospace',
+                                      fontWeight: 800,
+                                    }}
+                                  />
+                                </div>
+                              </td>
+                              <td>
+                                <span style={{ fontSize: '0.74rem', color: '#94A3B8', fontFamily: 'monospace' }}>
+                                  ₹{cost.toFixed(2)}
+                                </span>
+                              </td>
+                              <td>
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                  <span style={{ fontSize: '0.76rem', color: profit >= 0 ? '#4ADE80' : '#F87171', fontWeight: 800, fontFamily: 'monospace' }}>
+                                    +₹{profit.toFixed(2)}
+                                  </span>
+                                  <span style={{ fontSize: '0.62rem', color: '#38BDF8' }}>
+                                    {marginPct}%
+                                  </span>
+                                </div>
+                              </td>
+                              <td style={{ textAlign: 'center' }}>
+                                <button
+                                  type="button"
+                                  onClick={() => handleUpdatePackField(idx, 'popular', !pkg.popular)}
                                   style={{
-                                    background: '#0B1120',
-                                    border: '1px solid rgba(74, 222, 128, 0.35)',
-                                    borderRadius: '6px',
-                                    padding: '4px 6px',
-                                    color: '#4ADE80',
-                                    fontSize: '0.84rem',
-                                    fontFamily: 'monospace',
+                                    background: pkg.popular ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                                    border: `1px solid ${pkg.popular ? '#38BDF8' : 'rgba(255, 255, 255, 0.1)'}`,
+                                    color: pkg.popular ? '#38BDF8' : '#64748B',
+                                    padding: '2px 6px',
+                                    borderRadius: '5px',
+                                    fontSize: '0.62rem',
                                     fontWeight: 800,
-                                    width: '80px',
+                                    cursor: 'pointer',
                                   }}
-                                />
-                              </div>
-                            </td>
-
-                            {/* 5. Wholesale Cost */}
-                            <td>
-                              <span style={{ fontFamily: 'monospace', color: '#94A3B8', fontSize: '0.74rem' }}>
-                                ₹{cost.toFixed(2)}
-                              </span>
-                            </td>
-
-                            {/* 6. Net Profit & Margin */}
-                            <td>
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                                <span style={{ color: profit >= 0 ? '#86EFAC' : '#F87171', fontWeight: 800, fontFamily: 'monospace', fontSize: '0.76rem' }}>
-                                  {profit >= 0 ? '+' : ''}₹{profit.toFixed(2)}
-                                </span>
-                                <span style={{ fontSize: '0.62rem', color: marginPct >= 40 ? '#4ADE80' : marginPct >= 20 ? '#FBBF24' : '#F87171' }}>
-                                  ({marginPct.toFixed(1)}% Margin)
-                                </span>
-                              </div>
-                            </td>
-
-                            {/* 7. Popular Flag Toggle */}
-                            <td style={{ textAlign: 'center' }}>
-                              <button
-                                type="button"
-                                onClick={() => handleUpdatePackField(idx, 'popular', !pkg.popular)}
-                                style={{
-                                  background: pkg.popular ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                                  border: `1px solid ${pkg.popular ? 'rgba(56, 189, 248, 0.4)' : 'rgba(255, 255, 255, 0.1)'}`,
-                                  color: pkg.popular ? '#38BDF8' : '#64748B',
-                                  padding: '3px 8px',
-                                  borderRadius: '6px',
-                                  fontSize: '0.68rem',
-                                  fontWeight: 700,
-                                  cursor: 'pointer',
-                                }}
-                                title="Toggle Most Popular badge on Client Portal"
-                              >
-                                {pkg.popular ? '⭐ Popular' : '—'}
-                              </button>
-                            </td>
-
-                            {/* 8. Delete / Remove Plan Action */}
-                            <td style={{ textAlign: 'center' }}>
-                              <button
-                                type="button"
-                                onClick={() => handleRemovePack(idx)}
-                                style={{
-                                  background: 'rgba(239, 68, 68, 0.12)',
-                                  border: '1px solid rgba(239, 68, 68, 0.3)',
-                                  color: '#F87171',
-                                  padding: '4px 8px',
-                                  borderRadius: '6px',
-                                  fontSize: '0.7rem',
-                                  cursor: 'pointer',
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                }}
-                                title={`Remove ${pkg.name}`}
-                              >
-                                <Trash2 size={12} />
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Bottom Action & Quick Save Bar */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '14px', flexWrap: 'wrap', gap: '10px' }}>
-                  <span style={{ fontSize: '0.74rem', color: '#94A3B8' }}>
-                    💡 <em>Tip: You can edit rates, pack prices, and credits directly in the table cells. Click below to publish changes to database.</em>
-                  </span>
-
-                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                    <button
-                      type="button"
-                      onClick={() => handleSaveOtpPricing()}
-                      disabled={pricingSaving}
-                      style={{
-                        background: 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)',
-                        border: 'none',
-                        color: '#fff',
-                        padding: '9px 24px',
-                        borderRadius: '8px',
-                        fontSize: '0.84rem',
-                        fontWeight: 900,
-                        cursor: pricingSaving ? 'wait' : 'pointer',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        boxShadow: '0 4px 18px rgba(22, 163, 74, 0.45)',
-                      }}
-                    >
-                      <Save size={15} />
-                      <span>{pricingSaving ? 'Saving to Database...' : 'Save & Publish Live Pricing'}</span>
-                    </button>
+                                >
+                                  {pkg.popular ? '⭐ YES' : 'NO'}
+                                </button>
+                              </td>
+                              <td style={{ textAlign: 'right' }}>
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemovePack(idx)}
+                                  style={{
+                                    background: 'rgba(239, 68, 68, 0.15)',
+                                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                                    color: '#F87171',
+                                    padding: '3px 6px',
+                                    borderRadius: '5px',
+                                    fontSize: '0.66rem',
+                                    cursor: 'pointer',
+                                  }}
+                                >
+                                  Del
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            {/* 5. SECTION 4: LIVE CLIENT PORTAL PREVIEW */}
-            <div className="fixkar-panel">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Eye size={16} color="#38BDF8" />
-                  <span style={{ fontWeight: 800, color: '#fff', fontSize: '0.92rem' }}>
-                    4. Live Client Portal Preview (How Clients See These Packs on /#client)
-                  </span>
-                </div>
-                <span style={{ fontSize: '0.72rem', color: '#4ADE80', fontFamily: 'monospace', fontWeight: 700 }}>
-                  ● Real-time synchronized with Super Admin pricing
-                </span>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
-                {(otpPricing.packages || []).map((pkg) => (
-                  <div
-                    key={pkg.id}
-                    style={{
-                      background: 'linear-gradient(180deg, rgba(14, 21, 38, 0.95) 0%, rgba(9, 13, 25, 0.98) 100%)',
-                      border: pkg.popular ? '2px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.08)',
-                      borderRadius: '14px',
-                      padding: '16px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'space-between',
-                      position: 'relative',
-                      boxShadow: pkg.popular ? '0 10px 25px rgba(56, 189, 248, 0.15)' : 'none',
-                    }}
-                  >
-                    {pkg.popular && (
-                      <span style={{ position: 'absolute', top: '-9px', right: '14px', background: '#38BDF8', color: '#000', fontSize: '0.6rem', fontWeight: 800, padding: '2px 7px', borderRadius: '4px', letterSpacing: '0.05em' }}>
-                        MOST POPULAR
-                      </span>
-                    )}
-
-                    <div>
-                      <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.92rem' }}>{pkg.name}</div>
-                      <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#4ADE80', margin: '6px 0 2px' }}>
-                        ₹{Number(pkg.price || 0).toLocaleString('en-IN')}
-                      </div>
-                      <div style={{ fontSize: '0.7rem', color: '#38BDF8', fontFamily: 'monospace' }}>
-                        +{Number(pkg.credits || 0).toLocaleString()} Credits • ₹{(pkg.ratePerSms || (pkg.price / (pkg.credits || 1))).toFixed(2)}/OTP
-                      </div>
-                      <p style={{ fontSize: '0.72rem', color: '#94A3B8', lineHeight: 1.4, margin: '8px 0 14px' }}>
-                        {pkg.desc}
-                      </p>
+                {/* 4. LIVE CLIENT PORTAL PREVIEW */}
+                <div className="fixkar-panel">
+                  <div className="fixkar-panel-head" style={{ marginBottom: '12px' }}>
+                    <div className="fixkar-panel-title">
+                      <Eye size={15} color="#38BDF8" />
+                      <span>4. Live Client Portal Preview (/#client)</span>
                     </div>
-
-                    <div
-                      style={{
-                        background: pkg.popular ? 'linear-gradient(135deg, #38BDF8 0%, #2563EB 100%)' : 'rgba(255, 255, 255, 0.06)',
-                        border: `1px solid ${pkg.popular ? '#38BDF8' : 'rgba(255, 255, 255, 0.15)'}`,
-                        color: '#fff',
-                        padding: '7px 12px',
-                        borderRadius: '8px',
-                        fontSize: '0.74rem',
-                        fontWeight: 700,
-                        textAlign: 'center',
-                      }}
-                    >
-                      Instant Razorpay Top-Up
-                    </div>
+                    <span style={{ fontSize: '0.68rem', color: '#4ADE80', fontWeight: 700 }}>
+                      ● White-Labeled
+                    </span>
                   </div>
-                ))}
-              </div>
-            </div>
-            </>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
+                    {(otpPricing.packages || []).map((pkg) => (
+                      <div
+                        key={pkg.id}
+                        style={{
+                          background: pkg.popular ? 'rgba(37, 99, 235, 0.15)' : 'rgba(255, 255, 255, 0.02)',
+                          border: `1px solid ${pkg.popular ? '#38BDF8' : 'rgba(255, 255, 255, 0.08)'}`,
+                          borderRadius: '10px',
+                          padding: '12px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'space-between',
+                          gap: '8px',
+                          position: 'relative',
+                        }}
+                      >
+                        {pkg.popular && (
+                          <span style={{ position: 'absolute', top: '-7px', right: '10px', background: '#38BDF8', color: '#000', fontSize: '0.58rem', fontWeight: 900, padding: '1px 5px', borderRadius: '3px', letterSpacing: '0.04em' }}>
+                            POPULAR
+                          </span>
+                        )}
+
+                        <div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <strong style={{ fontSize: '0.82rem', color: '#fff' }}>{pkg.name}</strong>
+                            <span style={{ fontSize: '0.68rem', color: '#38BDF8', fontFamily: 'monospace', fontWeight: 700 }}>
+                              ₹{((Number(pkg.price) || 0) / (Number(pkg.credits) || 1)).toFixed(3)}/sms
+                            </span>
+                          </div>
+                          <div style={{ fontSize: '1.15rem', fontWeight: 900, color: '#FDE047', fontFamily: 'monospace', margin: '3px 0 1px' }}>
+                            +{(Number(pkg.credits) || 0).toLocaleString()} <span style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 600 }}>SMS</span>
+                          </div>
+                          <p style={{ fontSize: '0.66rem', color: '#94A3B8', margin: '3px 0 0', lineHeight: 1.3 }}>
+                            {pkg.desc}
+                          </p>
+                        </div>
+
+                        <div
+                          style={{
+                            background: pkg.popular ? 'linear-gradient(135deg, #38BDF8 0%, #2563EB 100%)' : 'rgba(255, 255, 255, 0.06)',
+                            border: `1px solid ${pkg.popular ? '#38BDF8' : 'rgba(255, 255, 255, 0.15)'}`,
+                            color: '#fff',
+                            padding: '5px 10px',
+                            borderRadius: '6px',
+                            fontSize: '0.7rem',
+                            fontWeight: 700,
+                            textAlign: 'center',
+                          }}
+                        >
+                          ₹{Number(pkg.price || 0).toLocaleString('en-IN')} Top-Up
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
             )}
 
+            {/* ═════════════════════════════════════════════════════════════
+                SUBTAB 2: EMAIL GATEWAY & RESEND UPSTREAM POOL
+                ═════════════════════════════════════════════════════════════ */}
             {gatewaySubTab === 'email' && (() => {
-              const filteredInbound = inboundEmails.filter((email) => {
-                if (!emailSearchQuery) return true;
-                const q = emailSearchQuery.toLowerCase();
-                return (
-                  (email.from && String(email.from).toLowerCase().includes(q)) ||
-                  (email.subject && String(email.subject).toLowerCase().includes(q)) ||
-                  (email.text && String(email.text).toLowerCase().includes(q)) ||
-                  (email.to && String(email.to).toLowerCase().includes(q))
-                );
-              });
-
-              const handleMarkInboundRead = async (email) => {
-                setSelectedInboundEmailModal(email);
-                if (email.status === 'UNREAD') {
-                  try {
-                    await fetch(`${API_BASE}/api/admin/emails/inbound/mark-read`, {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${adminToken}`,
-                      },
-                      body: JSON.stringify({ id: email.id }),
-                    });
-                    setInboundEmails(prev => prev.map(e => e.id === email.id ? { ...e, status: 'READ' } : e));
-                  } catch (err) {
-                    console.error(err);
-                  }
-                }
-              };
-
               const emailWholesaleCost = Number(emailGatewayConfig.wholesaleCostPerEmail) || 0.034;
 
               return (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-                  {/* 1. TOP CONTROLLER BAR */}
-                  <div className="fixkar-panel" style={{ padding: '16px 20px', borderLeft: '3px solid #0284C7' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <Mail size={18} color="#38BDF8" />
-                          <h2 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#fff', margin: 0 }}>
-                            Resend Cloud Mail Matrix &amp; Master Email Pool
-                          </h2>
-                          <span style={{ fontSize: '0.66rem', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.12)', border: '1px solid rgba(74, 222, 128, 0.3)', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>
-                            ● {emailGatewayConfig.status || 'Client Pool Connected'}
-                          </span>
-                        </div>
-                        <p style={{ fontSize: '0.74rem', color: '#94A3B8', margin: '3px 0 0' }}>
-                          Configure upstream Resend API credentials, set wholesale margins, and publish email recharge packages for all client portals.
-                        </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  {/* 1. UPSTREAM RESEND CREDENTIALS & INFRASTRUCTURE */}
+                  <div className="fixkar-panel">
+                    <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
+                      <div className="fixkar-panel-title">
+                        <Server size={15} color="#38BDF8" />
+                        <span>1. Upstream Resend Gateway Credentials &amp; Infrastructure</span>
+                        <span style={{ fontSize: '0.66rem', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.12)', border: '1px solid rgba(74, 222, 128, 0.3)', padding: '2px 8px', borderRadius: '12px', fontWeight: 700, marginLeft: '6px' }}>
+                          ● {emailGatewayConfig.status || 'Client Pool Connected'}
+                        </span>
                       </div>
 
-                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                         <button
                           type="button"
                           onClick={handleSaveEmailGatewayConfig}
@@ -3456,37 +3284,27 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                             background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
                             border: 'none',
                             color: '#fff',
-                            padding: '8px 18px',
-                            borderRadius: '8px',
-                            fontSize: '0.78rem',
-                            fontWeight: 900,
+                            padding: '6px 14px',
+                            borderRadius: '6px',
+                            fontSize: '0.74rem',
+                            fontWeight: 800,
                             cursor: emailGatewaySaving ? 'wait' : 'pointer',
                             display: 'inline-flex',
                             alignItems: 'center',
-                            gap: '7px',
-                            boxShadow: '0 4px 15px rgba(2, 132, 199, 0.4)',
+                            gap: '6px',
+                            boxShadow: '0 2px 10px rgba(2, 132, 199, 0.35)',
                           }}
                         >
-                          <Save size={14} />
-                          <span>{emailGatewaySaving ? 'Publishing...' : 'Save & Publish Email Gateway'}</span>
+                          <Save size={13} />
+                          <span>{emailGatewaySaving ? 'Saving...' : 'Save & Publish Email Gateway'}</span>
                         </button>
                       </div>
                     </div>
-                  </div>
 
-                  {/* 2. SECTION 1: UPSTREAM RESEND CREDENTIALS & SENDER DOMAIN */}
-                  <div className="fixkar-panel">
-                    <div className="fixkar-panel-head" style={{ marginBottom: '12px' }}>
-                      <div className="fixkar-panel-title">
-                        <Server size={15} color="#38BDF8" />
-                        <span>1. Upstream Resend Gateway Credentials &amp; Infrastructure</span>
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
                       {/* Gateway Provider */}
                       <div>
-                        <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700, display: 'block', marginBottom: '5px' }}>
+                        <label style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, display: 'block', marginBottom: '4px', textTransform: 'uppercase' }}>
                           Gateway Provider
                         </label>
                         <input
@@ -3495,12 +3313,12 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                           onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, provider: e.target.value })}
                           style={{
                             width: '100%',
-                            padding: '8px 12px',
-                            background: 'rgba(255, 255, 255, 0.04)',
+                            padding: '7px 10px',
+                            background: '#0B1120',
                             border: '1px solid rgba(255, 255, 255, 0.1)',
-                            borderRadius: '8px',
+                            borderRadius: '6px',
                             color: '#fff',
-                            fontSize: '0.8rem',
+                            fontSize: '0.78rem',
                             fontFamily: 'monospace',
                             boxSizing: 'border-box',
                           }}
@@ -3509,14 +3327,14 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
 
                       {/* Master Resend API Key */}
                       <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
-                          <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <label style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase' }}>
                             Master Resend API Key
                           </label>
                           <button
                             type="button"
                             onClick={() => setShowMasterEmailApiKey(!showMasterEmailApiKey)}
-                            style={{ background: 'none', border: 'none', color: '#38BDF8', fontSize: '0.68rem', cursor: 'pointer', fontWeight: 700 }}
+                            style={{ background: 'none', border: 'none', color: '#38BDF8', fontSize: '0.64rem', cursor: 'pointer', fontWeight: 700 }}
                           >
                             {showMasterEmailApiKey ? 'Hide 👁️' : 'Show 👁️'}
                           </button>
@@ -3528,12 +3346,12 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                           placeholder="Enter Resend Master API Key"
                           style={{
                             width: '100%',
-                            padding: '8px 12px',
-                            background: 'rgba(255, 255, 255, 0.04)',
-                            border: '1px solid rgba(56, 189, 248, 0.4)',
-                            borderRadius: '8px',
+                            padding: '7px 10px',
+                            background: '#0B1120',
+                            border: '1px solid rgba(56, 189, 248, 0.35)',
+                            borderRadius: '6px',
                             color: '#FDE047',
-                            fontSize: '0.8rem',
+                            fontSize: '0.78rem',
                             fontFamily: 'monospace',
                             fontWeight: 700,
                             boxSizing: 'border-box',
@@ -3543,7 +3361,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
 
                       {/* Master Header / Domain Sender ID */}
                       <div>
-                        <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700, display: 'block', marginBottom: '5px' }}>
+                        <label style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, display: 'block', marginBottom: '4px', textTransform: 'uppercase' }}>
                           Header / Domain Sender ID
                         </label>
                         <input
@@ -3552,12 +3370,12 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                           onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, senderId: e.target.value })}
                           style={{
                             width: '100%',
-                            padding: '8px 12px',
-                            background: 'rgba(255, 255, 255, 0.04)',
+                            padding: '7px 10px',
+                            background: '#0B1120',
                             border: '1px solid rgba(255, 255, 255, 0.1)',
-                            borderRadius: '8px',
+                            borderRadius: '6px',
                             color: '#93C5FD',
-                            fontSize: '0.8rem',
+                            fontSize: '0.78rem',
                             fontFamily: 'monospace',
                             fontWeight: 800,
                             boxSizing: 'border-box',
@@ -3567,7 +3385,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
 
                       {/* Email Delivery Route Mode */}
                       <div>
-                        <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700, display: 'block', marginBottom: '5px' }}>
+                        <label style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, display: 'block', marginBottom: '4px', textTransform: 'uppercase' }}>
                           Email Delivery Route
                         </label>
                         <select
@@ -3575,54 +3393,46 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                           onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, route: e.target.value })}
                           style={{
                             width: '100%',
-                            padding: '8px 12px',
-                            background: '#0D1323',
+                            padding: '7px 10px',
+                            background: '#0B1120',
                             border: '1px solid rgba(255, 255, 255, 0.1)',
-                            borderRadius: '8px',
+                            borderRadius: '6px',
                             color: '#fff',
-                            fontSize: '0.8rem',
+                            fontSize: '0.78rem',
                             boxSizing: 'border-box',
                           }}
                         >
-                          <option value="rest_api">HTTPS REST API (Instant Queue Route)</option>
-                          <option value="smtp">High-Speed SMTP Relay (Port 587)</option>
+                          <option value="rest_api">HTTPS REST API (Instant)</option>
+                          <option value="smtp">High-Speed SMTP Relay (587)</option>
                           <option value="bulk">Bulk Transactional Route</option>
                         </select>
                       </div>
                     </div>
 
                     {/* Resend Carrier Status Bar */}
-                    <div style={{ marginTop: '14px', padding: '10px 14px', background: 'rgba(56, 189, 248, 0.06)', border: '1px solid rgba(56, 189, 248, 0.2)', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <Mail size={16} color="#38BDF8" />
-                        <span style={{ fontSize: '0.76rem', color: '#CBD5E1' }}>
+                    <div style={{ marginTop: '10px', padding: '8px 12px', background: 'rgba(56, 189, 248, 0.05)', border: '1px solid rgba(56, 189, 248, 0.15)', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Mail size={14} color="#38BDF8" />
+                        <span style={{ fontSize: '0.72rem', color: '#CBD5E1' }}>
                           Live Resend Cloud Carrier Pool: <strong style={{ color: '#4ADE80', fontFamily: 'monospace' }}>50,000 Free / Unlimited Pro Engine</strong> (Active &amp; Verified)
                         </span>
                       </div>
-                      <span style={{ fontSize: '0.7rem', color: '#94A3B8' }}>
+                      <span style={{ fontSize: '0.66rem', color: '#94A3B8' }}>
                         Last Synced: <strong style={{ color: '#CBD5E1' }}>Recent</strong>
                       </span>
                     </div>
                   </div>
 
-                  {/* 3. SECTION 2: MASTER EMAIL RETAIL PRICE & PROFIT MARGIN CONTROLLERS */}
+                  {/* 2. MASTER EMAIL PRICING ARCHITECTURE & PROFIT MARGINS */}
                   <div className="fixkar-panel">
-                    <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
+                    <div className="fixkar-panel-head" style={{ marginBottom: '12px' }}>
                       <div className="fixkar-panel-title">
-                        <DollarSign size={16} color="#FBBF24" />
+                        <DollarSign size={15} color="#FBBF24" />
                         <span>2. Master Email Pricing Architecture &amp; Dynamic Profit Margins</span>
                       </div>
-                      <span style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
-                        Upstream cost auto-gathered from Resend Cloud API. Adjust base rate or pick target margin presets.
-                      </span>
-                    </div>
 
-                    {/* Dynamic Target Margin Preset Buttons */}
-                    <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '12px', padding: '10px 14px', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-                      <span style={{ fontSize: '0.74rem', color: '#CBD5E1', fontWeight: 700 }}>
-                        ⚡ Quick Target Margin Presets (Auto-Calculates Base Price &amp; All Packs):
-                      </span>
-                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      <div style={{ display: 'flex', gap: '5px', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: '0.68rem', color: '#94A3B8', marginRight: '4px' }}>Margin Presets:</span>
                         {[40, 50, 60, 70].map((m) => {
                           const cost = Number(emailGatewayConfig.wholesaleCostPerEmail) || 0.034;
                           const calculatedRate = (cost / (1 - m / 100)).toFixed(3);
@@ -3633,42 +3443,35 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                               type="button"
                               onClick={() => handleApplyEmailTargetMargin(m)}
                               style={{
-                                background: isCurrent ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' : 'rgba(255, 255, 255, 0.05)',
-                                border: `1px solid ${isCurrent ? '#38BDF8' : 'rgba(255, 255, 255, 0.12)'}`,
+                                background: isCurrent ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                                border: `1px solid ${isCurrent ? '#38BDF8' : 'rgba(255, 255, 255, 0.1)'}`,
                                 color: isCurrent ? '#fff' : '#CBD5E1',
-                                padding: '5px 12px',
-                                borderRadius: '6px',
-                                fontSize: '0.72rem',
-                                fontWeight: 800,
+                                padding: '3px 8px',
+                                borderRadius: '5px',
+                                fontSize: '0.68rem',
+                                fontWeight: 700,
                                 cursor: 'pointer',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '4px',
                               }}
-                              title={`Set profit margin to ${m}% (Base rate will be ₹${calculatedRate}/Email)`}
                             >
-                              <span>🎯 {m}% Margin</span>
-                              <span style={{ fontSize: '0.64rem', color: isCurrent ? '#BAE6FD' : '#94A3B8' }}>
-                                (₹{calculatedRate})
-                              </span>
+                              {m}% (₹{calculatedRate})
                             </button>
                           );
                         })}
                       </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px', marginBottom: '16px' }}>
-                      {/* 1. Base Retail Rate per Email */}
-                      <div style={{ background: 'rgba(56, 189, 248, 0.05)', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: '14px', padding: '16px 18px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+                      {/* Card 1: Base Retail Rate per Email */}
+                      <div style={{ background: 'rgba(56, 189, 248, 0.04)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '10px', padding: '12px 14px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                          <label style={{ fontSize: '0.72rem', color: '#93C5FD', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                            Base Retail Price Per Email (₹)
-                          </label>
-                          <span style={{ fontSize: '0.64rem', color: '#38BDF8', fontWeight: 700 }}>Selling Rate</span>
+                          <span style={{ fontSize: '0.68rem', color: '#93C5FD', fontWeight: 800, textTransform: 'uppercase' }}>
+                            Base Retail Price / Email
+                          </span>
+                          <span style={{ fontSize: '0.6rem', color: '#38BDF8', fontWeight: 700 }}>Selling Rate</span>
                         </div>
-                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                           <div style={{ position: 'relative', flex: 1 }}>
-                            <span style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#38BDF8', fontWeight: 800, fontSize: '0.9rem' }}>₹</span>
+                            <span style={{ position: 'absolute', left: '8px', top: '50%', transform: 'translateY(-50%)', color: '#38BDF8', fontWeight: 800, fontSize: '0.82rem' }}>₹</span>
                             <input
                               type="number"
                               step="0.005"
@@ -3685,12 +3488,12 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                               }}
                               style={{
                                 width: '100%',
-                                padding: '8px 10px 8px 24px',
+                                padding: '6px 8px 6px 20px',
                                 background: '#0B1120',
-                                border: '1px solid rgba(56, 189, 248, 0.4)',
-                                borderRadius: '8px',
+                                border: '1px solid rgba(56, 189, 248, 0.35)',
+                                borderRadius: '6px',
                                 color: '#38BDF8',
-                                fontSize: '1rem',
+                                fontSize: '0.9rem',
                                 fontWeight: 900,
                                 fontFamily: 'monospace',
                                 boxSizing: 'border-box',
@@ -3701,136 +3504,110 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                             type="button"
                             onClick={() => handleRecalculateEmailPacksFromBaseRate(baseRetailRatePerEmail || 0.080)}
                             style={{
-                              background: 'rgba(56, 189, 248, 0.18)',
-                              border: '1px solid rgba(56, 189, 248, 0.4)',
+                              background: 'rgba(56, 189, 248, 0.15)',
+                              border: '1px solid rgba(56, 189, 248, 0.35)',
                               color: '#38BDF8',
-                              padding: '8px 12px',
-                              borderRadius: '8px',
-                              fontSize: '0.74rem',
+                              padding: '6px 10px',
+                              borderRadius: '6px',
+                              fontSize: '0.68rem',
                               fontWeight: 800,
                               cursor: 'pointer',
                               whiteSpace: 'nowrap',
                             }}
-                            title="Cascade this base rate across all email packs with volume discounts"
                           >
-                            ⚡ Auto-Sync Packs
+                            ⚡ Sync
                           </button>
                         </div>
-                        <span style={{ fontSize: '0.68rem', color: '#94A3B8', marginTop: '6px', display: 'block' }}>
-                          Standard unit rate before volume discounts
-                        </span>
                       </div>
 
-                      {/* 2. Upstream Resend Wholesale Cost (Locked / Auto-Gathered from Gateway API) */}
-                      <div style={{ background: 'rgba(245, 158, 11, 0.05)', border: '1px solid rgba(245, 158, 11, 0.35)', borderRadius: '14px', padding: '16px 18px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                        <div>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                            <label style={{ fontSize: '0.72rem', color: '#FDE047', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                              Carrier Wholesale Cost (₹)
-                            </label>
-                            <span style={{ fontSize: '0.62rem', background: 'rgba(74, 222, 128, 0.18)', color: '#86EFAC', padding: '2px 7px', borderRadius: '4px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                              🔒 Auto-API
-                            </span>
-                          </div>
-
-                          <div style={{ background: '#0B1120', border: '1px solid rgba(245, 158, 11, 0.25)', borderRadius: '8px', padding: '8px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                              <span style={{ color: '#F59E0B', fontWeight: 900, fontSize: '1.2rem', fontFamily: 'monospace' }}>
-                                ₹{Number(emailGatewayConfig.wholesaleCostPerEmail || 0.034).toFixed(3)}
-                              </span>
-                              <span style={{ color: '#94A3B8', fontSize: '0.72rem', fontWeight: 700 }}>/EMAIL</span>
-                            </div>
-                            <span style={{ fontSize: '0.66rem', color: '#FDE047', background: 'rgba(245, 158, 11, 0.15)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>
-                              Resend Pro
-                            </span>
-                          </div>
+                      {/* Card 2: Carrier Wholesale Cost */}
+                      <div style={{ background: 'rgba(245, 158, 11, 0.04)', border: '1px solid rgba(245, 158, 11, 0.25)', borderRadius: '10px', padding: '12px 14px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                          <span style={{ fontSize: '0.68rem', color: '#FDE047', fontWeight: 800, textTransform: 'uppercase' }}>
+                            Carrier Wholesale Cost
+                          </span>
+                          <span style={{ fontSize: '0.58rem', background: 'rgba(74, 222, 128, 0.18)', color: '#86EFAC', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>
+                            🔒 Auto-API
+                          </span>
                         </div>
-
-                        <span style={{ fontSize: '0.68rem', color: '#94A3B8', marginTop: '8px' }}>
-                          Auto-gathered via Resend Cloud API ($20 Pro / 50k tier: ₹0.034/email)
-                        </span>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                          <span style={{ color: '#F59E0B', fontWeight: 900, fontSize: '1.2rem', fontFamily: 'monospace' }}>
+                            ₹{Number(emailGatewayConfig.wholesaleCostPerEmail || 0.034).toFixed(3)}
+                          </span>
+                          <span style={{ color: '#94A3B8', fontSize: '0.68rem' }}>/Email (Resend Pro)</span>
+                        </div>
                       </div>
 
-                      {/* 3. Live Gross Profit Margin Percentage */}
+                      {/* Card 3: Dynamic Gross Margin */}
                       {(() => {
                         const baseVal = Number(baseRetailRatePerEmail) || 0.080;
                         const costVal = Number(emailGatewayConfig.wholesaleCostPerEmail) || 0.034;
                         const marginPct = baseVal > 0 ? (((baseVal - costVal) / baseVal) * 100).toFixed(1) : '0.0';
                         const profitPerEmail = (baseVal - costVal).toFixed(3);
                         return (
-                          <div style={{ background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.35)', borderRadius: '14px', padding: '16px 18px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                            <div>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                <label style={{ fontSize: '0.72rem', color: '#6EE7B7', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                  Dynamic Gross Margin
-                                </label>
-                                <span style={{ fontSize: '0.62rem', background: 'rgba(74, 222, 128, 0.18)', color: '#86EFAC', padding: '2px 7px', borderRadius: '4px', fontWeight: 800 }}>
-                                  Real-Time
-                                </span>
-                              </div>
-
-                              <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#4ADE80', fontFamily: 'monospace', lineHeight: 1.1 }}>
-                                {marginPct}%
-                              </div>
+                          <div style={{ background: 'rgba(16, 185, 129, 0.04)', border: '1px solid rgba(16, 185, 129, 0.25)', borderRadius: '10px', padding: '12px 14px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                              <span style={{ fontSize: '0.68rem', color: '#6EE7B7', fontWeight: 800, textTransform: 'uppercase' }}>
+                                Dynamic Gross Margin
+                              </span>
+                              <span style={{ fontSize: '0.68rem', color: '#A7F3D0', fontWeight: 700 }}>
+                                +₹{profitPerEmail}/Email Profit
+                              </span>
                             </div>
-
-                            <span style={{ fontSize: '0.72rem', color: '#A7F3D0', fontWeight: 700, marginTop: '8px' }}>
-                              Net Studio Profit: <strong style={{ color: '#4ADE80', fontFamily: 'monospace' }}>+₹{profitPerEmail}</strong> per Email
-                            </span>
+                            <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#4ADE80', fontFamily: 'monospace', lineHeight: 1 }}>
+                              {marginPct}%
+                            </div>
                           </div>
                         );
                       })()}
                     </div>
                   </div>
 
-                  {/* 4. SECTION 3: EMAIL RECHARGE PACKAGE MATRIX & PLAN MANAGEMENT */}
+                  {/* 3. EMAIL RECHARGE PACKAGE MATRIX */}
                   <div className="fixkar-panel">
-                    <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
-                      <div>
-                        <div className="fixkar-panel-title">
-                          <Layers size={16} color="#38BDF8" />
-                          <span>3. Email Package Matrix &amp; Plan Management ({(emailGatewayConfig.packages || []).length} Plans Active)</span>
-                        </div>
-                        <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '3px' }}>
-                          Add new plans, adjust rates, and customize descriptions. Changes persist across client portals &amp; quote configurator.
-                        </div>
+                    <div className="fixkar-panel-head" style={{ marginBottom: '12px' }}>
+                      <div className="fixkar-panel-title">
+                        <Layers size={15} color="#38BDF8" />
+                        <span>3. Email Package Matrix</span>
+                        <span style={{ fontSize: '0.66rem', background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', padding: '2px 7px', borderRadius: '10px', fontWeight: 800, marginLeft: '6px' }}>
+                          {(emailGatewayConfig.packages || []).length} Plans
+                        </span>
                       </div>
 
                       <button
                         type="button"
                         onClick={handleAddNewEmailPack}
                         style={{
-                          background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
-                          border: 'none',
-                          color: '#fff',
-                          padding: '7px 16px',
-                          borderRadius: '8px',
-                          fontSize: '0.76rem',
+                          background: 'rgba(56, 189, 248, 0.15)',
+                          border: '1px solid rgba(56, 189, 248, 0.35)',
+                          color: '#38BDF8',
+                          padding: '5px 12px',
+                          borderRadius: '6px',
+                          fontSize: '0.72rem',
                           fontWeight: 800,
                           cursor: 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '6px',
-                          boxShadow: '0 4px 15px rgba(2, 132, 199, 0.4)',
+                          gap: '4px',
                         }}
                       >
-                        <Plus size={14} />
-                        <span>+ Create &amp; Add Custom Email Plan</span>
+                        <Plus size={12} />
+                        <span>+ Add Plan</span>
                       </button>
                     </div>
 
                     <div style={{ overflowX: 'auto', width: '100%' }}>
-                      <table className="fixkar-table" style={{ width: '100%', minWidth: '820px' }}>
+                      <table className="fixkar-table" style={{ width: '100%', minWidth: '800px' }}>
                         <thead>
                           <tr>
-                            <th style={{ width: '22%' }}>PACKAGE NAME &amp; DESCRIPTION</th>
-                            <th style={{ width: '12%' }}>CREDITS (EMAILS)</th>
-                            <th style={{ width: '14%' }}>RETAIL RATE / EMAIL</th>
-                            <th style={{ width: '14%' }}>PACK PRICE (₹)</th>
-                            <th style={{ width: '12%' }}>WHOLESALE COST</th>
-                            <th style={{ width: '12%' }}>NET PROFIT</th>
-                            <th style={{ width: '8%', textAlign: 'center' }}>POPULAR</th>
-                            <th style={{ width: '6%', textAlign: 'right' }}>ACTION</th>
+                            <th style={{ width: '25%' }}>PLAN NAME &amp; SUBTITLE</th>
+                            <th style={{ width: '13%' }}>CREDITS</th>
+                            <th style={{ width: '14%' }}>RATE / EMAIL</th>
+                            <th style={{ width: '14%' }}>PRICE (₹)</th>
+                            <th style={{ width: '12%' }}>WHOLESALE</th>
+                            <th style={{ width: '10%' }}>PROFIT</th>
+                            <th style={{ width: '7%', textAlign: 'center' }}>POPULAR</th>
+                            <th style={{ width: '5%', textAlign: 'right' }}>ACTION</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -3851,29 +3628,29 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                                     onChange={(e) => handleUpdateEmailPackField(idx, 'name', e.target.value)}
                                     style={{
                                       width: '100%',
-                                      padding: '5px 8px',
-                                      background: 'rgba(255, 255, 255, 0.04)',
+                                      padding: '4px 6px',
+                                      background: '#0B1120',
                                       border: '1px solid rgba(255, 255, 255, 0.1)',
-                                      borderRadius: '6px',
+                                      borderRadius: '5px',
                                       color: '#fff',
-                                      fontSize: '0.78rem',
+                                      fontSize: '0.76rem',
                                       fontWeight: 700,
                                     }}
                                   />
                                   <input
                                     type="text"
                                     value={pkg.desc || ''}
-                                    placeholder="Package description / subtitle..."
+                                    placeholder="Subtitle..."
                                     onChange={(e) => handleUpdateEmailPackField(idx, 'desc', e.target.value)}
                                     style={{
                                       width: '100%',
-                                      padding: '3px 8px',
-                                      marginTop: '4px',
-                                      background: 'rgba(255, 255, 255, 0.02)',
-                                      border: '1px solid rgba(255, 255, 255, 0.06)',
+                                      padding: '2px 6px',
+                                      marginTop: '3px',
+                                      background: 'transparent',
+                                      border: '1px solid rgba(255, 255, 255, 0.05)',
                                       borderRadius: '4px',
                                       color: '#94A3B8',
-                                      fontSize: '0.68rem',
+                                      fontSize: '0.66rem',
                                     }}
                                   />
                                 </td>
@@ -3884,37 +3661,37 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                                     onChange={(e) => handleUpdateEmailPackField(idx, 'credits', Number(e.target.value))}
                                     style={{
                                       width: '100%',
-                                      padding: '5px 8px',
-                                      background: 'rgba(255, 255, 255, 0.04)',
+                                      padding: '4px 6px',
+                                      background: '#0B1120',
                                       border: '1px solid rgba(255, 255, 255, 0.1)',
-                                      borderRadius: '6px',
+                                      borderRadius: '5px',
                                       color: '#38BDF8',
-                                      fontSize: '0.78rem',
+                                      fontSize: '0.76rem',
                                       fontFamily: 'monospace',
                                       fontWeight: 700,
                                     }}
                                   />
                                 </td>
                                 <td>
-                                  <span style={{ fontSize: '0.78rem', color: '#93C5FD', fontFamily: 'monospace', fontWeight: 700 }}>
-                                    ₹{unitRate} / email
+                                  <span style={{ fontSize: '0.74rem', color: '#93C5FD', fontFamily: 'monospace', fontWeight: 700 }}>
+                                    ₹{unitRate}
                                   </span>
                                 </td>
                                 <td>
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                    <span style={{ color: '#FDE047', fontWeight: 800 }}>₹</span>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                                    <span style={{ color: '#FDE047', fontWeight: 800, fontSize: '0.74rem' }}>₹</span>
                                     <input
                                       type="number"
                                       value={pkg.price}
                                       onChange={(e) => handleUpdateEmailPackField(idx, 'price', Number(e.target.value))}
                                       style={{
                                         width: '100%',
-                                        padding: '5px 8px',
-                                        background: 'rgba(255, 255, 255, 0.04)',
+                                        padding: '4px 6px',
+                                        background: '#0B1120',
                                         border: '1px solid rgba(255, 255, 255, 0.1)',
-                                        borderRadius: '6px',
+                                        borderRadius: '5px',
                                         color: '#FDE047',
-                                        fontSize: '0.8rem',
+                                        fontSize: '0.76rem',
                                         fontFamily: 'monospace',
                                         fontWeight: 800,
                                       }}
@@ -3922,17 +3699,17 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                                   </div>
                                 </td>
                                 <td>
-                                  <span style={{ fontSize: '0.78rem', color: '#94A3B8', fontFamily: 'monospace' }}>
+                                  <span style={{ fontSize: '0.74rem', color: '#94A3B8', fontFamily: 'monospace' }}>
                                     ₹{cost.toFixed(2)}
                                   </span>
                                 </td>
                                 <td>
                                   <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                    <span style={{ fontSize: '0.8rem', color: profit >= 0 ? '#4ADE80' : '#F87171', fontWeight: 800, fontFamily: 'monospace' }}>
+                                    <span style={{ fontSize: '0.76rem', color: profit >= 0 ? '#4ADE80' : '#F87171', fontWeight: 800, fontFamily: 'monospace' }}>
                                       +₹{profit.toFixed(2)}
                                     </span>
-                                    <span style={{ fontSize: '0.66rem', color: '#38BDF8', fontWeight: 700 }}>
-                                      {marginPct}% Margin
+                                    <span style={{ fontSize: '0.62rem', color: '#38BDF8' }}>
+                                      {marginPct}%
                                     </span>
                                   </div>
                                 </td>
@@ -3944,14 +3721,14 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                                       background: pkg.popular ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
                                       border: `1px solid ${pkg.popular ? '#38BDF8' : 'rgba(255, 255, 255, 0.1)'}`,
                                       color: pkg.popular ? '#38BDF8' : '#64748B',
-                                      padding: '3px 8px',
-                                      borderRadius: '6px',
-                                      fontSize: '0.66rem',
+                                      padding: '2px 6px',
+                                      borderRadius: '5px',
+                                      fontSize: '0.62rem',
                                       fontWeight: 800,
                                       cursor: 'pointer',
                                     }}
                                   >
-                                    {pkg.popular ? '⭐ MOST POPULAR' : 'Standard'}
+                                    {pkg.popular ? '⭐ YES' : 'NO'}
                                   </button>
                                 </td>
                                 <td style={{ textAlign: 'right' }}>
@@ -3962,13 +3739,13 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                                       background: 'rgba(239, 68, 68, 0.15)',
                                       border: '1px solid rgba(239, 68, 68, 0.3)',
                                       color: '#F87171',
-                                      padding: '4px 8px',
-                                      borderRadius: '6px',
-                                      fontSize: '0.7rem',
+                                      padding: '3px 6px',
+                                      borderRadius: '5px',
+                                      fontSize: '0.66rem',
                                       cursor: 'pointer',
                                     }}
                                   >
-                                    Delete
+                                    Del
                                   </button>
                                 </td>
                               </tr>
@@ -3979,51 +3756,51 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                     </div>
                   </div>
 
-                  {/* 5. SECTION 4: LIVE CLIENT-FACING RECHARGE MATRIX PREVIEW */}
+                  {/* 4. LIVE CLIENT PORTAL PREVIEW */}
                   <div className="fixkar-panel">
-                    <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
+                    <div className="fixkar-panel-head" style={{ marginBottom: '12px' }}>
                       <div className="fixkar-panel-title">
-                        <Smartphone size={16} color="#38BDF8" />
-                        <span>4. Live Client-Facing Email Pack Preview (What Clients See in Portal)</span>
+                        <Eye size={15} color="#38BDF8" />
+                        <span>4. Live Client Portal Preview (/#client)</span>
                       </div>
-                      <span style={{ fontSize: '0.7rem', color: '#4ADE80', fontWeight: 700 }}>
-                        ● 100% White-Labeled &bull; Fixkar Mail Matrix
+                      <span style={{ fontSize: '0.68rem', color: '#4ADE80', fontWeight: 700 }}>
+                        ● White-Labeled
                       </span>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
                       {(emailGatewayConfig.packages || []).map((pkg) => (
                         <div
                           key={pkg.id}
                           style={{
-                            background: pkg.popular ? 'rgba(37, 99, 235, 0.18)' : 'rgba(255, 255, 255, 0.02)',
+                            background: pkg.popular ? 'rgba(37, 99, 235, 0.15)' : 'rgba(255, 255, 255, 0.02)',
                             border: `1px solid ${pkg.popular ? '#38BDF8' : 'rgba(255, 255, 255, 0.08)'}`,
-                            borderRadius: '12px',
-                            padding: '14px',
+                            borderRadius: '10px',
+                            padding: '12px',
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'space-between',
-                            gap: '10px',
+                            gap: '8px',
                             position: 'relative',
                           }}
                         >
                           {pkg.popular && (
-                            <span style={{ position: 'absolute', top: '-8px', right: '12px', background: '#38BDF8', color: '#000', fontSize: '0.62rem', fontWeight: 900, padding: '1px 6px', borderRadius: '4px', letterSpacing: '0.04em' }}>
-                              MOST POPULAR
+                            <span style={{ position: 'absolute', top: '-7px', right: '10px', background: '#38BDF8', color: '#000', fontSize: '0.58rem', fontWeight: 900, padding: '1px 5px', borderRadius: '3px', letterSpacing: '0.04em' }}>
+                              POPULAR
                             </span>
                           )}
 
                           <div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                              <strong style={{ fontSize: '0.86rem', color: '#fff' }}>{pkg.name}</strong>
-                              <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontFamily: 'monospace', fontWeight: 700 }}>
+                              <strong style={{ fontSize: '0.82rem', color: '#fff' }}>{pkg.name}</strong>
+                              <span style={{ fontSize: '0.68rem', color: '#38BDF8', fontFamily: 'monospace', fontWeight: 700 }}>
                                 ₹{((Number(pkg.price) || 0) / (Number(pkg.credits) || 1)).toFixed(3)}/email
                               </span>
                             </div>
-                            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#FDE047', fontFamily: 'monospace', margin: '4px 0 2px' }}>
-                              +{(Number(pkg.credits) || 0).toLocaleString()} <span style={{ fontSize: '0.74rem', color: '#94A3B8', fontWeight: 600 }}>Emails</span>
+                            <div style={{ fontSize: '1.15rem', fontWeight: 900, color: '#FDE047', fontFamily: 'monospace', margin: '3px 0 1px' }}>
+                              +{(Number(pkg.credits) || 0).toLocaleString()} <span style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 600 }}>Emails</span>
                             </div>
-                            <p style={{ fontSize: '0.7rem', color: '#94A3B8', margin: '4px 0 0', lineHeight: 1.3 }}>
+                            <p style={{ fontSize: '0.66rem', color: '#94A3B8', margin: '3px 0 0', lineHeight: 1.3 }}>
                               {pkg.desc}
                             </p>
                           </div>
@@ -4033,9 +3810,9 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                               background: pkg.popular ? 'linear-gradient(135deg, #38BDF8 0%, #2563EB 100%)' : 'rgba(255, 255, 255, 0.06)',
                               border: `1px solid ${pkg.popular ? '#38BDF8' : 'rgba(255, 255, 255, 0.15)'}`,
                               color: '#fff',
-                              padding: '7px 12px',
-                              borderRadius: '8px',
-                              fontSize: '0.74rem',
+                              padding: '5px 10px',
+                              borderRadius: '6px',
+                              fontSize: '0.7rem',
                               fontWeight: 700,
                               textAlign: 'center',
                             }}
@@ -4052,7 +3829,8 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
           </div>
         )}
 
-        {/* ═════════════════════════════════════════════════════════════════
+        `;
+{/* ═════════════════════════════════════════════════════════════════
             TAB: DEDICATED INBOUND & CLIENT MAILBOX FEED (support@fixkar.co.in)
             ═════════════════════════════════════════════════════════════════ */}
         {activeTab === 'emails' && (() => {
