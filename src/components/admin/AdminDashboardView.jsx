@@ -3928,7 +3928,6 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                 <Users size={14} color={activeTab === 'clients' ? '#38BDF8' : 'currentColor'} />
                 <span>Clients</span>
               </div>
-              <span style={{ fontSize: '0.66rem', fontFamily: 'monospace', color: '#94A3B8' }}>{clients.length}</span>
             </button>
 
             <button
@@ -3939,7 +3938,6 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                 <Briefcase size={14} color={activeTab === 'projects' ? '#38BDF8' : 'currentColor'} />
                 <span>Projects</span>
               </div>
-              <span style={{ fontSize: '0.66rem', fontFamily: 'monospace', color: '#94A3B8' }}>{projects.length}</span>
             </button>
 
             <button
@@ -3981,7 +3979,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                 <span>Client OTP Accounts</span>
               </div>
               {lowOtpClientsCount > 0 && (
-                <span style={{ fontSize: '0.62rem', background: 'rgba(244, 63, 94, 0.25)', color: '#FDA4AF', padding: '1px 5px', borderRadius: '4px', fontWeight: 700 }}>
+                <span style={{ fontSize: '0.62rem', background: 'rgba(244, 63, 94, 0.2)', color: '#FDA4AF', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
                   {lowOtpClientsCount} Low
                 </span>
               )}
@@ -3996,7 +3994,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                 <span>Recharge Requests</span>
               </div>
               {pendingRechargesCount > 0 && (
-                <span style={{ fontSize: '0.62rem', background: 'rgba(251, 191, 36, 0.25)', color: '#FDE047', padding: '1px 5px', borderRadius: '4px', fontWeight: 700 }}>
+                <span style={{ fontSize: '0.62rem', background: 'rgba(251, 191, 36, 0.2)', color: '#FDE047', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
                   {pendingRechargesCount}
                 </span>
               )}
@@ -4025,7 +4023,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                 <span>Support Tickets</span>
               </div>
               {openSupportTicketsCount > 0 && (
-                <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.25)', color: '#38BDF8', padding: '1px 5px', borderRadius: '4px' }}>
+                <span style={{ fontSize: '0.62rem', background: 'rgba(244, 63, 94, 0.2)', color: '#FDA4AF', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
                   {openSupportTicketsCount}
                 </span>
               )}
@@ -4073,9 +4071,15 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                 <Mail size={14} color={activeTab === 'emails' ? '#38BDF8' : 'currentColor'} />
                 <span>Inbound Mail</span>
               </div>
-              <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.25)', color: '#38BDF8', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>
-                {inboundEmails.length}
-              </span>
+              {(() => {
+                const unreadCount = (inboundEmails || []).filter((e) => e.status === 'UNREAD').length;
+                if (unreadCount === 0) return null;
+                return (
+                  <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.2)', color: '#38BDF8', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
+                    {unreadCount}
+                  </span>
+                );
+              })()}
             </button>
           </nav>
         </div>
