@@ -165,81 +165,80 @@ body:has(.client-portal-root) {
   justify-content: space-between;
   width: 100%;
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: 9px;
   font-size: 0.78rem;
-  color: var(--admin-text-secondary);
+  color: #94A3B8;
   background: transparent;
   border: 1px solid transparent;
-  border-left: 3px solid transparent;
   cursor: pointer;
-  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   text-align: left;
   font-weight: 500;
   position: relative;
+  overflow: hidden;
 }
 
 .fixkar-nav-btn svg {
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease, filter 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease, filter 0.25s ease;
   flex-shrink: 0;
 }
 
-/* Sidebar Nav Button Hover States */
+/* Resend-Grade Sleek Sidebar Hover Effect */
 .fixkar-nav-btn:hover {
-  background: linear-gradient(90deg, rgba(56, 189, 248, 0.12) 0%, rgba(37, 99, 235, 0.05) 100%);
-  border-color: rgba(56, 189, 248, 0.25);
-  border-left: 3px solid #38BDF8;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
   color: #FFFFFF;
-  transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.08);
+  transform: translateY(-1px);
+  backdrop-filter: blur(12px);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-/* Specific Icon Micro-Animations on Nav Button Hover */
+/* Living Icon Micro-Lift & Soft Phosphor Glow */
 .fixkar-nav-btn:hover svg {
-  transform: scale(1.22);
+  transform: translateY(-1px) scale(1.12);
   color: #38BDF8 !important;
-}
-
-.fixkar-nav-btn:hover svg.lucide-layout-dashboard,
-.fixkar-nav-btn:hover svg.lucide-layers {
-  transform: scale(1.22) rotate(8deg);
-}
-
-.fixkar-nav-btn:hover svg.lucide-key,
-.fixkar-nav-btn:hover svg.lucide-key-round {
-  transform: rotate(45deg) scale(1.2);
-}
-
-.fixkar-nav-btn:hover svg.lucide-clock {
-  transform: rotate(90deg) scale(1.2);
-}
-
-.fixkar-nav-btn:hover svg.lucide-life-buoy {
-  transform: rotate(20deg) scale(1.2);
-}
-
-.fixkar-nav-btn:hover svg.lucide-mail {
-  transform: translateY(-2px) scale(1.25);
-  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.6));
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.55));
 }
 
 .fixkar-nav-btn:hover svg.lucide-shield-check,
 .fixkar-nav-btn:hover svg.lucide-shield {
-  transform: scale(1.22);
   color: #FDE047 !important;
-  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.6));
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.6));
 }
 
+/* Active Nav Item — Resend Specular Inset & Sleek Phosphor Line */
 .fixkar-nav-btn.active {
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.35) 0%, rgba(29, 78, 216, 0.2) 100%);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   color: #FFFFFF;
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  border-left: 3px solid #38BDF8;
-  font-weight: 700;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2);
+  font-weight: 600;
+  box-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.fixkar-nav-btn.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: #38BDF8;
+  box-shadow: 0 0 10px #38BDF8;
 }
 
 .fixkar-nav-btn.active svg {
   color: #38BDF8 !important;
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
+}
+
+/* Tactile Active Press Feedback */
+.fixkar-nav-btn:active {
+  transform: translateY(0px) scale(0.98);
 }
 
 /* --------------------------------------------------------------------------
