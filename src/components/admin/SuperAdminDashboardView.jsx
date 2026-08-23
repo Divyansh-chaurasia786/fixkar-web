@@ -1305,38 +1305,8 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
             </div>
           </div>
 
-          {/* Super Admin User Profile Card */}
-          <div className="fixkar-sidebar-user" style={{ border: '1px solid rgba(245, 158, 11, 0.25)', background: 'rgba(245, 158, 11, 0.05)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '8px',
-                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#000',
-                  fontWeight: 900,
-                  fontSize: '0.8rem',
-                }}
-              >
-                👑
-              </div>
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {superUser?.name || 'Lead Architect & Founder'}
-                </div>
-                <div style={{ fontSize: '0.68rem', color: '#FDE047', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {superUser?.username || 'fixkar_root'} (GOD-MODE)
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* GROUP 1: ROOT COMMANDS */}
-          <div className="fixkar-nav-heading">LAYER 2 ROOT SOVEREIGNTY</div>
+          {/* GROUP 1: OVERVIEW & GOVERNANCE */}
+          <div className="fixkar-nav-heading" style={{ marginTop: '8px' }}>ROOT GOVERNANCE</div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
             {/* Tab 0: Super Dashboard Overview */}
             <button
@@ -1371,30 +1341,52 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
               })()}
             </button>
 
-            {/* Unified Tab: SMS Gateway & Pricing */}
+            {/* Tab: Inbound Client Mail */}
             <button
               type="button"
-              onClick={() => setActiveTab('gateway')}
-              className={`fixkar-nav-btn ${activeTab === 'gateway' ? 'active' : ''}`}
+              onClick={() => setActiveTab('emails')}
+              className={`fixkar-nav-btn ${activeTab === 'emails' ? 'active' : ''}`}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Globe size={14} color={activeTab === 'gateway' ? '#38BDF8' : 'currentColor'} />
-                <span>SMS Gateway &amp; Pricing</span>
+                <Mail size={14} color={activeTab === 'emails' ? '#38BDF8' : 'currentColor'} />
+                <span>Inbound Mail</span>
               </div>
+              {(() => {
+                const unreadCount = (inboundEmails || []).filter((e) => e.status === 'UNREAD').length;
+                if (unreadCount === 0) return null;
+                return (
+                  <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.2)', color: '#38BDF8', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
+                    {unreadCount}
+                  </span>
+                );
+              })()}
             </button>
 
-            {/* Tab 2: Client API Studio */}
+            {/* Tab: Support Tickets */}
             <button
               type="button"
-              onClick={() => setActiveTab('client-apis')}
-              className={`fixkar-nav-btn ${activeTab === 'client-apis' ? 'active' : ''}`}
+              onClick={() => setActiveTab('support')}
+              className={`fixkar-nav-btn ${activeTab === 'support' ? 'active' : ''}`}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <KeyRound size={14} color={activeTab === 'client-apis' ? '#38BDF8' : 'currentColor'} />
-                <span>Client API Studio</span>
+                <LifeBuoy size={14} color={activeTab === 'support' ? '#38BDF8' : 'currentColor'} />
+                <span>Support Tickets</span>
               </div>
+              {(() => {
+                const openCount = (supportTickets || []).filter((t) => t.status === 'Open' || t.status === 'In Progress').length;
+                if (openCount === 0) return null;
+                return (
+                  <span style={{ fontSize: '0.62rem', background: 'rgba(244, 63, 94, 0.2)', color: '#FDA4AF', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
+                    {openCount}
+                  </span>
+                );
+              })()}
             </button>
+          </nav>
 
+          {/* GROUP 2: FINANCIAL RADAR & INFRASTRUCTURE */}
+          <div className="fixkar-nav-heading" style={{ marginTop: '14px' }}>FINANCE &amp; INFRASTRUCTURE</div>
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
             {/* Tab 3: Provisional Reconciliation */}
             <button
               type="button"
@@ -1432,26 +1424,33 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 );
               })()}
             </button>
+          </nav>
 
-            {/* Tab: Support Tickets */}
+          {/* GROUP 3: DEVELOPER ENGINE & SECURITY */}
+          <div className="fixkar-nav-heading" style={{ marginTop: '14px' }}>GATEWAYS &amp; SECURITY</div>
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+            {/* Unified Tab: SMS Gateway & Pricing */}
             <button
               type="button"
-              onClick={() => setActiveTab('support')}
-              className={`fixkar-nav-btn ${activeTab === 'support' ? 'active' : ''}`}
+              onClick={() => setActiveTab('gateway')}
+              className={`fixkar-nav-btn ${activeTab === 'gateway' ? 'active' : ''}`}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <LifeBuoy size={14} color={activeTab === 'support' ? '#38BDF8' : 'currentColor'} />
-                <span>Support Tickets</span>
+                <Globe size={14} color={activeTab === 'gateway' ? '#38BDF8' : 'currentColor'} />
+                <span>SMS Gateway &amp; Pricing</span>
               </div>
-              {(() => {
-                const openCount = (supportTickets || []).filter((t) => t.status === 'Open' || t.status === 'In Progress').length;
-                if (openCount === 0) return null;
-                return (
-                  <span style={{ fontSize: '0.62rem', background: 'rgba(244, 63, 94, 0.2)', color: '#FDA4AF', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
-                    {openCount}
-                  </span>
-                );
-              })()}
+            </button>
+
+            {/* Tab 2: Client API Studio */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('client-apis')}
+              className={`fixkar-nav-btn ${activeTab === 'client-apis' ? 'active' : ''}`}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <KeyRound size={14} color={activeTab === 'client-apis' ? '#38BDF8' : 'currentColor'} />
+                <span>Client API Studio</span>
+              </div>
             </button>
 
             {/* Tab: Master Credential & Security Governance */}
@@ -1465,27 +1464,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 <span>Security &amp; Passwords</span>
               </div>
             </button>
-
-            {/* Tab: Inbound Client Mail */}
-            <button
-              type="button"
-              onClick={() => setActiveTab('emails')}
-              className={`fixkar-nav-btn ${activeTab === 'emails' ? 'active' : ''}`}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Mail size={14} color={activeTab === 'emails' ? '#38BDF8' : '#94A3B8'} />
-                <span>Inbound Client Mail</span>
-              </div>
-              {(() => {
-                const unreadCount = (inboundEmails || []).filter((e) => e.status === 'UNREAD').length;
-                if (unreadCount === 0) return null;
-                return (
-                  <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.2)', color: '#38BDF8', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
-                    {unreadCount}
-                  </span>
-                );
-              })()}
-            </button>
+          </nav>
 
           </nav>
         </div>
