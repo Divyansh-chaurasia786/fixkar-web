@@ -1,0 +1,65 @@
+{
+  "adminProfile": {
+    "preferredLanguage": "Hinglish / Hindi (Friendly, Natural, Professional)",
+    "communicationStyle": "Direct, action-focused, structured with emojis and clear action buttons",
+    "frequentActions": [
+      "RECHARGE_OTP",
+      "SETTLE_PAYMENT",
+      "RENEW_DOMAIN",
+      "ADD_CLIENT",
+      "DASHBOARD_BRIEFING"
+    ],
+    "topEntities": [
+      "Zenith Tech",
+      "Ecofone Electronics",
+      "Nova Tech",
+      "R.K. Computer Classes"
+    ],
+    "interactionCount": 19,
+    "lastActive": "2026-08-20T05:44:22.383Z"
+  },
+  "learnedInsights": [
+    {
+      "id": "ins_1",
+      "topic": "Language & Tone",
+      "insight": "Admin talks naturally in conversational Hindi/Hinglish. Prefers direct, confident and helpful answers without unnecessary friction.",
+      "confidence": 0.98,
+      "learnedAt": "2026-08-19T19:59:46.915Z"
+    },
+    {
+      "id": "ins_2",
+      "topic": "OTP Infrastructure & Credits",
+      "insight": "Admin frequently monitors DLT OTP pool and allocates credits directly in bulk (1000 - 2500 credits) to client wallets.",
+      "confidence": 0.95,
+      "learnedAt": "2026-08-19T19:59:46.915Z"
+    },
+    {
+      "id": "ins_3",
+      "topic": "Conversational Memory & Pronouns",
+      "insight": "Admin refers to previously discussed clients using pronouns like \"uska\", \"unka\", \"pehle wala\", \"jo abhi add kiya\". AI must resolve context from chat history seamlessly.",
+      "confidence": 0.99,
+      "learnedAt": "2026-08-19T19:59:46.915Z"
+    },
+    {
+      "id": "ins_4",
+      "topic": "Billing & Receipts",
+      "insight": "When settling payments, Admin appreciates automatic invoice clearance, balance due reset to ₹0, and instant official PDF receipt generation link.",
+      "confidence": 0.96,
+      "learnedAt": "2026-08-19T19:59:46.915Z"
+    },
+    {
+      "id": "ins_5",
+      "topic": "UI Cleanliness",
+      "insight": "Admin prefers clutter-free console, removing redundant buttons from sidebar in favor of top-level command palette and sparkles action triggers.",
+      "confidence": 0.94,
+      "learnedAt": "2026-08-19T19:59:46.915Z"
+    }
+  ],
+  "frequentQueryPatterns": {
+    "clientInquiries": 8,
+    "otpOperations": 6,
+    "renewalsRadar": 5,
+    "billingSettlement": 4,
+    "uiSettings": 2
+  }
+}

@@ -1,0 +1,40 @@
+[
+  {
+    "id": "TXN-BANK-1787400972630",
+    "utrNumber": "UPI983500112233",
+    "clientCode": "FIX-RKCC-001",
+    "clientName": "R.K. Computer Classes",
+    "packId": "otp_5000",
+    "credits": 5000,
+    "amountPaid": 1100,
+    "status": "VERIFIED_BY_SUPER_ADMIN",
+    "paymentMethod": "Bank Transfer / Direct UPI (Admin Top-Up)",
+    "verifiedAt": "2026-08-22T12:16:12.630Z",
+    "verifiedBy": "admin",
+    "notes": "Client topped up 5,000 SMS pack"
+  },
+  {
+    "id": "TXN-BANK-1787399577275",
+    "utrNumber": "UTR492819002134",
+    "clientCode": "FIX-ECO-002",
+    "clientName": "Ecofone India",
+    "packId": "otp_1000",
+    "credits": 1000,
+    "amountPaid": 250,
+    "status": "VERIFIED_BY_SUPER_ADMIN",
+    "paymentMethod": "Bank Transfer / Direct UPI (Admin Recorded)",
+    "verifiedAt": "2026-08-22T11:52:57.275Z",
+    "verifiedBy": "admin",
+    "notes": "Client paid via direct ICICI IMPS"
+  },
+  {
+    "raw": "Dear Customer, A/c ...8821 credited with Rs. 550.00 on 20-Aug-26 by UPI Ref 423188990011 - SBI",
+    "utr": "423188990011",
+    "amount": 550,
+    "formattedAmount": "₹550",
+    "bank": "State Bank of India (SBI) (A/c ...8821)",
+    "status": "CONFIRMED_IN_BANK",
+    "parsedAt": "2026-08-20T06:28:04.796Z",
+    "parsedTimestamp": "20/8/2026, 11:58:04 am"
+  }
+]

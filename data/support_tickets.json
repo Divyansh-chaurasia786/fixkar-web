@@ -1,0 +1,27 @@
+[
+  {
+    "id": "TKT-497",
+    "client": "Nova Tech",
+    "clientId": "cli_1787166959009",
+    "email": "novatech@fixkar.co.in",
+    "phone": "9835011223",
+    "subject": "Integrate UPI payment QR code on checkout",
+    "description": "",
+    "priority": "Low",
+    "status": "In Progress",
+    "createdAt": "20/8/2026, 9:50:00 pm",
+    "notes": ""
+  },
+  {
+    "id": "TKT-701",
+    "client": "Nova Tech",
+    "clientId": "cli_1787166959009",
+    "phone": "9835011223",
+    "email": "novatech@fixkar.co.in",
+    "subject": ": Nova Tech, SSL certificate configuration, High",
+    "priority": "High",
+    "status": "Resolved",
+    "createdAt": "20/8/2026, 1:02:33 am",
+    "notes": "Logged autonomously by Admin AI Copilot"
+  }
+]

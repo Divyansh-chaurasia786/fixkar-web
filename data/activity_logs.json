@@ -1,0 +1,80 @@
+[
+  {
+    "id": "act_1787463969311",
+    "activity": "🟢 System Lockdown Lifted",
+    "description": "Standard traffic resumed. Reason: Test completed",
+    "actor": "Super Admin (GOD-MODE)",
+    "role": "SUPER_ADMIN",
+    "timestamp": "23/8/2026, 11:16:09 am"
+  },
+  {
+    "id": "act_1787463965856",
+    "activity": "🚨 System Kill-Switch Activated",
+    "description": "Global emergency quarantine armed. Reason: Security drill test",
+    "actor": "Super Admin (GOD-MODE)",
+    "role": "SUPER_ADMIN",
+    "timestamp": "23/8/2026, 11:16:05 am"
+  },
+  {
+    "id": "act_prev_1787390873275",
+    "activity": "🚀 Prototype Review Alert Sent: Zenith Tech",
+    "description": "Dispatched interactive prototype notification to zenithtech@fixkar.co.in via Firebase.",
+    "actor": "PREVIEW_NOTIFICATION_AUTOPILOT",
+    "role": "SYSTEM",
+    "isoTimestamp": "2026-08-22T09:27:53.275Z",
+    "timestamp": "22/8/2026, 2:57:51 pm"
+  },
+  {
+    "id": "act_prev_1787390659857",
+    "activity": "🚀 Prototype Review Alert Sent: Zenith Tech",
+    "description": "Dispatched interactive prototype notification to zenithtech@fixkar.co.in via Firebase.",
+    "actor": "PREVIEW_NOTIFICATION_AUTOPILOT",
+    "role": "SYSTEM",
+    "isoTimestamp": "2026-08-22T09:24:19.857Z",
+    "timestamp": "22/8/2026, 2:54:18 pm"
+  },
+  {
+    "id": "act_prev_1787390451912",
+    "activity": "🚀 Prototype Review Alert Sent: Zenith Tech",
+    "description": "Dispatched interactive prototype notification to zenithtech@fixkar.co.in via Firebase.",
+    "actor": "PREVIEW_NOTIFICATION_AUTOPILOT",
+    "role": "SYSTEM",
+    "isoTimestamp": "2026-08-22T09:20:51.912Z",
+    "timestamp": "22/8/2026, 2:50:50 pm"
+  },
+  {
+    "id": "act_prev_1787388825278",
+    "activity": "🚀 Prototype Review Alert Sent: Zenith Tech",
+    "description": "Dispatched interactive prototype notification to zenithtech@fixkar.co.in via Firebase.",
+    "actor": "PREVIEW_NOTIFICATION_AUTOPILOT",
+    "role": "SYSTEM",
+    "isoTimestamp": "2026-08-22T08:53:45.278Z",
+    "timestamp": "22/8/2026, 2:23:43 pm"
+  },
+  {
+    "id": "act_prev_1787381595254",
+    "activity": "🚀 Prototype Review Alert Sent: Sharma Classes",
+    "description": "Dispatched interactive prototype notification to sharmaclasses@fixkar.co.in via Firebase.",
+    "actor": "PREVIEW_NOTIFICATION_AUTOPILOT",
+    "role": "SYSTEM",
+    "isoTimestamp": "2026-08-22T06:53:15.254Z",
+    "timestamp": "22/8/2026, 12:23:13 pm"
+  },
+  {
+    "id": "act_prev_1787380484962",
+    "activity": "🚀 Prototype Review Alert Sent: Sharma Classes",
+    "description": "Dispatched interactive prototype notification to sharmaclasses@fixkar.co.in via Firebase.",
+    "actor": "PREVIEW_NOTIFICATION_AUTOPILOT",
+    "role": "SYSTEM",
+    "isoTimestamp": "2026-08-22T06:34:44.962Z",
+    "timestamp": "22/8/2026, 12:04:42 pm"
+  },
+  {
+    "id": "act_1787242800799",
+    "activity": "New Support Ticket: TKT-497",
+    "description": "Nova Tech - Integrate UPI payment QR code on checkout",
+    "actor": "admin",
+    "role": "ADMIN",
+    "timestamp": "20/8/2026, 9:50:00 pm"
+  }
+]

@@ -1,0 +1,37 @@
+{
+  "admins": [
+    {
+      "id": "admin_01",
+      "name": "Senior Lead Engineer",
+      "email": "admin@fixkar.co.in",
+      "username": "admin",
+      "passwordHash": "209aeb42aeef5a0b011d4c46a878b5fef1bbb49558437276abf4c95251cf0f61",
+      "salt": "salt_1787464208020",
+      "role": "admin",
+      "can_attempt_super_admin": true,
+      "status": "active",
+      "createdAt": "2026-08-01T00:00:00.000Z",
+      "plainPassword": "NewSecureAdminPass2026",
+      "lastPasswordChangedAt": "23/8/2026, 11:20:07 am"
+    }
+  ],
+  "superAdmins": [
+    {
+      "id": "super_01",
+      "username": "fixkar_root",
+      "passwordHash": "366ef05dafff57e5f1be70927a637b6d5118d7370d34c4132cf5bd5de8b2bb20",
+      "salt": "super_salt_1787467309099",
+      "totpSecret": "JBSWY3DPEHPK3PXP",
+      "totpSecretFormatted": "JBSW Y3DP EHPK 3PXP",
+      "totpEnabled": true,
+      "recoveryCodesHashed": [
+        "rec_hash_1a2b3c",
+        "rec_hash_4d5e6f",
+        "rec_hash_7g8h9i"
+      ],
+      "status": "active",
+      "createdAt": "2026-08-01T00:00:00.000Z",
+      "lastPasswordResetAt": "2026-08-23T06:41:49.099Z"
+    }
+  ]
+}

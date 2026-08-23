@@ -1,0 +1,91 @@
+[
+  {
+    "id": "DEL-1787215637468-373",
+    "clientCode": "FIX-RKCC-001",
+    "clientName": "R.K. Computer Classes",
+    "maskedMobile": "98XXXXXX45",
+    "purpose": "Student Portal Login",
+    "dltSenderId": "RKCCPT",
+    "creditUsed": 1,
+    "status": "Delivered",
+    "gatewayStatus": "DELIVRD (Fast2SMS Upstream)",
+    "timestamp": "20/8/2026, 2:17:17 pm",
+    "isoTimestamp": "2026-08-20T08:47:17.468Z"
+  },
+  {
+    "id": "DEL-1787214268858-750",
+    "clientCode": "FIX-ZENI-007",
+    "clientName": "Zenith Tech",
+    "maskedMobile": "98XXXXXX45",
+    "purpose": "Web Portal Login OTP",
+    "dltSenderId": "ZENITH",
+    "creditUsed": 1,
+    "status": "Delivered",
+    "gatewayStatus": "DELIVRD (Fast2SMS Upstream)",
+    "timestamp": "20/8/2026, 1:54:28 pm",
+    "isoTimestamp": "2026-08-20T08:24:28.858Z"
+  },
+  {
+    "id": "DEL-1787214235056-808",
+    "clientCode": "FIX-RKCC-001",
+    "clientName": "R.K. Computer Classes",
+    "maskedMobile": "98XXXXXX45",
+    "purpose": "Student Verification",
+    "dltSenderId": "RKCCPT",
+    "creditUsed": 1,
+    "status": "Delivered",
+    "gatewayStatus": "DELIVRD (Fast2SMS Upstream)",
+    "timestamp": "20/8/2026, 1:53:55 pm",
+    "isoTimestamp": "2026-08-20T08:23:55.056Z"
+  },
+  {
+    "id": "log_101",
+    "clientCode": "FIX-RKCC-001",
+    "clientName": "R.K. Computer Classes",
+    "purpose": "Student Portal Login",
+    "maskedMobile": "98XXXXXX45",
+    "creditUsed": 1,
+    "status": "Delivered",
+    "timestamp": "2026-08-17 19:42:10"
+  },
+  {
+    "id": "log_102",
+    "clientCode": "FIX-RKCC-001",
+    "clientName": "R.K. Computer Classes",
+    "purpose": "Password Reset OTP",
+    "maskedMobile": "94XXXXXX12",
+    "creditUsed": 1,
+    "status": "Delivered",
+    "timestamp": "2026-08-17 18:10:04"
+  },
+  {
+    "id": "log_103",
+    "clientCode": "FIX-ECO-003",
+    "clientName": "Ecofone Recommerce",
+    "purpose": "Seller Mobile Verification",
+    "maskedMobile": "91XXXXXX89",
+    "creditUsed": 1,
+    "status": "Delivered",
+    "timestamp": "2026-08-17 21:04:18"
+  },
+  {
+    "id": "log_104",
+    "clientCode": "FIX-VERM-005",
+    "clientName": "Verma Competitive Institutes",
+    "purpose": "Online Admission Verification",
+    "maskedMobile": "97XXXXXX33",
+    "creditUsed": 1,
+    "status": "Delivered",
+    "timestamp": "2026-08-17 20:11:45"
+  },
+  {
+    "id": "log_105",
+    "clientCode": "FIX-SGL-004",
+    "clientName": "Singh's Glamour Lounge",
+    "purpose": "VIP Booking Confirmation",
+    "maskedMobile": "98XXXXXX80",
+    "creditUsed": 1,
+    "status": "Delivered",
+    "timestamp": "2026-08-17 18:22:05"
+  }
+]

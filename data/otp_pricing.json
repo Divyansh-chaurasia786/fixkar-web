@@ -1,0 +1,68 @@
+{
+  "wholesaleCostPerSms": 0.125,
+  "baseRetailRatePerSms": 0.25,
+  "currency": "INR",
+  "packages": [
+    {
+      "id": "otp_500",
+      "name": "Starter Micro Pack",
+      "credits": 500,
+      "ratePerSms": 0.25,
+      "price": 125,
+      "popular": false,
+      "desc": "Quick top-up for small portals & testing"
+    },
+    {
+      "id": "otp_1000",
+      "name": "Starter Pro Pack",
+      "credits": 1000,
+      "ratePerSms": 0.25,
+      "price": 250,
+      "popular": false,
+      "desc": "Ideal for coaching institute student logins and attendance alerts."
+    },
+    {
+      "id": "otp_2500",
+      "name": "Growth Lite Pack",
+      "credits": 2500,
+      "ratePerSms": 0.23,
+      "price": 575,
+      "popular": false,
+      "desc": "Great for growing academy & clinic booking portals."
+    },
+    {
+      "id": "otp_5000",
+      "name": "Growth Business Pack",
+      "credits": 5000,
+      "ratePerSms": 0.22,
+      "price": 1100,
+      "popular": true,
+      "desc": "Best value for high-volume exam portals and member booking notifications."
+    },
+    {
+      "id": "otp_10000",
+      "name": "Enterprise Scale Pack",
+      "credits": 10000,
+      "ratePerSms": 0.2,
+      "price": 2000,
+      "popular": false,
+      "desc": "Maximum savings with dedicated high-throughput DLT SMS routing."
+    },
+    {
+      "id": "otp_25000",
+      "name": "Mega Enterprise Pack",
+      "credits": 25000,
+      "ratePerSms": 0.18,
+      "price": 4500,
+      "popular": false,
+      "desc": "Ultra-low bulk volume rate for large institutions."
+    }
+  ],
+  "customCalculator": {
+    "minCredits": 500,
+    "defaultRate": 0.22,
+    "maxCredits": 100000
+  },
+  "lastUpdatedBy": "fixkar_root",
+  "lastUpdatedAt": "2026-08-22T11:21:20.460Z"
+}

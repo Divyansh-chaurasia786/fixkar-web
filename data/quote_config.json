@@ -1,0 +1,265 @@
+{
+  "siteTypes": [
+    {
+      "id": "landing",
+      "title": "1-Page Quick Launchpad",
+      "price": 3999,
+      "badge": "Fast Launch",
+      "includedPages": 1,
+      "simpleDesc": "A single, high-converting scrollable page. Perfect for landing pages, portfolio, or single service launch.",
+      "whoIsItFor": "Freelancers, new businesses, single product launch",
+      "turnaround": "3–5 Days",
+      "isCustomizable": true,
+      "isLive": true
+    },
+    {
+      "id": "business",
+      "title": "Complete Multi-Page Website",
+      "price": 7999,
+      "badge": "Most Popular",
+      "includedPages": 5,
+      "simpleDesc": "Full professional website with separate pages: Home, About Us, Services/Menu, Photo Gallery, and Contact.",
+      "whoIsItFor": "Catering, Salons, Clinics, Contractors, Local Brands",
+      "turnaround": "7–14 Days",
+      "isCustomizable": true,
+      "isLive": true
+    },
+    {
+      "id": "ecommerce",
+      "title": "Online Shop / E-Commerce Store",
+      "price": 14999,
+      "badge": "Direct Selling",
+      "includedPages": 6,
+      "simpleDesc": "Sell your products online with automatic shopping cart, UPI & Card payments, and WhatsApp order alerts.",
+      "whoIsItFor": "Clothing, Electronics, Grocery, Product Brands",
+      "turnaround": "14–21 Days",
+      "isCustomizable": true,
+      "isLive": true
+    },
+    {
+      "id": "custom_portal",
+      "title": "Custom Booking / Valuation Portal",
+      "price": 18999,
+      "badge": "Advanced System",
+      "includedPages": 8,
+      "simpleDesc": "Interactive system with client login, automatic trade-in price valuation (like Ecofone), or complex booking flows.",
+      "whoIsItFor": "Startups, Recommerce, Multi-branch operations",
+      "turnaround": "14–28 Days",
+      "isCustomizable": true,
+      "isLive": true
+    }
+  ],
+  "extraPageRate": 399,
+  "features": [
+    {
+      "id": "whatsapp",
+      "title": "1-Click WhatsApp Chat Button",
+      "price": 0,
+      "whatItDoes": "Visitors can tap one button on mobile to chat with you directly on WhatsApp. No long forms to fill.",
+      "whyYouNeedIt": "Generates 3x more inquiries because customers in India prefer direct WhatsApp conversations.",
+      "isCustomizable": true
+    },
+    {
+      "id": "contactForm",
+      "title": "Smart Contact & Inquiry Form",
+      "price": 0,
+      "whatItDoes": "Collects customer name, phone number, and message, and emails it to you immediately.",
+      "whyYouNeedIt": "Included completely FREE in all website plans.",
+      "isCustomizable": true
+    },
+    {
+      "id": "bookingCalendar",
+      "title": "Online Appointment & Booking System",
+      "price": 1799,
+      "whatItDoes": "Allows clients to choose their date and time slot online (like Singh's Glamour Salon).",
+      "whyYouNeedIt": "Saves you hours of phone calls and prevents double-bookings automatically.",
+      "isCustomizable": true
+    },
+    {
+      "id": "priceCalculator",
+      "title": "Interactive Price / Menu Estimator",
+      "price": 2199,
+      "whatItDoes": "Clients can select food items or services and see instant estimated costs (like S Caterers).",
+      "whyYouNeedIt": "Builds instant trust and qualifies high-budget leads automatically without manual quoting.",
+      "isCustomizable": true
+    },
+    {
+      "id": "paymentGateway",
+      "title": "UPI & Card Online Payment Gateway",
+      "price": 2499,
+      "whatItDoes": "Accept advance booking fees or product sales via PhonePe, GPay, Paytm, UPI, and Cards.",
+      "whyYouNeedIt": "Get paid instantly into your bank account via Razorpay/Cashfree integration.",
+      "isCustomizable": true
+    },
+    {
+      "id": "gallery",
+      "title": "Photo & Video Showcase Gallery",
+      "price": 899,
+      "whatItDoes": "Organized albums for your photos and videos with zoom and category filters.",
+      "whyYouNeedIt": "Show off your best work, wedding setups, salon makeovers, or products visually.",
+      "isCustomizable": true
+    },
+    {
+      "id": "multiLanguage",
+      "title": "English + Hindi Language Switcher",
+      "price": 1299,
+      "whatItDoes": "Adds a toggle button so visitors can read your whole website in English or Hindi.",
+      "whyYouNeedIt": "Makes your website accessible to all regional Indian customers.",
+      "isCustomizable": true
+    },
+    {
+      "id": "adminDashboard",
+      "title": "Self-Edit Admin Login (Change Content Yourself)",
+      "price": 2999,
+      "whatItDoes": "A simple password-protected panel where you can edit your prices, photos, and text anytime.",
+      "whyYouNeedIt": "You won't have to pay a developer every time your price list or menu changes.",
+      "isCustomizable": true
+    }
+  ],
+  "aiOptions": [
+    {
+      "id": "none",
+      "title": "No AI Needed",
+      "price": 0,
+      "desc": "Standard fast website without automated AI chatbots.",
+      "isCustomizable": true
+    },
+    {
+      "id": "whatsapp_bot",
+      "title": "AI WhatsApp Auto-Responder",
+      "price": 1999,
+      "desc": "An AI that replies to customer questions on your WhatsApp 24/7 with your menu, pricing, and location.",
+      "isCustomizable": true
+    },
+    {
+      "id": "website_copilot",
+      "title": "Smart Website AI Assistant",
+      "price": 3499,
+      "desc": "A smart chat assistant embedded on your website trained on your business to convert visitors into clients.",
+      "isCustomizable": true
+    }
+  ],
+  "seoAddonPrice": 1499,
+  "hostingPlans": [
+    {
+      "id": "standard_cloud",
+      "title": "Standard High-Speed Cloud Server",
+      "providerSource": "Hostinger / DigitalOcean Fast Cloud",
+      "providerBaseRate": 1185,
+      "gstRate": 0.18,
+      "managementFee": 100,
+      "finalPrice": 1499,
+      "displayPriceText": "₹1,499 / yr",
+      "specs": "25,000 visits/mo • 0.25s speed • Free SSL • NVMe SSD",
+      "badge": "Standard Traffic",
+      "desc": "Commercial cloud server with 99.9% uptime SLA. Perfect for standard local business sites and landing pages.",
+      "isAutoSynced": true
+    },
+    {
+      "id": "business_vps",
+      "title": "Business High-Speed Cloud VPS",
+      "providerSource": "Hostinger Premium VPS / DigitalOcean Droplet",
+      "providerBaseRate": 2033,
+      "gstRate": 0.18,
+      "managementFee": 100,
+      "finalPrice": 2499,
+      "displayPriceText": "₹2,499 / yr",
+      "specs": "Dedicated IP • 100,000 visits/mo • NVMe SSD • Daily Auto Backups",
+      "badge": "High Traffic",
+      "desc": "Dedicated cloud resources for busy salons, catering firms, clinics, and appointment booking systems.",
+      "isAutoSynced": true
+    },
+    {
+      "id": "ecommerce_dedicated",
+      "title": "Enterprise Dedicated Cloud VPS",
+      "providerSource": "AWS Lightsail / Google Cloud Dedicated",
+      "providerBaseRate": 4151,
+      "gstRate": 0.18,
+      "managementFee": 100,
+      "finalPrice": 4999,
+      "displayPriceText": "₹4,999 / yr",
+      "specs": "Unlimited traffic • 4 vCPU / 8GB RAM • Redis Cache • 99.99% SLA Uptime",
+      "badge": "Max Performance",
+      "desc": "Heavy-duty cloud server for e-commerce stores, high-volume transactions, and custom SaaS web portals.",
+      "isAutoSynced": true
+    },
+    {
+      "id": "self_hosted",
+      "title": "Deploy on My Own Server (₹0 Setup)",
+      "providerSource": "Client Existing Server (Hostinger / GoDaddy / AWS)",
+      "providerBaseRate": 0,
+      "gstRate": 0,
+      "managementFee": 0,
+      "finalPrice": 0,
+      "displayPriceText": "₹0",
+      "specs": "Direct deployment & DNS integration on your existing server account.",
+      "badge": "Self-Hosted",
+      "desc": "Our engineers configure and deploy directly to your existing server at no extra charge.",
+      "isAutoSynced": true
+    }
+  ],
+  "domainOptions": [
+    {
+      "id": "dot_in",
+      "ext": ".in",
+      "title": ".in Domain Registration",
+      "providerSource": "National Internet Exchange of India (NIXI .in Registry)",
+      "providerBaseRate": 499,
+      "gstRate": 0.18,
+      "managementFee": 100,
+      "finalPrice": 689,
+      "displayPriceText": "₹689 / yr",
+      "specs": "1-Year Official .in Registry • DNS Management • WHOIS Privacy",
+      "badge": "Popular in India",
+      "desc": "Recommended for Indian local businesses, brands, and service providers.",
+      "isAutoSynced": true
+    },
+    {
+      "id": "dot_com",
+      "ext": ".com",
+      "title": ".com Domain Registration",
+      "providerSource": "VeriSign Global Registry (.com)",
+      "providerBaseRate": 899,
+      "gstRate": 0.18,
+      "managementFee": 100,
+      "finalPrice": 1160,
+      "displayPriceText": "₹1,160 / yr",
+      "specs": "1-Year Global .com Registry • Full DNS Control • SSL Linked",
+      "badge": "Global Standard",
+      "desc": "The worldwide recognized standard domain extension for commercial companies.",
+      "isAutoSynced": true
+    },
+    {
+      "id": "dot_co_in",
+      "ext": ".co.in",
+      "title": ".co.in Domain Registration",
+      "providerSource": "NIXI .co.in Commercial Registry",
+      "providerBaseRate": 599,
+      "gstRate": 0.18,
+      "managementFee": 100,
+      "finalPrice": 806,
+      "displayPriceText": "₹806 / yr",
+      "specs": "1-Year .co.in Registry • High Credibility for Indian Companies",
+      "badge": "Commercial India",
+      "desc": "Company domain extension for Indian commercial enterprises.",
+      "isAutoSynced": true
+    },
+    {
+      "id": "own_domain",
+      "ext": "own_domain",
+      "title": "I Already Own a Domain (₹0)",
+      "providerSource": "Client Existing Domain (GoDaddy, Namecheap, Google Domains)",
+      "providerBaseRate": 0,
+      "gstRate": 0,
+      "managementFee": 0,
+      "finalPrice": 0,
+      "displayPriceText": "₹0",
+      "specs": "Free DNS record mapping to your new Fixkar Cloud Server",
+      "badge": "Existing Domain",
+      "desc": "We will link your existing domain DNS to your new website server for free.",
+      "isAutoSynced": true
+    }
+  ],
+  "lastSyncedAt": "2026-08-18T22:38:00.000Z",
+  "lastUpdatedAt": "2026-08-20T16:18:13.811Z"
+}

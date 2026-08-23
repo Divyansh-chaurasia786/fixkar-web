@@ -1,0 +1,43 @@
+[
+  {
+    "id": "KEY-FIXECO002-287",
+    "apiKey": "fixkar_live_otp_fixeco002_651424471affc7e9a8991475",
+    "clientCode": "FIX-ECO-002",
+    "clientName": "Ecofone India",
+    "dltSenderId": "ECOFNE",
+    "status": "Active",
+    "totalRequests": 0,
+    "lastUsedAt": null,
+    "lastUsedTimestamp": "Not yet used",
+    "createdAt": "2026-08-22T11:52:57.251Z",
+    "createdTimestamp": "22/8/2026, 5:22:57 pm",
+    "createdBy": "admin"
+  },
+  {
+    "id": "KEY-FIXZENI007-239",
+    "apiKey": "fixkar_live_otp_fixzeni007_bd3eda44a2d2ddb5782140e7",
+    "clientCode": "FIX-ZENI-007",
+    "clientName": "Zenith Tech",
+    "dltSenderId": "ZENI",
+    "status": "Active",
+    "totalRequests": 0,
+    "lastUsedAt": null,
+    "lastUsedTimestamp": "Not yet used",
+    "createdAt": "2026-08-22T11:43:08.610Z",
+    "createdTimestamp": "22/8/2026, 5:13:08 pm",
+    "createdBy": "admin"
+  },
+  {
+    "id": "KEY-ZENI-002",
+    "apiKey": "fixkar_live_otp_zeni_3e7a9b0c2d1f",
+    "clientCode": "FIX-ZENI-007",
+    "clientName": "Zenith Tech",
+    "dltSenderId": "ZENITH",
+    "status": "Active",
+    "totalRequests": 59,
+    "lastUsedAt": "2026-08-20T08:24:28.857Z",
+    "lastUsedTimestamp": "20/8/2026, 1:54:28 pm",
+    "createdAt": "2026-08-20T07:44:46.578Z",
+    "createdBy": "Super Admin"
+  }
+]

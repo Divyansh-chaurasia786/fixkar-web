@@ -1,0 +1,18 @@
+[
+  {
+    "id": "notif_1787471280625",
+    "type": "INBOUND_EMAIL",
+    "title": "📩 New Client Email: chaurasiadivyansh86@gmail.com",
+    "message": "Client Inquiry to Fixkar: \"Received: from mail-yw1-x112b.google.com (2607:f8b0:4864:20::112b)\r\n        by cloudflare-...\"",
+    "isRead": false,
+    "timestamp": "2026-08-23T07:48:00.625Z"
+  },
+  {
+    "id": "notif_1787468524758",
+    "type": "INBOUND_EMAIL",
+    "title": "📩 New Client Email: Pooja Verma <pooja.verma@fintechsolutions.in>",
+    "message": "URGENT: Request for Custom SMS Gateway Route & DLT Whitelist: \"Hi Fixkar Team,\n\nWe would like to request high-throughput DLT SMS routing for our fintech ...\"",
+    "isRead": false,
+    "timestamp": "2026-08-23T07:02:04.758Z"
+  }
+]

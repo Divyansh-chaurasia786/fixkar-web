@@ -1,0 +1,377 @@
+.interaction-section {
+  padding: var(--space-16) 0;
+}
+
+.interaction-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+}
+
+.interaction-title {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--dark-ink);
+}
+
+/* Intent Tabs */
+.intent-tabs {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .intent-tabs {
+    width: auto;
+  }
+}
+
+.intent-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0.75rem 1.25rem;
+  background: var(--concrete-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xs);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--dark-steel);
+  transition: all var(--duration-fast) var(--motion-snap);
+}
+
+.intent-tab:hover {
+  border-color: var(--dark-ink);
+  color: var(--dark-ink);
+}
+
+.intent-tab.active-fix {
+  background: var(--asphalt-black);
+  border-color: var(--fixkar-red);
+  color: var(--signal-white);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.intent-tab.active-care {
+  background: var(--dark-ink);
+  border-color: var(--dark-ink);
+  color: var(--signal-white);
+}
+
+.tab-tag {
+  font-size: 8px;
+  background: var(--fixkar-red);
+  color: var(--signal-white);
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+}
+
+.tab-tag-subtle {
+  font-size: 8px;
+  background: var(--steel);
+  color: var(--signal-white);
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+}
+
+/* Step Block */
+.shell-step-block {
+  margin-bottom: var(--space-12);
+}
+
+.step-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  color: var(--dark-steel);
+  margin-bottom: var(--space-2);
+}
+
+.step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: var(--dark-ink);
+  color: var(--fixkar-red);
+  font-weight: 700;
+  border-radius: var(--radius-xs);
+}
+
+.step-subtitle {
+  font-size: var(--text-sm);
+  color: var(--dark-ink-muted);
+  margin-bottom: var(--space-4);
+}
+
+/* Technical Vehicle Rail */
+.vehicle-technical-rail {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-3);
+}
+
+.rail-vehicle-item {
+  position: relative;
+  background: var(--concrete-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xs);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-3);
+  height: 110px;
+  text-align: left;
+  transition: all var(--duration-fast) var(--motion-snap);
+}
+
+.rail-vehicle-item:hover {
+  background: var(--concrete-card);
+  border-color: var(--dark-steel);
+  transform: translateY(-2px);
+}
+
+.rail-vehicle-item.selected {
+  background: var(--asphalt-black);
+  color: var(--signal-white);
+  border-color: var(--fixkar-red);
+}
+
+.item-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--steel);
+}
+
+.rail-vehicle-item.selected .item-top {
+  color: var(--fixkar-red);
+}
+
+.snap-check-icon {
+  color: var(--fixkar-red);
+}
+
+.item-bottom {
+  display: flex;
+  flex-direction: column;
+}
+
+.rail-v-label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+
+.rail-v-sub {
+  font-size: 8px;
+  opacity: 0.7;
+}
+
+.active-red-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: var(--fixkar-red);
+}
+
+/* Editorial Problem List */
+.editorial-problem-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.editorial-problem-row {
+  background: var(--concrete-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xs);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  text-align: left;
+  transition: all var(--duration-fast) var(--motion-snap);
+}
+
+@media (min-width: 768px) {
+  .editorial-problem-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.editorial-problem-row:hover {
+  background: var(--concrete-card);
+  border-color: var(--dark-steel);
+}
+
+.editorial-problem-row.selected {
+  background: var(--asphalt-black);
+  border-color: var(--fixkar-red);
+  color: var(--signal-white);
+}
+
+.row-main {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.prob-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--warm-concrete);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xs);
+  color: var(--dark-steel);
+}
+
+.editorial-problem-row.selected .prob-icon-box {
+  background: var(--fixkar-red);
+  color: var(--signal-white);
+  border-color: var(--fixkar-red);
+}
+
+.prob-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.prob-name {
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.prob-eta {
+  font-size: 10px;
+  color: var(--steel);
+}
+
+.editorial-problem-row.selected .prob-eta {
+  color: var(--status-success);
+}
+
+.selected-insight-callout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--steel);
+  max-width: 480px;
+}
+
+.editorial-problem-row.selected .selected-insight-callout {
+  color: var(--signal-white-muted);
+}
+
+.callout-arrow {
+  color: var(--fixkar-red);
+  flex-shrink: 0;
+}
+
+/* Concrete Action Bar */
+.concrete-action-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background: var(--asphalt-black);
+  border: 1px solid var(--fixkar-red);
+  border-radius: var(--radius-xs);
+  padding: var(--space-4) var(--space-6);
+  color: var(--signal-white);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 768px) {
+  .concrete-action-bar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.action-location-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: 1;
+}
+
+.pin-icon {
+  color: var(--fixkar-red);
+  flex-shrink: 0;
+}
+
+.location-field-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.location-field-wrapper label {
+  font-size: 9px;
+  color: var(--steel);
+  letter-spacing: 0.1em;
+}
+
+.location-input-control {
+  background: none;
+  border: none;
+  color: var(--signal-white);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  outline: none;
+  width: 100%;
+}
+
+.eta-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-xs);
+  font-size: 10px;
+  color: var(--status-success);
+}
+
+.action-dispatch-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0.875rem 1.5rem;
+  background: var(--fixkar-red);
+  color: var(--signal-white);
+  font-weight: 800;
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  border-radius: var(--radius-xs);
+  transition: all var(--duration-fast) var(--motion-snap);
+  box-shadow: 0 4px 20px var(--fixkar-red-glow);
+  white-space: nowrap;
+}
+
+.action-dispatch-btn:hover {
+  background: var(--fixkar-red-hover);
+  transform: translateY(-1px);
+}

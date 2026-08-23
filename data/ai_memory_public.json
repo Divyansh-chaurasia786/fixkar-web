@@ -1,0 +1,65 @@
+{
+  "publicProfile": {
+    "visitorLanguages": [
+      "Hinglish",
+      "Hindi",
+      "English"
+    ],
+    "popularServices": [
+      "Full-Stack Custom Web Application",
+      "E-Commerce Store with Payment Gateway",
+      "Fast2SMS Enterprise DLT OTP Service",
+      "High-Speed Managed Cloud VPS & Domain"
+    ],
+    "topFAQs": [
+      "What is the pricing for a website?",
+      "Is hosting and domain included?",
+      "How much time does it take to deliver?",
+      "Do you provide DLT OTP infrastructure for login?"
+    ],
+    "totalInteractions": 41,
+    "lastActive": "2026-08-20T06:01:35.556Z",
+    "pricingInquiries": 2,
+    "ecommerceInquiries": 1
+  },
+  "learnedInsights": [
+    {
+      "id": "pub_1",
+      "topic": "Hosting & Domain Inclusions",
+      "insight": "Visitors frequently ask if hosting is included. AI should proactively highlight 1-Year Free High-Speed Cloud VPS & Free Domain with every project package.",
+      "confidence": 0.97,
+      "learnedAt": "2026-08-19T19:59:46.915Z"
+    },
+    {
+      "id": "pub_2",
+      "topic": "Quotation Transparency",
+      "insight": "Visitors appreciate instant, transparent ₹ INR price estimations with clear feature breakdown (e.g. ₹15,000 for standard business sites, ₹25,000 for dynamic apps).",
+      "confidence": 0.96,
+      "learnedAt": "2026-08-19T19:59:46.915Z"
+    },
+    {
+      "id": "pub_3",
+      "topic": "Delivery Timelines",
+      "insight": "Prospects want to know turnaround times. Highlight rapid delivery sprints (7 to 14 days full production deployment).",
+      "confidence": 0.95,
+      "learnedAt": "2026-08-19T19:59:46.915Z"
+    },
+    {
+      "id": "pub_4",
+      "topic": "Conversational Tone",
+      "insight": "Visitors in India respond best to polite, warm, and helpful Hinglish / Hindi assistance with quick WhatsApp quotation connect.",
+      "confidence": 0.98,
+      "learnedAt": "2026-08-19T19:59:46.915Z"
+    }
+  ],
+  "securityGuardrails": {
+    "adminAccessDisabled": true,
+    "restrictedData": [
+      "database_write_operations",
+      "client_credentials_passwords",
+      "wholesale_sms_costs",
+      "server_ip_private_keys",
+      "system_configuration_secrets"
+    ]
+  }
+}

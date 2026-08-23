@@ -1,0 +1,50 @@
+[
+  {
+    "id": "srv_web_dev",
+    "name": "Custom Website Development",
+    "category": "Development",
+    "defaultCycle": "One-time",
+    "basePrice": "₹24,999",
+    "description": "Bespoke high-performance web application built with React, Next.js or Laravel."
+  },
+  {
+    "id": "srv_hosting",
+    "name": "Managed High-Speed Edge Cloud Hosting",
+    "category": "Infrastructure",
+    "defaultCycle": "Annual",
+    "basePrice": "₹4,999 / yr",
+    "description": "Global edge deployment with automated daily backups and 99.98% SLA."
+  },
+  {
+    "id": "srv_domain",
+    "name": "Domain Management & Google DNS",
+    "category": "Infrastructure",
+    "defaultCycle": "Annual",
+    "basePrice": "₹999 / yr",
+    "description": "DNS configuration, DoH security routing, and annual registration protection."
+  },
+  {
+    "id": "srv_otp",
+    "name": "OTP Mobile Verification Service",
+    "category": "API / Telephony",
+    "defaultCycle": "Pay-as-you-go",
+    "basePrice": "₹0.22 / credit",
+    "description": "Instant 6-digit transactional SMS authentication for logins and booking alerts."
+  },
+  {
+    "id": "srv_maintenance",
+    "name": "Annual Technical Maintenance (AMC)",
+    "category": "Support",
+    "defaultCycle": "Annual",
+    "basePrice": "₹7,999 / yr",
+    "description": "Security patching, content updates, database optimization, and priority bug fixes."
+  },
+  {
+    "id": "srv_ssl",
+    "name": "Enterprise SSL & Security Hardening",
+    "category": "Security",
+    "defaultCycle": "Annual",
+    "basePrice": "₹1,499 / yr",
+    "description": "End-to-end HTTPS TLS 1.3 encryption and automated certificate rotation."
+  }
+]

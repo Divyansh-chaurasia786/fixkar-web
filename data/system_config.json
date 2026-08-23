@@ -1,0 +1,48 @@
+{
+  "otpInfrastructure": {
+    "masterCapacity": 50000,
+    "masterRemaining": 44253,
+    "unitRateINR": 0.25,
+    "clientWallets": [
+      {
+        "clientId": "rkcc_01",
+        "clientName": "R.K. Computer Classes",
+        "availableCredits": 1247,
+        "totalUsed": 753,
+        "lastRechargeDate": "2026-08-05",
+        "status": "Active"
+      },
+      {
+        "clientId": "ecofone_01",
+        "clientName": "Ecofone Recommerce",
+        "availableCredits": 4500,
+        "totalUsed": 5500,
+        "lastRechargeDate": "2026-08-10",
+        "status": "Active"
+      },
+      {
+        "clientId": "singhs_01",
+        "clientName": "Singh's Glamour",
+        "availableCredits": 820,
+        "totalUsed": 1180,
+        "lastRechargeDate": "2026-08-08",
+        "status": "Active"
+      }
+    ]
+  },
+  "apiIntegrations": {
+    "groqApiKey": "gsk_live_configured_in_env",
+    "googleDohDns": "https://dns.google/resolve",
+    "razorpayKeyId": "rzp_live_fixkar_configured",
+    "smsGatewayStatus": "Connected",
+    "edgeCDNStatus": "Global Active"
+  },
+  "securityPolicy": {
+    "adminSessionDurationHours": 12,
+    "superAdminTimeoutMinutes": 15,
+    "maxFailedAdminAttempts": 5,
+    "maxFailedSuperAdminAttempts": 3,
+    "lockoutDurationMinutes": 15,
+    "requireTotpForSuperAdmin": true
+  }
+}

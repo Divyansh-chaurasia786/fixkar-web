@@ -1,0 +1,188 @@
+[
+  {
+    "id": "fb_mail_1787467614474_9dca3",
+    "to": "chaurasiadivyansh86@gmail.com, founder@fixkar.in, superadmin@fixkar.in",
+    "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 350950 & 2FA Setup Key",
+    "engine": "Firebase Google Cloud Engine (fixkar-5152d)",
+    "status": "DISPATCHED_FIREBASE",
+    "otp": "350950",
+    "isoTimestamp": "2026-08-23T06:46:55.044Z"
+  },
+  {
+    "id": "fb_mail_1787467273919_ikax8",
+    "to": "chaurasiadivyansh86@gmail.com, founder@fixkar.in, superadmin@fixkar.in",
+    "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 417522 & 2FA Setup Key",
+    "engine": "Firebase Google Cloud Engine (fixkar-5152d)",
+    "status": "DISPATCHED_FIREBASE",
+    "otp": "417522",
+    "isoTimestamp": "2026-08-23T06:41:14.068Z"
+  },
+  {
+    "id": "fb_mail_1787467078260_9u92v",
+    "to": "chaurasiadivyansh86@gmail.com, founder@fixkar.in, superadmin@fixkar.in",
+    "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 826065 & 2FA Setup Key",
+    "engine": "Firebase Google Cloud Engine (fixkar-5152d)",
+    "status": "DISPATCHED_FIREBASE",
+    "otp": "826065",
+    "isoTimestamp": "2026-08-23T06:37:59.029Z"
+  },
+  {
+    "id": "fb_mail_1787466676631_tt4wc",
+    "to": "chaurasiadivyansh86@gmail.com, founder@fixkar.in, superadmin@fixkar.in",
+    "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 239944 & 2FA Setup Key",
+    "engine": "Firebase Google Cloud Engine (fixkar-5152d)",
+    "status": "DISPATCHED_FIREBASE",
+    "otp": "239944",
+    "isoTimestamp": "2026-08-23T06:31:17.135Z"
+  },
+  {
+    "id": "fb_mail_1787466266857_6q84w",
+    "to": "chaurasiadivyansh86@gmail.com, founder@fixkar.in, superadmin@fixkar.in",
+    "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 834449 & 2FA Setup Key",
+    "engine": "Firebase Google Cloud Engine (fixkar-5152d)",
+    "status": "DISPATCHED_FIREBASE",
+    "otp": "834449",
+    "isoTimestamp": "2026-08-23T06:24:27.557Z"
+  },
+  {
+    "id": "fb_mail_1787466137643_b3qiq",
+    "to": "chaurasiadivyansh86@gmail.com, founder@fixkar.in, superadmin@fixkar.in",
+    "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 256798 & 2FA Setup Key",
+    "engine": "Firebase Cloud Mail & OTP Engine (fixkar-5152d)",
+    "status": "DISPATCHED_FIREBASE",
+    "otp": "256798",
+    "isoTimestamp": "2026-08-23T06:22:17.778Z"
+  },
+  {
+    "id": "fb_mail_1787466116188_9dxoh",
+    "to": "chaurasiadivyansh86@gmail.com, founder@fixkar.in, superadmin@fixkar.in",
+    "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 776376 & 2FA Setup Key",
+    "engine": "Firebase Cloud Mail & OTP Engine (fixkar-5152d)",
+    "status": "DISPATCHED_FIREBASE",
+    "otp": "776376",
+    "isoTimestamp": "2026-08-23T06:21:57.245Z"
+  },
+  {
+    "id": "fb_mail_1787465673665_47kjc",
+    "to": "chaurasiadivyansh86@gmail.com, founder@fixkar.in, superadmin@fixkar.in",
+    "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 987581 & 2FA Setup Key",
+    "engine": "Firebase Cloud Mail & OTP Engine",
+    "status": "DISPATCHED_FIREBASE",
+    "otp": "987581",
+    "isoTimestamp": "2026-08-23T06:14:33.669Z"
+  },
+  {
+    "id": "fb_mail_1787465625358_0lvjv",
+    "to": "chaurasiadivyansh86@gmail.com, founder@fixkar.in, superadmin@fixkar.in",
+    "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 951513 & 2FA Setup Key",
+    "engine": "Firebase Cloud Mail & OTP Engine",
+    "status": "DISPATCHED_FIREBASE",
+    "otp": "951513",
+    "isoTimestamp": "2026-08-23T06:13:45.360Z"
+  },
+  {
+    "id": "fb_mail_1787465501162_zt5xc",
+    "to": "chaurasiadivyansh86@gmail.com, founder@fixkar.in, superadmin@fixkar.in",
+    "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 965376 & 2FA Setup Key",
+    "engine": "Firebase Cloud Mail & OTP Engine",
+    "status": "DISPATCHED_FIREBASE",
+    "otp": "965376",
+    "isoTimestamp": "2026-08-23T06:11:41.164Z"
+  },
+  {
+    "id": "email_prev_1787390873274",
+    "clientCode": "FIX-ZENI-007",
+    "clientName": "Zenith Tech",
+    "to": "zenithtech@fixkar.co.in",
+    "subject": "🚀 Your Website Interactive Prototype is Ready for Review! - Zenith Tech",
+    "engine": "Firebase Prototype Notification Engine",
+    "status": "DISPATCHED_SANDBOX",
+    "timestamp": "22/8/2026, 2:57:51 pm",
+    "isoTimestamp": "2026-08-22T09:27:53.274Z",
+    "error": "Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials 5a478bee46e88-327f91d37cesm5700770eec.15 - gsmtp"
+  },
+  {
+    "id": "email_prev_1787390659844",
+    "clientCode": "FIX-ZENI-007",
+    "clientName": "Zenith Tech",
+    "to": "zenithtech@fixkar.co.in",
+    "subject": "🚀 Your Website Interactive Prototype is Ready for Review! - Zenith Tech",
+    "engine": "Firebase Prototype Notification Engine",
+    "status": "DISPATCHED_SANDBOX",
+    "timestamp": "22/8/2026, 2:54:18 pm",
+    "isoTimestamp": "2026-08-22T09:24:19.844Z",
+    "error": "Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials 5a478bee46e88-327f9209fafsm8204963eec.23 - gsmtp"
+  },
+  {
+    "id": "email_prev_1787390451911",
+    "clientCode": "FIX-ZENI-007",
+    "clientName": "Zenith Tech",
+    "to": "zenithtech@fixkar.co.in",
+    "subject": "🚀 Your Website Interactive Prototype is Ready for Review! - Zenith Tech",
+    "engine": "Firebase Prototype Notification Engine",
+    "status": "DISPATCHED_SANDBOX",
+    "timestamp": "22/8/2026, 2:50:50 pm",
+    "isoTimestamp": "2026-08-22T09:20:51.911Z",
+    "error": "Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials 5a478bee46e88-327f9209f51sm8355237eec.22 - gsmtp"
+  },
+  {
+    "id": "email_prev_1787388825276",
+    "clientCode": "FIX-ZENI-007",
+    "clientName": "Zenith Tech",
+    "to": "zenithtech@fixkar.co.in",
+    "subject": "🚀 Your Website Interactive Prototype is Ready for Review! - Zenith Tech",
+    "engine": "Firebase Prototype Notification Engine",
+    "status": "DISPATCHED_SANDBOX",
+    "timestamp": "22/8/2026, 2:23:43 pm",
+    "isoTimestamp": "2026-08-22T08:53:45.276Z",
+    "error": "Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials a92af1059eb24-1418600535csm5045230c88.0 - gsmtp"
+  },
+  {
+    "id": "email_prev_1787381595251",
+    "clientCode": "FIX-SHAR-005",
+    "clientName": "Sharma Classes",
+    "to": "sharmaclasses@fixkar.co.in",
+    "subject": "🚀 Your Website Interactive Prototype is Ready for Review! - Sharma Classes",
+    "engine": "Firebase Prototype Notification Engine",
+    "status": "DISPATCHED_SANDBOX",
+    "timestamp": "22/8/2026, 12:23:13 pm",
+    "isoTimestamp": "2026-08-22T06:53:15.251Z",
+    "error": "Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials 5a478bee46e88-327f91d33dcsm4639680eec.18 - gsmtp"
+  },
+  {
+    "id": "email_prev_1787380484960",
+    "clientCode": "FIX-SHAR-005",
+    "clientName": "Sharma Classes",
+    "to": "sharmaclasses@fixkar.co.in",
+    "subject": "🚀 Your Website Interactive Prototype is Ready for Review! - Sharma Classes",
+    "engine": "Firebase Prototype Notification Engine",
+    "status": "DISPATCHED_SANDBOX",
+    "timestamp": "22/8/2026, 12:04:42 pm",
+    "isoTimestamp": "2026-08-22T06:34:44.960Z",
+    "error": "Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials 5a478bee46e88-327f9209f51sm5168476eec.22 - gsmtp"
+  },
+  {
+    "id": "email_prev_1787242617976",
+    "clientCode": "FIX-ZENI-007",
+    "clientName": "Zenith Tech",
+    "to": "zenithtech@fixkar.co.in",
+    "subject": "🚀 Your Website Interactive Prototype is Ready for Review! - Zenith Tech",
+    "engine": "Firebase Prototype Notification Engine",
+    "status": "DISPATCHED_SANDBOX",
+    "timestamp": "20/8/2026, 9:46:55 pm",
+    "isoTimestamp": "2026-08-20T16:16:57.976Z",
+    "error": "Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials 41be03b00d2f7-cc15568ca35sm2090394a12.26 - gsmtp"
+  },
+  {
+    "id": "email_otp_1787242124561",
+    "clientCode": "FIX-RKCC-001",
+    "clientName": "R.K. Computer Classes",
+    "to": "contact@rkcc.in",
+    "subject": "🔒 Password Reset OTP for Your Fixkar Client Portal - R.K. Computer Classes",
+    "engine": "Firebase Password Reset Engine",
+    "status": "DISPATCHED_SANDBOX",
+    "timestamp": "20/8/2026, 9:38:41 pm",
+    "isoTimestamp": "2026-08-20T16:08:44.561Z",
+    "error": "Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials a92af1059eb24-1416ae5f1ffsm28784001c88.13 - gsmtp"
+  }
+]

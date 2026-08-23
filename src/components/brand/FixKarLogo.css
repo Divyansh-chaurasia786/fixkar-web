@@ -1,0 +1,46 @@
+.fixkar-brand-logo-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.fixkar-official-logo-img {
+  display: block;
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+  filter: none;
+}
+
+/* Compact Navbar Logo (Increased by 5px) */
+.logo-variant-compact {
+  height: 49px;
+  max-width: 215px;
+}
+
+@media (min-width: 768px) {
+  .logo-variant-compact {
+    height: 57px;
+    max-width: 245px;
+  }
+}
+
+/* Full Splash Screen Logo */
+.logo-variant-full {
+  height: 140px;
+  max-width: 480px;
+}
+
+@media (min-width: 768px) {
+  .logo-variant-full {
+    height: 180px;
+    max-width: 600px;
+  }
+}
+
+/* Hero Scale Logo */
+.logo-variant-hero {
+  height: 90px;
+  max-width: 340px;
+}

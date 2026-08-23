@@ -1,0 +1,13 @@
+{
+  "provider": "Fast2SMS Enterprise DLT Gateway",
+  "apiKey": "f2s_live_sample_master_key_9835",
+  "senderId": "FIXKAR",
+  "route": "dlt_manual",
+  "upstreamWalletAmount": "₹5,099",
+  "upstreamBalance": 25497,
+  "status": "🟢 Gateway Master Pool Active (Ready)",
+  "lastSyncedAt": "2026-08-22T07:32:13.812Z",
+  "lastSyncedTimestamp": "22/8/2026, 1:02:13 pm",
+  "autoDeductEnabled": true,
+  "alertThreshold": 500
+}

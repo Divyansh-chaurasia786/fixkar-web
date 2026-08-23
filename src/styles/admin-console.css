@@ -1,0 +1,590 @@
+/* ==========================================================================
+   FIXKAR ADMIN CONSOLE - COMMAND CENTER DESIGN SYSTEM
+   Professional / Clean / Fast / Functional / High-Clarity
+   ========================================================================== */
+
+:root {
+  --admin-bg-base: #060911;
+  --admin-bg-surface: #0a0f1d;
+  --admin-bg-elevated: #0f162a;
+  --admin-bg-card: rgba(14, 21, 38, 0.92);
+  --admin-border: rgba(255, 255, 255, 0.08);
+  --admin-border-focus: rgba(56, 189, 248, 0.4);
+  --admin-primary: #2563EB;
+  --admin-primary-hover: #1D4ED8;
+  --admin-cyan: #38BDF8;
+  --admin-green: #4ADE80;
+  --admin-amber: #FBBF24;
+  --admin-rose: #F43F5E;
+  --admin-text-primary: #FFFFFF;
+  --admin-text-secondary: #94A3B8;
+  --admin-text-muted: #64748B;
+}
+
+/* --------------------------------------------------------------------------
+   INDEPENDENT SECTION-WISE SCROLL (OUTER PAGE LOCKED, HOVERED SECTION SCROLLS)
+   -------------------------------------------------------------------------- */
+html:has(.fixkar-admin-root),
+body:has(.fixkar-admin-root),
+html:has(.client-portal-root),
+body:has(.client-portal-root) {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  overflow: hidden !important;
+}
+
+.fixkar-root-container:has(.fixkar-admin-root),
+.fixkar-root-container:has(.client-portal-root) {
+  width: min(1580px, calc(100vw - 32px)) !important;
+  max-width: min(1580px, calc(100vw - 32px)) !important;
+  min-width: unset !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  padding: 12px 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.fixkar-glass-shell:has(.fixkar-admin-root),
+.fixkar-glass-shell:has(.client-portal-root) {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 100% !important;
+  height: calc(100vh - 24px) !important;
+  max-height: calc(100vh - 24px) !important;
+  min-height: calc(100vh - 24px) !important;
+  padding: 16px 20px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-sizing: border-box !important;
+}
+
+.fixkar-page-scene:has(.fixkar-admin-root),
+.fixkar-page-scene:has(.client-portal-root) {
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex: 1 !important;
+  width: 100% !important;
+}
+
+.fixkar-admin-root {
+  display: flex !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  flex: 1 !important;
+  gap: 16px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  background-color: transparent !important;
+  color: var(--admin-text-primary) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  padding: 0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   SIDEBAR NAVIGATION (INDEPENDENT SECTION SCROLL)
+   -------------------------------------------------------------------------- */
+.fixkar-sidebar {
+  width: 230px !important;
+  flex-shrink: 0 !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 20px !important;
+  padding: 16px 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justifyContent: space-between !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+}
+
+.fixkar-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+.fixkar-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.fixkar-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+.fixkar-sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 189, 248, 0.4);
+}
+
+.fixkar-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 6px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 12px;
+}
+
+.fixkar-brand-pill {
+  width: 9px;
+  height: 26px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #38BDF8 0%, #2563EB 100%);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+}
+
+.fixkar-sidebar-user {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 12px;
+}
+
+.fixkar-nav-heading {
+  font-size: 0.64rem;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.1em;
+  color: var(--admin-text-muted);
+  padding: 8px 8px 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.fixkar-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: var(--admin-text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+  font-weight: 500;
+}
+
+.fixkar-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--admin-text-primary);
+}
+
+.fixkar-nav-btn.active {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.3) 0%, rgba(29, 78, 216, 0.15) 100%);
+  color: #fff;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   MAIN WORKSPACE (INDEPENDENT SECTION SCROLL)
+   -------------------------------------------------------------------------- */
+.fixkar-workspace {
+  flex: 1 !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  box-sizing: border-box !important;
+  padding-right: 4px !important;
+  padding-bottom: 24px !important;
+}
+
+.fixkar-workspace::-webkit-scrollbar {
+  width: 5px;
+}
+.fixkar-workspace::-webkit-scrollbar-track {
+  background: transparent;
+}
+.fixkar-workspace::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+.fixkar-workspace::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 189, 248, 0.5);
+}
+
+.fixkar-topbar {
+  position: relative !important;
+  z-index: 9999 !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 18px !important;
+  padding: 14px 20px;
+  display: flex;
+  justifyContent: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+}
+
+/* --------------------------------------------------------------------------
+   STAT & METRIC CARDS (ZERO COLLISION GUARANTEE)
+   -------------------------------------------------------------------------- */
+.fixkar-stat-card {
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 20px !important;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 148px;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+  transition: all 0.25s ease;
+}
+
+.fixkar-stat-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65), 0 0 25px rgba(37, 99, 235, 0.2);
+}
+
+.fixkar-stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.7), transparent);
+}
+
+.fixkar-stat-card.alert-pulse-card {
+  background: linear-gradient(180deg, rgba(38, 12, 20, 0.95) 0%, rgba(20, 8, 14, 0.98) 100%);
+  border: 1px solid #F43F5E !important;
+}
+
+.fixkar-stat-card.alert-pulse-card::before {
+  background: linear-gradient(90deg, transparent, #F43F5E, transparent);
+}
+
+.fixkar-card-top {
+  display: flex;
+  justifyContent: space-between;
+  align-items: center;
+}
+
+.fixkar-card-tag {
+  font-size: 0.74rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--admin-text-secondary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.fixkar-card-num {
+  font-size: 2.1rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.03em;
+  margin: 10px 0 4px;
+  line-height: 1.1;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.fixkar-card-footer {
+  font-size: 0.8rem;
+  color: var(--admin-text-secondary);
+  display: flex;
+  justifyContent: space-between;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+/* --------------------------------------------------------------------------
+   PANELS & SECTIONS
+   -------------------------------------------------------------------------- */
+.fixkar-panel {
+  background: linear-gradient(180deg, rgba(14, 21, 38, 0.92) 0%, rgba(9, 13, 25, 0.98) 100%);
+  border: 1px solid var(--admin-border);
+  border-radius: 20px;
+  padding: 24px 28px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+.fixkar-panel-head {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  gap: 16px !important;
+  margin-bottom: 16px !important;
+  padding-bottom: 12px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  box-sizing: border-box !important;
+}
+
+.fixkar-panel-title {
+  font-size: 0.98rem !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   TABLE DESIGN
+   -------------------------------------------------------------------------- */
+.fixkar-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  text-align: left;
+}
+
+.fixkar-table th {
+  background: rgba(255, 255, 255, 0.02);
+  color: #64748B;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.fixkar-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  vertical-align: middle;
+}
+
+.fixkar-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* --------------------------------------------------------------------------
+   USER-FRIENDLY PILL TABS & FILTERS
+   -------------------------------------------------------------------------- */
+.fixkar-pill-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.fixkar-pill-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94A3B8;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fixkar-pill-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.fixkar-pill-btn.active {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(37, 99, 235, 0.25) 100%);
+  border-color: rgba(56, 189, 248, 0.5);
+  color: #38BDF8;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   USER-FRIENDLY SECTION GUIDE (COMPACT & COLLAPSIBLE)
+   -------------------------------------------------------------------------- */
+.fixkar-guide-card {
+  background: linear-gradient(135deg, rgba(14, 21, 38, 0.7) 0%, rgba(9, 13, 25, 0.85) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  border-radius: 14px;
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.fixkar-guide-card:hover {
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.fixkar-guide-header {
+  display: flex;
+  justifyContent: space-between;
+  align-items: center;
+}
+
+.fixkar-guide-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: #fff;
+  font-size: 0.86rem;
+}
+
+.fixkar-guide-toggle {
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  color: #38BDF8;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fixkar-guide-example {
+  background: rgba(0, 0, 0, 0.3);
+  border-left: 3px solid #38BDF8;
+  border-radius: 0 8px 8px 0;
+  padding: 8px 12px;
+  font-size: 0.74rem;
+  color: #CBD5E1;
+  line-height: 1.5;
+  animation: fadeInPage 0.2s ease;
+}
+
+/* --------------------------------------------------------------------------
+   AVATAR INITIALS & STATUS PILLS
+   -------------------------------------------------------------------------- */
+.fixkar-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.25) 0%, rgba(37, 99, 235, 0.3) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38BDF8;
+  display: flex;
+  align-items: center;
+  justifyContent: center;
+  font-weight: 800;
+  font-size: 0.76rem;
+  flex-shrink: 0;
+}
+
+.fixkar-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.fixkar-status-chip.success {
+  background: rgba(74, 222, 128, 0.12);
+  color: #4ADE80;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+.fixkar-status-chip.warning {
+  background: rgba(251, 191, 36, 0.12);
+  color: #FBBF24;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.fixkar-status-chip.danger {
+  background: rgba(244, 63, 94, 0.12);
+  color: #FDA4AF;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.fixkar-status-chip.info {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38BDF8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE DESIGN (1366px, Tablet, Mobile)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .fixkar-admin-root {
+    flex-direction: column;
+    padding: 12px;
+  }
+  .fixkar-sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+  }
+}
+
+@media print {
+  body, html {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .receipt-modal-backdrop {
+    position: static !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+  #printable-receipt-sheet {
+    box-shadow: none !important;
+    border: 1px solid #e2e8f0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 24px !important;
+    border-radius: 0 !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   REMOVE NUMBER INPUT SPINNER ARROWS (COUNT BUTTONS)
+   -------------------------------------------------------------------------- */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+input[type=number] {
+  -moz-appearance: textfield !important;
+  appearance: textfield !important;
+}
+

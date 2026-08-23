@@ -1,0 +1,343 @@
+[
+  {
+    "id": "inv_1787166964855",
+    "invoiceNumber": "FIX-INV-2026-211",
+    "receiptNumber": "FIX-RCPT-2026-946",
+    "clientName": "Nova Tech",
+    "clientCode": "FIX-NOVA-006",
+    "domain": "novatech.in",
+    "phone": "9835011223",
+    "service": "Phase 1: 50% Advance Infrastructure Setup",
+    "serviceDescription": "Phase 1: Advance Infrastructure Setup",
+    "invoiceType": "Phase 1: 50% Advance Infrastructure Setup",
+    "total": "₹17,500",
+    "rawAmount": 17500,
+    "advancePaidAmount": 0,
+    "advanceRef": "",
+    "balanceDue": "₹17,500",
+    "totalProjectBudget": 35000,
+    "date": "2026-08-19",
+    "dueDate": "2026-08-26",
+    "status": "Paid",
+    "paymentMethod": "UPI (Google Pay / PhonePe)",
+    "transactionReference": "UPI/257534667588"
+  },
+  {
+    "id": "INV-134",
+    "invoiceNumber": "FIX-INV-2026-133",
+    "receiptNumber": "FIX-RCPT-2026-733",
+    "clientName": "Apex Fitness Hub",
+    "clientCode": "FIX-APEX-002",
+    "domain": "apexfitnesshub.in",
+    "phone": "+91 91234 56789",
+    "service": "Phase 2: Final Launch Milestone — Core Web Architecture Handover & 1-Year SLA",
+    "serviceDescription": "Phase 2: Final Launch Milestone — Core Web Architecture Handover & 1-Year SLA",
+    "dueDate": "2026-08-19",
+    "total": "₹9,000",
+    "rawAmount": 9000,
+    "balanceDue": 0,
+    "status": "Paid",
+    "invoiceType": "50% Final Launch Milestone",
+    "paymentMethod": "UPI (Google Pay / PhonePe / Paytm / QR)",
+    "transactionReference": "UPI/678510634152",
+    "customLineItems": [
+      {
+        "id": "1",
+        "name": "Full-Stack Production Web Application Handover & Cloud Deployment",
+        "amount": 6300
+      },
+      {
+        "id": "2",
+        "name": "1-Year Priority Technical Maintenance SLA & Enterprise Bug-Fix Warranty",
+        "amount": 2700
+      }
+    ],
+    "addons": {
+      "paymentGateway": {
+        "active": true,
+        "price": 1499,
+        "label": "Payment Gateway Integration (UPI/QR)"
+      },
+      "whatsappAlerts": {
+        "active": true,
+        "price": 999,
+        "label": "WhatsApp Order & Booking Alert Bot"
+      },
+      "seoPack": {
+        "active": true,
+        "price": 1200,
+        "label": "Google Business Profile & Local SEO Pack"
+      },
+      "customAddon": {
+        "active": false,
+        "name": "Custom Engineering Feature Pack",
+        "price": 2000
+      }
+    },
+    "totalProjectBudget": 9000,
+    "advanceRef": "FIX-RCPT-2026-383",
+    "advancePaidAmount": 4500
+  },
+  {
+    "id": "INV-495",
+    "invoiceNumber": "FIX-INV-2026-983",
+    "receiptNumber": "FIX-RCPT-2026-285",
+    "clientName": "Apex Fitness Hub",
+    "clientCode": "FIX-APEX-002",
+    "domain": "apexfitnesshub.in",
+    "phone": "+91 91234 56789",
+    "service": "Phase 2: Final Launch Milestone — Core Web Architecture Handover & 1-Year SLA",
+    "serviceDescription": "Phase 2: Final Launch Milestone — Core Web Architecture Handover & 1-Year SLA",
+    "dueDate": "2026-08-19",
+    "total": "₹9,000",
+    "rawAmount": 9000,
+    "balanceDue": 0,
+    "status": "Paid",
+    "invoiceType": "50% Final Launch Milestone",
+    "paymentMethod": "UPI (Google Pay / PhonePe / Paytm / QR)",
+    "transactionReference": "UPI/259013193500",
+    "customLineItems": [
+      {
+        "id": "1",
+        "name": "Full-Stack Production Web Application Handover & Cloud Deployment",
+        "amount": 6300
+      },
+      {
+        "id": "2",
+        "name": "1-Year Priority Technical Maintenance SLA & Enterprise Bug-Fix Warranty",
+        "amount": 2700
+      }
+    ],
+    "addons": {
+      "paymentGateway": {
+        "active": true,
+        "price": 1499,
+        "label": "Payment Gateway Integration (UPI/QR)"
+      },
+      "whatsappAlerts": {
+        "active": true,
+        "price": 999,
+        "label": "WhatsApp Order & Booking Alert Bot"
+      },
+      "seoPack": {
+        "active": true,
+        "price": 1200,
+        "label": "Google Business Profile & Local SEO Pack"
+      },
+      "customAddon": {
+        "active": false,
+        "name": "Custom Engineering Feature Pack",
+        "price": 2000
+      }
+    },
+    "totalProjectBudget": 9000
+  },
+  {
+    "id": "INV-548",
+    "invoiceNumber": "FIX-INV-2026-517",
+    "receiptNumber": "FIX-RCPT-2026-383",
+    "clientName": "Apex Fitness Hub",
+    "clientCode": "FIX-APEX-002",
+    "domain": "apexfitnesshub.in",
+    "phone": "+91 91234 56789",
+    "service": "Phase 1: Advance Infrastructure Setup (Domain, Cloud VPS Server & OTP Security)",
+    "serviceDescription": "Phase 1: Advance Infrastructure Setup (Domain, Cloud VPS Server & OTP Security)",
+    "dueDate": "2026-08-26",
+    "total": "₹4,500",
+    "rawAmount": 4500,
+    "balanceDue": 4500,
+    "status": "Paid",
+    "invoiceType": "50% Advance Infrastructure Setup",
+    "paymentMethod": "UPI (Google Pay / PhonePe / Paytm / QR)",
+    "transactionReference": "UPI/357172659642",
+    "customLineItems": [
+      {
+        "id": "1",
+        "name": "Custom Domain Registration & Enterprise Cloud VPS Server (1 Year)",
+        "amount": 3498
+      },
+      {
+        "id": "2",
+        "name": "System Architecture Modeling, Responsive UI/UX & OTP Gateway Setup",
+        "amount": 5502
+      }
+    ],
+    "addons": {
+      "paymentGateway": {
+        "active": false,
+        "price": 1499,
+        "label": "Payment Gateway Integration (UPI/QR)"
+      },
+      "whatsappAlerts": {
+        "active": false,
+        "price": 999,
+        "label": "WhatsApp Order & Booking Alert Bot"
+      },
+      "seoPack": {
+        "active": false,
+        "price": 1200,
+        "label": "Google Business Profile & Local SEO Pack"
+      },
+      "customAddon": {
+        "active": false,
+        "name": "Custom Engineering Feature Pack",
+        "price": 2000
+      }
+    },
+    "totalProjectBudget": 9000
+  },
+  {
+    "id": "INV-739",
+    "invoiceNumber": "FIX-INV-2026-909",
+    "receiptNumber": "FIX-RCPT-2026-519",
+    "clientName": "Apex Fitness Hub",
+    "clientCode": "FIX-APEX-002",
+    "domain": "apexfitnesshub.in",
+    "phone": "+91 91234 56789",
+    "service": "Full-Stack Production E-Commerce Platform & Razorpay Gateway",
+    "serviceDescription": "Full-Stack Production E-Commerce Platform & Razorpay Gateway",
+    "dueDate": "2026-08-26",
+    "total": "₹12,500",
+    "rawAmount": 12500,
+    "balanceDue": 12500,
+    "status": "Paid",
+    "invoiceType": "50% Advance Infrastructure Setup",
+    "paymentMethod": "UPI (Google Pay / PhonePe / Paytm / QR)",
+    "transactionReference": "UPI/227441098797",
+    "customLineItems": [
+      {
+        "id": "1",
+        "name": "Full-Stack E-Commerce Engine, Product Catalog & Razorpay Integration",
+        "amount": 16000
+      },
+      {
+        "id": "2",
+        "name": "1-Year High-Speed Cloud VPS Infrastructure & Priority SLA Support",
+        "amount": 9000
+      }
+    ],
+    "addons": {
+      "paymentGateway": {
+        "active": false,
+        "price": 1499,
+        "label": "Payment Gateway Integration (UPI/QR)"
+      },
+      "whatsappAlerts": {
+        "active": false,
+        "price": 999,
+        "label": "WhatsApp Order & Booking Alert Bot"
+      },
+      "seoPack": {
+        "active": false,
+        "price": 1200,
+        "label": "Google Business Profile & Local SEO Pack"
+      },
+      "customAddon": {
+        "active": false,
+        "name": "Custom Engineering Feature Pack",
+        "price": 2000
+      }
+    },
+    "totalProjectBudget": 25000
+  },
+  {
+    "id": "INV-101",
+    "invoiceNumber": "FIX-INV-2026-101",
+    "receiptNumber": "FIX-RCPT-2026-101",
+    "clientId": "c_rkcc_01",
+    "clientName": "R.K. Computer Classes",
+    "clientCode": "FIX-RKCC-001",
+    "domain": "rkcc.in",
+    "phone": "+91 98350 44120",
+    "service": "Phase 1: Advance Infrastructure Setup (Domain: rkcc.in, Cloud VPS Server & OTP Security)",
+    "dueDate": "2026-08-20",
+    "total": "₹4,497",
+    "rawAmount": 4497,
+    "status": "Paid",
+    "invoiceType": "50% Advance Infrastructure Setup",
+    "paymentMethod": "UPI (Google Pay / PhonePe / Paytm)",
+    "transactionReference": "UPI/423189021456",
+    "advanceRef": "",
+    "advancePaidAmount": 0,
+    "addons": {
+      "paymentGateway": false,
+      "whatsappAlerts": false,
+      "seoPack": false
+    }
+  },
+  {
+    "id": "INV-102",
+    "invoiceNumber": "FIX-INV-2026-102",
+    "receiptNumber": "FIX-RCPT-2026-102",
+    "clientId": "c_apex_02",
+    "clientName": "Apex Fitness Hub",
+    "clientCode": "FIX-APEX-002",
+    "domain": "apexfitnesshub.in",
+    "phone": "+91 91234 56789",
+    "service": "Phase 1: Advance Infrastructure Setup (Domain: apexfitnesshub.in, Cloud VPS Server & OTP)",
+    "dueDate": "2026-08-22",
+    "total": "₹4,497",
+    "rawAmount": 4497,
+    "status": "Paid",
+    "invoiceType": "50% Advance Infrastructure Setup",
+    "paymentMethod": "Direct Bank Transfer (IMPS / NEFT)",
+    "transactionReference": "IMPS-93821098231",
+    "advanceRef": "",
+    "advancePaidAmount": 0,
+    "addons": {
+      "paymentGateway": false,
+      "whatsappAlerts": false,
+      "seoPack": false
+    }
+  },
+  {
+    "id": "INV-103",
+    "invoiceNumber": "FIX-INV-2026-103",
+    "receiptNumber": "FIX-RCPT-2026-103",
+    "clientId": "c_scat_03",
+    "clientName": "S Caterers & Events",
+    "clientCode": "FIX-SCAT-003",
+    "domain": "scaterers.in",
+    "phone": "+91 98765 43210",
+    "service": "Complete Catering Platform Architecture & 1-Year Managed Cloud VPS SLA",
+    "dueDate": "2026-08-15",
+    "total": "₹24,999",
+    "rawAmount": 24999,
+    "status": "Paid",
+    "invoiceType": "Full Package Web Architecture",
+    "paymentMethod": "UPI (Google Pay / PhonePe / Paytm)",
+    "transactionReference": "UPI/883920194821",
+    "advanceRef": "",
+    "advancePaidAmount": 0,
+    "addons": {
+      "paymentGateway": true,
+      "whatsappAlerts": true,
+      "seoPack": true
+    }
+  },
+  {
+    "id": "INV-104",
+    "invoiceNumber": "FIX-INV-2026-104",
+    "receiptNumber": "FIX-RCPT-2026-104",
+    "clientId": "c_eco_04",
+    "clientName": "Ecofone Electronics",
+    "clientCode": "FIX-ECO-004",
+    "domain": "ecofone.in",
+    "phone": "+91 99887 76655",
+    "service": "Phase 2: Final Launch Milestone — Recommerce Platform Codebase & 1-Year SLA",
+    "dueDate": "2026-08-19",
+    "total": "₹18,999",
+    "rawAmount": 18999,
+    "status": "Paid",
+    "invoiceType": "50% Final Launch Milestone",
+    "paymentMethod": "UPI (Google Pay / PhonePe / QR)",
+    "transactionReference": "UPI/705672670860",
+    "advanceRef": "FIX-RCPT-2026-098",
+    "advancePaidAmount": 4497,
+    "addons": {
+      "paymentGateway": true,
+      "whatsappAlerts": true,
+      "seoPack": false
+    }
+  }
+]

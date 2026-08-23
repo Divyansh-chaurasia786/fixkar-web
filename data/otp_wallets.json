@@ -1,0 +1,70 @@
+[
+  {
+    "clientCode": "FIX-RKCC-001",
+    "clientName": "R.K. Computer Classes",
+    "businessName": "R.K. Computer Classes",
+    "availableCredits": 13998,
+    "status": "Active",
+    "serviceStatus": "Active",
+    "lastOtpActivity": "Bank Top-up (+5,000 SMS | UTR: UPI983500112233)",
+    "lowBalanceState": "Normal",
+    "lastRechargeCredits": 2500,
+    "lastRechargeAt": "2026-08-20T07:06:06.490Z",
+    "lastRechargeTimestamp": "20/8/2026, 12:36:06 pm",
+    "usedToday": 2,
+    "usedThisMonth": 2
+  },
+  {
+    "clientCode": "FIX-ZENI-007",
+    "clientName": "Zenith Tech",
+    "businessName": "Zenith Tech",
+    "availableCredits": 2999,
+    "status": "Active",
+    "lastOtpActivity": "API Sent to 98XXXXXX45",
+    "serviceStatus": "Active",
+    "lowBalanceState": "Normal",
+    "usedToday": 1,
+    "usedThisMonth": 1
+  },
+  {
+    "clientCode": "FIX-NOVA-006",
+    "clientName": "Nova Tech",
+    "businessName": "Nova Tech",
+    "availableCredits": 2000,
+    "status": "Active",
+    "lastOtpActivity": "AI Top-up (+1500)",
+    "lastRechargeCredits": 1500,
+    "lastRechargeAt": "2026-08-19T19:51:49.300Z",
+    "lastRechargeTimestamp": "20/8/2026, 1:21:49 am",
+    "serviceStatus": "Active",
+    "lowBalanceState": "Normal",
+    "usedToday": 0,
+    "usedThisMonth": 0
+  },
+  {
+    "clientCode": "FIX-SHAR-005",
+    "clientName": "Sharma Classes",
+    "businessName": "Sharma Classes",
+    "availableCredits": 1500,
+    "status": "Active",
+    "lastOtpActivity": "Verified UTR Recharge (+1000)",
+    "lastRechargeCredits": 1000,
+    "lastRechargeAt": "2026-08-20T07:06:26.817Z",
+    "lastRechargeTimestamp": "20/8/2026, 12:36:26 pm",
+    "serviceStatus": "Active",
+    "lowBalanceState": "Normal",
+    "usedToday": 0,
+    "usedThisMonth": 0
+  },
+  {
+    "clientCode": "FIX-ECO-002",
+    "clientName": "Ecofone India",
+    "businessName": "Ecofone India",
+    "availableCredits": 1000,
+    "status": "Active",
+    "serviceStatus": "Active",
+    "lastOtpActivity": "Initial Bank Recharge (+1,000 SMS | UTR: UTR492819002134)",
+    "lowBalanceState": "Normal",
+    "createdAt": "2026-08-22T11:52:57.272Z"
+  }
+]

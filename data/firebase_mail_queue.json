@@ -1,0 +1,162 @@
+[
+  {
+    "id": "fb_mail_1787467614474_9dca3",
+    "to": [
+      "chaurasiadivyansh86@gmail.com",
+      "founder@fixkar.in",
+      "superadmin@fixkar.in"
+    ],
+    "message": {
+      "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 350950 & 2FA Setup Key",
+      "html": "\n      <div style=\"font-family: Arial, sans-serif; background: #0B0418; color: #fff; padding: 24px; border-radius: 14px; border: 1px solid #A855F7; max-width: 540px; margin: auto;\">\n        <h2 style=\"color: #FDE047; margin-top: 0; text-align: center;\">👑 Fixkar Super Admin Sovereign Recovery</h2>\n        <p style=\"font-size: 14px; line-height: 1.5; color: #DDD6FE;\">An emergency password & 2FA recovery request was initiated from IP <strong>127.0.0.1</strong> via Firebase Cloud.</p>\n        \n        <!-- 1. Emergency OTP -->\n        <div style=\"background: rgba(168, 85, 247, 0.2); border: 2px dashed #FDE047; padding: 16px; text-align: center; border-radius: 10px; margin: 18px 0;\">\n          <div style=\"font-size: 12px; color: #DDD6FE; text-transform: uppercase; font-weight: bold; margin-bottom: 6px;\">Your Emergency Login / Reset OTP</div>\n          <span style=\"font-size: 32px; font-weight: 900; letter-spacing: 0.3em; color: #FDE047; font-family: monospace;\">350950</span>\n        </div>\n\n        <!-- 2. Authenticator Secret Key & Scannable QR (Email Exclusive) -->\n        <div style=\"background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); padding: 16px; border-radius: 10px; margin: 18px 0; text-align: center;\">\n          <div style=\"font-size: 13px; font-weight: bold; color: #38BDF8; margin-bottom: 10px;\">📱 Your Private 2FA Authenticator Secret Key</div>\n          <div style=\"background: #000; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 16px; font-weight: bold; letter-spacing: 0.1em; color: #4ADE80; display: inline-block; margin-bottom: 12px;\">\n            JBSW Y3DP EHPK 3PXP\n          </div>\n          <p style=\"font-size: 12px; color: #94A3B8; margin: 0 0 10px;\">Scan this QR code in Google Authenticator or Microsoft Authenticator:</p>\n          <img src=\"https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=otpauth%3A%2F%2Ftotp%2FFixkar%3ASuperAdmin%3Fsecret%3DJBSWY3DPEHPK3PXP%26issuer%3DFixkar&bgcolor=ffffff&color=000000\" alt=\"2FA QR Code\" style=\"width: 140px; height: 140px; border-radius: 8px; border: 2px solid #fff;\" />\n        </div>\n\n        <p style=\"color: #94A3B8; font-size: 12px; line-height: 1.4;\">⚠️ <em>This information is confidential. Never share your secret key with anyone.</em></p>\n        <p style=\"font-family: monospace; color: #64748B; font-size: 11px; margin-top: 14px;\">Timestamp: 23/8/2026, 12:16:54 pm IST • Engine: Firebase Cloud</p>\n      </div>\n    "
+    },
+    "otp": "350950",
+    "type": "SUPER_ADMIN_2FA_RECOVERY",
+    "status": "QUEUED_FIREBASE",
+    "createdAt": "2026-08-23T06:46:54.474Z"
+  },
+  {
+    "id": "fb_mail_1787467273919_ikax8",
+    "to": [
+      "chaurasiadivyansh86@gmail.com",
+      "founder@fixkar.in",
+      "superadmin@fixkar.in"
+    ],
+    "message": {
+      "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 417522 & 2FA Setup Key",
+      "html": "\n      <div style=\"font-family: Arial, sans-serif; background: #0B0418; color: #fff; padding: 24px; border-radius: 14px; border: 1px solid #A855F7; max-width: 540px; margin: auto;\">\n        <h2 style=\"color: #FDE047; margin-top: 0; text-align: center;\">👑 Fixkar Super Admin Sovereign Recovery</h2>\n        <p style=\"font-size: 14px; line-height: 1.5; color: #DDD6FE;\">An emergency password & 2FA recovery request was initiated from IP <strong>127.0.0.1</strong> via Firebase Cloud.</p>\n        \n        <!-- 1. Emergency OTP -->\n        <div style=\"background: rgba(168, 85, 247, 0.2); border: 2px dashed #FDE047; padding: 16px; text-align: center; border-radius: 10px; margin: 18px 0;\">\n          <div style=\"font-size: 12px; color: #DDD6FE; text-transform: uppercase; font-weight: bold; margin-bottom: 6px;\">Your Emergency Login / Reset OTP</div>\n          <span style=\"font-size: 32px; font-weight: 900; letter-spacing: 0.3em; color: #FDE047; font-family: monospace;\">417522</span>\n        </div>\n\n        <!-- 2. Authenticator Secret Key & Scannable QR (Email Exclusive) -->\n        <div style=\"background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); padding: 16px; border-radius: 10px; margin: 18px 0; text-align: center;\">\n          <div style=\"font-size: 13px; font-weight: bold; color: #38BDF8; margin-bottom: 10px;\">📱 Your Private 2FA Authenticator Secret Key</div>\n          <div style=\"background: #000; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 16px; font-weight: bold; letter-spacing: 0.1em; color: #4ADE80; display: inline-block; margin-bottom: 12px;\">\n            JBSW Y3DP EHPK 3PXP\n          </div>\n          <p style=\"font-size: 12px; color: #94A3B8; margin: 0 0 10px;\">Scan this QR code in Google Authenticator or Microsoft Authenticator:</p>\n          <img src=\"https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=otpauth%3A%2F%2Ftotp%2FFixkar%3ASuperAdmin%3Fsecret%3DJBSWY3DPEHPK3PXP%26issuer%3DFixkar&bgcolor=ffffff&color=000000\" alt=\"2FA QR Code\" style=\"width: 140px; height: 140px; border-radius: 8px; border: 2px solid #fff;\" />\n        </div>\n\n        <p style=\"color: #94A3B8; font-size: 12px; line-height: 1.4;\">⚠️ <em>This information is confidential. Never share your secret key with anyone.</em></p>\n        <p style=\"font-family: monospace; color: #64748B; font-size: 11px; margin-top: 14px;\">Timestamp: 23/8/2026, 12:11:13 pm IST • Engine: Firebase Cloud</p>\n      </div>\n    "
+    },
+    "otp": "417522",
+    "type": "SUPER_ADMIN_2FA_RECOVERY",
+    "status": "QUEUED_FIREBASE",
+    "createdAt": "2026-08-23T06:41:13.919Z"
+  },
+  {
+    "id": "fb_mail_1787467078260_9u92v",
+    "to": [
+      "chaurasiadivyansh86@gmail.com",
+      "founder@fixkar.in",
+      "superadmin@fixkar.in"
+    ],
+    "message": {
+      "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 826065 & 2FA Setup Key",
+      "html": "\n      <div style=\"font-family: Arial, sans-serif; background: #0B0418; color: #fff; padding: 24px; border-radius: 14px; border: 1px solid #A855F7; max-width: 540px; margin: auto;\">\n        <h2 style=\"color: #FDE047; margin-top: 0; text-align: center;\">👑 Fixkar Super Admin Sovereign Recovery</h2>\n        <p style=\"font-size: 14px; line-height: 1.5; color: #DDD6FE;\">An emergency password & 2FA recovery request was initiated from IP <strong>127.0.0.1</strong> via Firebase Cloud.</p>\n        \n        <!-- 1. Emergency OTP -->\n        <div style=\"background: rgba(168, 85, 247, 0.2); border: 2px dashed #FDE047; padding: 16px; text-align: center; border-radius: 10px; margin: 18px 0;\">\n          <div style=\"font-size: 12px; color: #DDD6FE; text-transform: uppercase; font-weight: bold; margin-bottom: 6px;\">Your Emergency Login / Reset OTP</div>\n          <span style=\"font-size: 32px; font-weight: 900; letter-spacing: 0.3em; color: #FDE047; font-family: monospace;\">826065</span>\n        </div>\n\n        <!-- 2. Authenticator Secret Key & Scannable QR (Email Exclusive) -->\n        <div style=\"background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); padding: 16px; border-radius: 10px; margin: 18px 0; text-align: center;\">\n          <div style=\"font-size: 13px; font-weight: bold; color: #38BDF8; margin-bottom: 10px;\">📱 Your Private 2FA Authenticator Secret Key</div>\n          <div style=\"background: #000; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 16px; font-weight: bold; letter-spacing: 0.1em; color: #4ADE80; display: inline-block; margin-bottom: 12px;\">\n            JBSW Y3DP EHPK 3PXP\n          </div>\n          <p style=\"font-size: 12px; color: #94A3B8; margin: 0 0 10px;\">Scan this QR code in Google Authenticator or Microsoft Authenticator:</p>\n          <img src=\"https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=otpauth%3A%2F%2Ftotp%2FFixkar%3ASuperAdmin%3Fsecret%3DJBSWY3DPEHPK3PXP%26issuer%3DFixkar&bgcolor=ffffff&color=000000\" alt=\"2FA QR Code\" style=\"width: 140px; height: 140px; border-radius: 8px; border: 2px solid #fff;\" />\n        </div>\n\n        <p style=\"color: #94A3B8; font-size: 12px; line-height: 1.4;\">⚠️ <em>This information is confidential. Never share your secret key with anyone.</em></p>\n        <p style=\"font-family: monospace; color: #64748B; font-size: 11px; margin-top: 14px;\">Timestamp: 23/8/2026, 12:07:58 pm IST • Engine: Firebase Cloud</p>\n      </div>\n    "
+    },
+    "otp": "826065",
+    "type": "SUPER_ADMIN_2FA_RECOVERY",
+    "status": "QUEUED_FIREBASE",
+    "createdAt": "2026-08-23T06:37:58.260Z"
+  },
+  {
+    "id": "fb_mail_1787466676631_tt4wc",
+    "to": [
+      "chaurasiadivyansh86@gmail.com",
+      "founder@fixkar.in",
+      "superadmin@fixkar.in"
+    ],
+    "message": {
+      "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 239944 & 2FA Setup Key",
+      "html": "\n      <div style=\"font-family: Arial, sans-serif; background: #0B0418; color: #fff; padding: 24px; border-radius: 14px; border: 1px solid #A855F7; max-width: 540px; margin: auto;\">\n        <h2 style=\"color: #FDE047; margin-top: 0; text-align: center;\">👑 Fixkar Super Admin Sovereign Recovery</h2>\n        <p style=\"font-size: 14px; line-height: 1.5; color: #DDD6FE;\">An emergency password & 2FA recovery request was initiated from IP <strong>127.0.0.1</strong> via Firebase Cloud.</p>\n        \n        <!-- 1. Emergency OTP -->\n        <div style=\"background: rgba(168, 85, 247, 0.2); border: 2px dashed #FDE047; padding: 16px; text-align: center; border-radius: 10px; margin: 18px 0;\">\n          <div style=\"font-size: 12px; color: #DDD6FE; text-transform: uppercase; font-weight: bold; margin-bottom: 6px;\">Your Emergency Login / Reset OTP</div>\n          <span style=\"font-size: 32px; font-weight: 900; letter-spacing: 0.3em; color: #FDE047; font-family: monospace;\">239944</span>\n        </div>\n\n        <!-- 2. Authenticator Secret Key & Scannable QR (Email Exclusive) -->\n        <div style=\"background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); padding: 16px; border-radius: 10px; margin: 18px 0; text-align: center;\">\n          <div style=\"font-size: 13px; font-weight: bold; color: #38BDF8; margin-bottom: 10px;\">📱 Your Private 2FA Authenticator Secret Key</div>\n          <div style=\"background: #000; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 16px; font-weight: bold; letter-spacing: 0.1em; color: #4ADE80; display: inline-block; margin-bottom: 12px;\">\n            JBSW Y3DP EHPK 3PXP\n          </div>\n          <p style=\"font-size: 12px; color: #94A3B8; margin: 0 0 10px;\">Scan this QR code in Google Authenticator or Microsoft Authenticator:</p>\n          <img src=\"https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=otpauth%3A%2F%2Ftotp%2FFixkar%3ASuperAdmin%3Fsecret%3DJBSWY3DPEHPK3PXP%26issuer%3DFixkar&bgcolor=ffffff&color=000000\" alt=\"2FA QR Code\" style=\"width: 140px; height: 140px; border-radius: 8px; border: 2px solid #fff;\" />\n        </div>\n\n        <p style=\"color: #94A3B8; font-size: 12px; line-height: 1.4;\">⚠️ <em>This information is confidential. Never share your secret key with anyone.</em></p>\n        <p style=\"font-family: monospace; color: #64748B; font-size: 11px; margin-top: 14px;\">Timestamp: 23/8/2026, 12:01:16 pm IST • Engine: Firebase Cloud</p>\n      </div>\n    "
+    },
+    "otp": "239944",
+    "type": "SUPER_ADMIN_2FA_RECOVERY",
+    "status": "QUEUED_FIREBASE",
+    "createdAt": "2026-08-23T06:31:16.631Z"
+  },
+  {
+    "id": "fb_mail_1787466266857_6q84w",
+    "to": [
+      "chaurasiadivyansh86@gmail.com",
+      "founder@fixkar.in",
+      "superadmin@fixkar.in"
+    ],
+    "message": {
+      "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 834449 & 2FA Setup Key",
+      "html": "\n      <div style=\"font-family: Arial, sans-serif; background: #0B0418; color: #fff; padding: 24px; border-radius: 14px; border: 1px solid #A855F7; max-width: 540px; margin: auto;\">\n        <h2 style=\"color: #FDE047; margin-top: 0; text-align: center;\">👑 Fixkar Super Admin Sovereign Recovery</h2>\n        <p style=\"font-size: 14px; line-height: 1.5; color: #DDD6FE;\">An emergency password & 2FA recovery request was initiated from IP <strong>127.0.0.1</strong> via Firebase Cloud.</p>\n        \n        <!-- 1. Emergency OTP -->\n        <div style=\"background: rgba(168, 85, 247, 0.2); border: 2px dashed #FDE047; padding: 16px; text-align: center; border-radius: 10px; margin: 18px 0;\">\n          <div style=\"font-size: 12px; color: #DDD6FE; text-transform: uppercase; font-weight: bold; margin-bottom: 6px;\">Your Emergency Login / Reset OTP</div>\n          <span style=\"font-size: 32px; font-weight: 900; letter-spacing: 0.3em; color: #FDE047; font-family: monospace;\">834449</span>\n        </div>\n\n        <!-- 2. Authenticator Secret Key & Scannable QR (Email Exclusive) -->\n        <div style=\"background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); padding: 16px; border-radius: 10px; margin: 18px 0; text-align: center;\">\n          <div style=\"font-size: 13px; font-weight: bold; color: #38BDF8; margin-bottom: 10px;\">📱 Your Private 2FA Authenticator Secret Key</div>\n          <div style=\"background: #000; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 16px; font-weight: bold; letter-spacing: 0.1em; color: #4ADE80; display: inline-block; margin-bottom: 12px;\">\n            JBSW Y3DP EHPK 3PXP\n          </div>\n          <p style=\"font-size: 12px; color: #94A3B8; margin: 0 0 10px;\">Scan this QR code in Google Authenticator or Microsoft Authenticator:</p>\n          <img src=\"https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=otpauth%3A%2F%2Ftotp%2FFixkar%3ASuperAdmin%3Fsecret%3DJBSWY3DPEHPK3PXP%26issuer%3DFixkar&bgcolor=ffffff&color=000000\" alt=\"2FA QR Code\" style=\"width: 140px; height: 140px; border-radius: 8px; border: 2px solid #fff;\" />\n        </div>\n\n        <p style=\"color: #94A3B8; font-size: 12px; line-height: 1.4;\">⚠️ <em>This information is confidential. Never share your secret key with anyone.</em></p>\n        <p style=\"font-family: monospace; color: #64748B; font-size: 11px; margin-top: 14px;\">Timestamp: 23/8/2026, 11:54:26 am IST • Engine: Firebase Cloud</p>\n      </div>\n    "
+    },
+    "otp": "834449",
+    "type": "SUPER_ADMIN_2FA_RECOVERY",
+    "status": "QUEUED_FIREBASE",
+    "createdAt": "2026-08-23T06:24:26.857Z"
+  },
+  {
+    "id": "fb_mail_1787466137643_b3qiq",
+    "to": [
+      "chaurasiadivyansh86@gmail.com",
+      "founder@fixkar.in",
+      "superadmin@fixkar.in"
+    ],
+    "message": {
+      "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 256798 & 2FA Setup Key",
+      "html": "\n      <div style=\"font-family: Arial, sans-serif; background: #0B0418; color: #fff; padding: 24px; border-radius: 14px; border: 1px solid #A855F7; max-width: 540px; margin: auto;\">\n        <h2 style=\"color: #FDE047; margin-top: 0; text-align: center;\">👑 Fixkar Super Admin Sovereign Recovery</h2>\n        <p style=\"font-size: 14px; line-height: 1.5; color: #DDD6FE;\">An emergency password & 2FA recovery request was initiated from IP <strong>127.0.0.1</strong> via Firebase Cloud.</p>\n        \n        <!-- 1. Emergency OTP -->\n        <div style=\"background: rgba(168, 85, 247, 0.2); border: 2px dashed #FDE047; padding: 16px; text-align: center; border-radius: 10px; margin: 18px 0;\">\n          <div style=\"font-size: 12px; color: #DDD6FE; text-transform: uppercase; font-weight: bold; margin-bottom: 6px;\">Your Emergency Login / Reset OTP</div>\n          <span style=\"font-size: 32px; font-weight: 900; letter-spacing: 0.3em; color: #FDE047; font-family: monospace;\">256798</span>\n        </div>\n\n        <!-- 2. Authenticator Secret Key & Scannable QR (Email Exclusive) -->\n        <div style=\"background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); padding: 16px; border-radius: 10px; margin: 18px 0; text-align: center;\">\n          <div style=\"font-size: 13px; font-weight: bold; color: #38BDF8; margin-bottom: 10px;\">📱 Your Private 2FA Authenticator Secret Key</div>\n          <div style=\"background: #000; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 16px; font-weight: bold; letter-spacing: 0.1em; color: #4ADE80; display: inline-block; margin-bottom: 12px;\">\n            JBSW Y3DP EHPK 3PXP\n          </div>\n          <p style=\"font-size: 12px; color: #94A3B8; margin: 0 0 10px;\">Scan this QR code in Google Authenticator or Microsoft Authenticator:</p>\n          <img src=\"https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=otpauth%3A%2F%2Ftotp%2FFixkar%3ASuperAdmin%3Fsecret%3DJBSWY3DPEHPK3PXP%26issuer%3DFixkar&bgcolor=ffffff&color=000000\" alt=\"2FA QR Code\" style=\"width: 140px; height: 140px; border-radius: 8px; border: 2px solid #fff;\" />\n        </div>\n\n        <p style=\"color: #94A3B8; font-size: 12px; line-height: 1.4;\">⚠️ <em>This information is confidential. Never share your secret key with anyone.</em></p>\n        <p style=\"font-family: monospace; color: #64748B; font-size: 11px; margin-top: 14px;\">Timestamp: 23/8/2026, 11:52:17 am IST • Engine: Firebase Cloud</p>\n      </div>\n    "
+    },
+    "otp": "256798",
+    "type": "SUPER_ADMIN_2FA_RECOVERY",
+    "status": "QUEUED_FIREBASE",
+    "createdAt": "2026-08-23T06:22:17.643Z"
+  },
+  {
+    "id": "fb_mail_1787466116188_9dxoh",
+    "to": [
+      "chaurasiadivyansh86@gmail.com",
+      "founder@fixkar.in",
+      "superadmin@fixkar.in"
+    ],
+    "message": {
+      "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 776376 & 2FA Setup Key",
+      "html": "\n      <div style=\"font-family: Arial, sans-serif; background: #0B0418; color: #fff; padding: 24px; border-radius: 14px; border: 1px solid #A855F7; max-width: 540px; margin: auto;\">\n        <h2 style=\"color: #FDE047; margin-top: 0; text-align: center;\">👑 Fixkar Super Admin Sovereign Recovery</h2>\n        <p style=\"font-size: 14px; line-height: 1.5; color: #DDD6FE;\">An emergency password & 2FA recovery request was initiated from IP <strong>127.0.0.1</strong> via Firebase Cloud.</p>\n        \n        <!-- 1. Emergency OTP -->\n        <div style=\"background: rgba(168, 85, 247, 0.2); border: 2px dashed #FDE047; padding: 16px; text-align: center; border-radius: 10px; margin: 18px 0;\">\n          <div style=\"font-size: 12px; color: #DDD6FE; text-transform: uppercase; font-weight: bold; margin-bottom: 6px;\">Your Emergency Login / Reset OTP</div>\n          <span style=\"font-size: 32px; font-weight: 900; letter-spacing: 0.3em; color: #FDE047; font-family: monospace;\">776376</span>\n        </div>\n\n        <!-- 2. Authenticator Secret Key & Scannable QR (Email Exclusive) -->\n        <div style=\"background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); padding: 16px; border-radius: 10px; margin: 18px 0; text-align: center;\">\n          <div style=\"font-size: 13px; font-weight: bold; color: #38BDF8; margin-bottom: 10px;\">📱 Your Private 2FA Authenticator Secret Key</div>\n          <div style=\"background: #000; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 16px; font-weight: bold; letter-spacing: 0.1em; color: #4ADE80; display: inline-block; margin-bottom: 12px;\">\n            JBSW Y3DP EHPK 3PXP\n          </div>\n          <p style=\"font-size: 12px; color: #94A3B8; margin: 0 0 10px;\">Scan this QR code in Google Authenticator or Microsoft Authenticator:</p>\n          <img src=\"https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=otpauth%3A%2F%2Ftotp%2FFixkar%3ASuperAdmin%3Fsecret%3DJBSWY3DPEHPK3PXP%26issuer%3DFixkar&bgcolor=ffffff&color=000000\" alt=\"2FA QR Code\" style=\"width: 140px; height: 140px; border-radius: 8px; border: 2px solid #fff;\" />\n        </div>\n\n        <p style=\"color: #94A3B8; font-size: 12px; line-height: 1.4;\">⚠️ <em>This information is confidential. Never share your secret key with anyone.</em></p>\n        <p style=\"font-family: monospace; color: #64748B; font-size: 11px; margin-top: 14px;\">Timestamp: 23/8/2026, 11:51:56 am IST • Engine: Firebase Cloud</p>\n      </div>\n    "
+    },
+    "otp": "776376",
+    "type": "SUPER_ADMIN_2FA_RECOVERY",
+    "status": "QUEUED_FIREBASE",
+    "createdAt": "2026-08-23T06:21:56.188Z"
+  },
+  {
+    "id": "fb_mail_1787465673665_47kjc",
+    "to": [
+      "chaurasiadivyansh86@gmail.com",
+      "founder@fixkar.in",
+      "superadmin@fixkar.in"
+    ],
+    "message": {
+      "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 987581 & 2FA Setup Key",
+      "html": "\n      <div style=\"font-family: Arial, sans-serif; background: #0B0418; color: #fff; padding: 24px; border-radius: 14px; border: 1px solid #A855F7; max-width: 540px; margin: auto;\">\n        <h2 style=\"color: #FDE047; margin-top: 0; text-align: center;\">👑 Fixkar Super Admin Sovereign Recovery</h2>\n        <p style=\"font-size: 14px; line-height: 1.5; color: #DDD6FE;\">An emergency password & 2FA recovery request was initiated from IP <strong>127.0.0.1</strong> via Firebase Cloud.</p>\n        \n        <!-- 1. Emergency OTP -->\n        <div style=\"background: rgba(168, 85, 247, 0.2); border: 2px dashed #FDE047; padding: 16px; text-align: center; border-radius: 10px; margin: 18px 0;\">\n          <div style=\"font-size: 12px; color: #DDD6FE; text-transform: uppercase; font-weight: bold; margin-bottom: 6px;\">Your Emergency Login / Reset OTP</div>\n          <span style=\"font-size: 32px; font-weight: 900; letter-spacing: 0.3em; color: #FDE047; font-family: monospace;\">987581</span>\n        </div>\n\n        <!-- 2. Authenticator Secret Key & Scannable QR (Email Exclusive) -->\n        <div style=\"background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); padding: 16px; border-radius: 10px; margin: 18px 0; text-align: center;\">\n          <div style=\"font-size: 13px; font-weight: bold; color: #38BDF8; margin-bottom: 10px;\">📱 Your Private 2FA Authenticator Secret Key</div>\n          <div style=\"background: #000; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 16px; font-weight: bold; letter-spacing: 0.1em; color: #4ADE80; display: inline-block; margin-bottom: 12px;\">\n            JBSW Y3DP EHPK 3PXP\n          </div>\n          <p style=\"font-size: 12px; color: #94A3B8; margin: 0 0 10px;\">Scan this QR code in Google Authenticator or Microsoft Authenticator:</p>\n          <img src=\"https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=otpauth%3A%2F%2Ftotp%2FFixkar%3ASuperAdmin%3Fsecret%3DJBSWY3DPEHPK3PXP%26issuer%3DFixkar&bgcolor=ffffff&color=000000\" alt=\"2FA QR Code\" style=\"width: 140px; height: 140px; border-radius: 8px; border: 2px solid #fff;\" />\n        </div>\n\n        <p style=\"color: #94A3B8; font-size: 12px; line-height: 1.4;\">⚠️ <em>This information is confidential. Never share your secret key with anyone.</em></p>\n        <p style=\"font-family: monospace; color: #64748B; font-size: 11px; margin-top: 14px;\">Timestamp: 23/8/2026, 11:44:33 am IST • Engine: Firebase Cloud</p>\n      </div>\n    "
+    },
+    "otp": "987581",
+    "type": "SUPER_ADMIN_2FA_RECOVERY",
+    "status": "QUEUED_FIREBASE",
+    "createdAt": "2026-08-23T06:14:33.665Z"
+  },
+  {
+    "id": "fb_mail_1787465625358_0lvjv",
+    "to": [
+      "chaurasiadivyansh86@gmail.com",
+      "founder@fixkar.in",
+      "superadmin@fixkar.in"
+    ],
+    "message": {
+      "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 951513 & 2FA Setup Key",
+      "html": "\n      <div style=\"font-family: Arial, sans-serif; background: #0B0418; color: #fff; padding: 24px; border-radius: 14px; border: 1px solid #A855F7; max-width: 540px; margin: auto;\">\n        <h2 style=\"color: #FDE047; margin-top: 0; text-align: center;\">👑 Fixkar Super Admin Sovereign Recovery</h2>\n        <p style=\"font-size: 14px; line-height: 1.5; color: #DDD6FE;\">An emergency password & 2FA recovery request was initiated from IP <strong>127.0.0.1</strong> via Firebase Cloud.</p>\n        \n        <!-- 1. Emergency OTP -->\n        <div style=\"background: rgba(168, 85, 247, 0.2); border: 2px dashed #FDE047; padding: 16px; text-align: center; border-radius: 10px; margin: 18px 0;\">\n          <div style=\"font-size: 12px; color: #DDD6FE; text-transform: uppercase; font-weight: bold; margin-bottom: 6px;\">Your Emergency Login / Reset OTP</div>\n          <span style=\"font-size: 32px; font-weight: 900; letter-spacing: 0.3em; color: #FDE047; font-family: monospace;\">951513</span>\n        </div>\n\n        <!-- 2. Authenticator Secret Key & Scannable QR (Email Exclusive) -->\n        <div style=\"background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); padding: 16px; border-radius: 10px; margin: 18px 0; text-align: center;\">\n          <div style=\"font-size: 13px; font-weight: bold; color: #38BDF8; margin-bottom: 10px;\">📱 Your Private 2FA Authenticator Secret Key</div>\n          <div style=\"background: #000; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 16px; font-weight: bold; letter-spacing: 0.1em; color: #4ADE80; display: inline-block; margin-bottom: 12px;\">\n            JBSW Y3DP EHPK 3PXP\n          </div>\n          <p style=\"font-size: 12px; color: #94A3B8; margin: 0 0 10px;\">Scan this QR code in Google Authenticator or Microsoft Authenticator:</p>\n          <img src=\"https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=otpauth%3A%2F%2Ftotp%2FFixkar%3ASuperAdmin%3Fsecret%3DJBSWY3DPEHPK3PXP%26issuer%3DFixkar&bgcolor=ffffff&color=000000\" alt=\"2FA QR Code\" style=\"width: 140px; height: 140px; border-radius: 8px; border: 2px solid #fff;\" />\n        </div>\n\n        <p style=\"color: #94A3B8; font-size: 12px; line-height: 1.4;\">⚠️ <em>This information is confidential. Never share your secret key with anyone.</em></p>\n        <p style=\"font-family: monospace; color: #64748B; font-size: 11px; margin-top: 14px;\">Timestamp: 23/8/2026, 11:43:45 am IST • Engine: Firebase Cloud</p>\n      </div>\n    "
+    },
+    "otp": "951513",
+    "type": "SUPER_ADMIN_2FA_RECOVERY",
+    "status": "QUEUED_FIREBASE",
+    "createdAt": "2026-08-23T06:13:45.358Z"
+  },
+  {
+    "id": "fb_mail_1787465501162_zt5xc",
+    "to": [
+      "chaurasiadivyansh86@gmail.com",
+      "founder@fixkar.in",
+      "superadmin@fixkar.in"
+    ],
+    "message": {
+      "subject": "🔑 [CONFIDENTIAL] Fixkar Super Admin Recovery OTP: 965376 & 2FA Setup Key",
+      "html": "\n      <div style=\"font-family: Arial, sans-serif; background: #0B0418; color: #fff; padding: 24px; border-radius: 14px; border: 1px solid #A855F7; max-width: 540px; margin: auto;\">\n        <h2 style=\"color: #FDE047; margin-top: 0; text-align: center;\">👑 Fixkar Super Admin Sovereign Recovery</h2>\n        <p style=\"font-size: 14px; line-height: 1.5; color: #DDD6FE;\">An emergency password & 2FA recovery request was initiated from IP <strong>127.0.0.1</strong> via Firebase Cloud.</p>\n        \n        <!-- 1. Emergency OTP -->\n        <div style=\"background: rgba(168, 85, 247, 0.2); border: 2px dashed #FDE047; padding: 16px; text-align: center; border-radius: 10px; margin: 18px 0;\">\n          <div style=\"font-size: 12px; color: #DDD6FE; text-transform: uppercase; font-weight: bold; margin-bottom: 6px;\">Your Emergency Login / Reset OTP</div>\n          <span style=\"font-size: 32px; font-weight: 900; letter-spacing: 0.3em; color: #FDE047; font-family: monospace;\">965376</span>\n        </div>\n\n        <!-- 2. Authenticator Secret Key & Scannable QR (Email Exclusive) -->\n        <div style=\"background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); padding: 16px; border-radius: 10px; margin: 18px 0; text-align: center;\">\n          <div style=\"font-size: 13px; font-weight: bold; color: #38BDF8; margin-bottom: 10px;\">📱 Your Private 2FA Authenticator Secret Key</div>\n          <div style=\"background: #000; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 16px; font-weight: bold; letter-spacing: 0.1em; color: #4ADE80; display: inline-block; margin-bottom: 12px;\">\n            JBSW Y3DP EHPK 3PXP\n          </div>\n          <p style=\"font-size: 12px; color: #94A3B8; margin: 0 0 10px;\">Scan this QR code in Google Authenticator or Microsoft Authenticator:</p>\n          <img src=\"https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=otpauth%3A%2F%2Ftotp%2FFixkar%3ASuperAdmin%3Fsecret%3DJBSWY3DPEHPK3PXP%26issuer%3DFixkar&bgcolor=ffffff&color=000000\" alt=\"2FA QR Code\" style=\"width: 140px; height: 140px; border-radius: 8px; border: 2px solid #fff;\" />\n        </div>\n\n        <p style=\"color: #94A3B8; font-size: 12px; line-height: 1.4;\">⚠️ <em>This information is confidential. Never share your secret key with anyone.</em></p>\n        <p style=\"font-family: monospace; color: #64748B; font-size: 11px; margin-top: 14px;\">Timestamp: 23/8/2026, 11:41:41 am IST • Engine: Firebase Cloud</p>\n      </div>\n    "
+    },
+    "otp": "965376",
+    "type": "SUPER_ADMIN_2FA_RECOVERY",
+    "status": "QUEUED_FIREBASE",
+    "createdAt": "2026-08-23T06:11:41.162Z"
+  }
+]
