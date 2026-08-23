@@ -1314,7 +1314,7 @@ export function ClientPortalPage({ onNavigateHome }) {
                 {[
                   { id: 'overview', label: isLive ? 'Overview & Website' : '📋 Project Sprint & Progress', icon: Globe, locked: false },
                   { id: 'preview', label: '🌐 Live Prototype & Reviews', icon: ExternalLink, locked: !isStaging && !isLive, hidden: !isStaging && !isLive },
-                  { id: 'otp', label: 'OTP Live Wallet & Recharge', icon: Smartphone, locked: !isLive, badge: isLive && wallet.lowBalanceState === 'Critical' ? 'Critical' : null },
+                  { id: 'otp', label: 'SMS & Email Wallet', icon: Smartphone, locked: !isLive, badge: isLive && wallet.lowBalanceState === 'Critical' ? 'Critical' : null },
                   { id: 'invoices', label: 'Invoices & Receipts', icon: FileText, locked: !isLive },
                   { id: 'renewals', label: 'Renewals Radar', icon: Clock, locked: !isLive },
                   { id: 'support', label: 'Support Helpdesk', icon: LifeBuoy, locked: false },
@@ -1715,10 +1715,10 @@ export function ClientPortalPage({ onNavigateHome }) {
             {/* Instant Razorpay Pricing Cards */}
             <div>
               <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#fff', marginBottom: '6px' }}>
-                Buy OTP Verification Credits (Instant Razorpay Activation)
+                Buy SMS &amp; Email Messaging Credits (Instant Razorpay Activation)
               </h3>
               <p style={{ fontSize: '0.8rem', color: '#94A3B8', marginBottom: '16px' }}>
-                Choose a package below to pay securely via Razorpay (UPI, GPay, PhonePe, Paytm, Cards, NetBanking). Credits will be credited instantly to your website.
+                Unified credits power <strong>both SMS OTP verification and Transactional Email dispatches</strong> for your website (1 Credit = 1 SMS or 1 Transactional Email). Choose a package below to pay securely via Razorpay.
               </p>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
