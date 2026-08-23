@@ -12459,16 +12459,17 @@ Fixkar Web & AI Engineering Studio (Bihar, India)`}
             {/* ─── SENT REPLIES CONVERSATION THREAD ────────────────────────── */}
             {(() => {
               const clientEmail = (selectedInboundEmailModal.from || '').toLowerCase();
-              const threadReplies = (emailLogs || []).filter((log) => {
+              const modalId = selectedInboundEmailModal.id;
+              const directReplies = selectedInboundEmailModal.replies || [];
+              const logReplies = (emailLogs || []).filter((log) => {
                 const logRecip = (log.recipient || '').toLowerCase();
-                const logSubj = (log.subject || '').toLowerCase();
-                const modalSubj = (selectedInboundEmailModal.subject || '').toLowerCase();
                 return (
-                  (log.inReplyToId && log.inReplyToId === selectedInboundEmailModal.id) ||
-                  (logRecip && clientEmail.includes(logRecip)) ||
-                  (modalSubj && logSubj.includes(modalSubj))
+                  (log.inReplyToId && log.inReplyToId === modalId) ||
+                  (logRecip && clientEmail.includes(logRecip))
                 );
               });
+              const combined = [...directReplies, ...logReplies];
+              const threadReplies = Array.from(new Map(combined.map(item => [item.id || item.timestamp, item])).values());
 
               if (threadReplies.length === 0) return null;
 
