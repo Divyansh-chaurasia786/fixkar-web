@@ -3289,269 +3289,263 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
               <button
                 onClick={() => setPaymentConfirmationNotice(null)}
                 style={{ background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#CBD5E1', padding: '8px 14px', borderRadius: '8px', fontSize: '0.78rem', cursor: 'pointer' }}
-              >
-                Dismiss
-              </button>
-
-              <a
-                href={`https://wa.me/${String(paymentConfirmationNotice.phone || '').replace(/\D/g, '')}?text=${encodeURIComponent(
-                  `Dear ${paymentConfirmationNotice.clientName}, your payment of ${paymentConfirmationNotice.amount} for ${paymentConfirmationNotice.service} has been successfully updated. Your website renewal has been extended to ${paymentConfirmationNotice.extendedDate}. View your official receipt in your Client Portal: https://fixkar.co.in/#client-login`
-                )}`}
-                target="_blank"
-                rel="noreferrer"
-                style={{ background: '#16A34A', color: '#fff', padding: '8px 16px', borderRadius: '8px', fontSize: '0.78rem', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
-              >
-                <MessageSquare size={13} />
-                <span>Send WhatsApp Alert →</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ─── PHASE 1: CLIENT REGISTRATION & IDENTITY ONBOARDING MODAL ───────── */}
+              {/* ─── PHASE 1: CLIENT REGISTRATION & IDENTITY ONBOARDING MODAL ─────────── */}
       {isAddClientModalOpen && (
         <div
           style={{
             position: 'fixed',
             inset: 0,
             background: 'rgba(2, 4, 10, 0.88)',
-            backdropFilter: 'blur(16px)',
+            backdropFilter: 'blur(20px)',
             zIndex: 100000,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '20px',
+            padding: '16px',
+            boxSizing: 'border-box',
           }}
+          onClick={(e) => { if (e.target === e.currentTarget) setIsAddClientModalOpen(false); }}
         >
           <div
             style={{
-              width: '640px',
+              width: '680px',
               maxWidth: '96vw',
-              maxHeight: '92vh',
-              overflowY: 'auto',
-              background: 'linear-gradient(180deg, rgba(14, 20, 36, 0.98) 0%, rgba(8, 12, 22, 0.99) 100%)',
+              maxHeight: '88vh',
+              display: 'flex',
+              flexDirection: 'column',
+              background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(8, 12, 22, 0.99) 100%)',
               border: '1px solid rgba(56, 189, 248, 0.35)',
               borderRadius: '16px',
-              padding: '24px',
-              boxShadow: '0 25px 60px rgba(0,0,0,0.8), 0 0 35px rgba(56, 189, 248, 0.15)',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.85), 0 0 35px rgba(56, 189, 248, 0.15)',
+              overflow: 'hidden',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '12px' }}>
+            {/* Sticky Modal Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', background: 'rgba(15, 23, 42, 0.6)' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Users size={18} color="#38BDF8" />
-                  <h2 style={{ fontSize: '1.15rem', color: '#fff', margin: 0, fontWeight: 800 }}>
+                  <h2 style={{ fontSize: '1.05rem', color: '#fff', margin: 0, fontWeight: 800 }}>
                     🚀 Phase 1: Client Registration &amp; Identity Onboarding
                   </h2>
                 </div>
-                <div style={{ fontSize: '0.74rem', color: '#94A3B8', marginTop: '4px' }}>
-                  Step 1 of 2: Create Client Account, Generate Portal Credentials &amp; Agreement Record. (Phase 2 Infrastructure will unlock once domain &amp; server are purchased).
+                <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '3px' }}>
+                  Step 1 of 2: Create Client Account, Generate Portal Credentials &amp; Agreement Record.
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => setIsAddClientModalOpen(false)}
-                style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', fontSize: '1.2rem' }}
+                style={{ background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#94A3B8', cursor: 'pointer', borderRadius: '6px', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleAddClientSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {/* Section 1: Business Info */}
-              <div style={{ fontSize: '0.74rem', fontFamily: 'monospace', color: '#38BDF8', letterSpacing: '0.08em' }}>
-                1. BUSINESS &amp; IDENTITY DETAILS
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Business / Website Name *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Apex Fitness Hub"
-                    value={newClientForm.businessName}
-                    onChange={(e) => setNewClientForm({ ...newClientForm, businessName: e.target.value })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
+            {/* Scrollable Form Body */}
+            <form onSubmit={handleAddClientSubmit} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, margin: 0 }}>
+              <div style={{ padding: '20px', overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* Section 1: Business Info */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', paddingBottom: '6px' }}>
+                  <span style={{ fontSize: '0.7rem', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38BDF8', padding: '2px 8px', borderRadius: '12px', fontWeight: 800, fontFamily: 'monospace' }}>01</span>
+                  <span style={{ fontSize: '0.74rem', fontFamily: 'monospace', color: '#38BDF8', letterSpacing: '0.08em', fontWeight: 700 }}>BUSINESS &amp; IDENTITY DETAILS</span>
                 </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Business Category</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Gym &amp; Fitness Studio"
-                    value={newClientForm.businessType}
-                    onChange={(e) => setNewClientForm({ ...newClientForm, businessType: e.target.value })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
-                </div>
-              </div>
 
-              {/* Client Logo Upload */}
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', padding: '6px 0' }}>
-                <div
-                  style={{
-                    width: '56px',
-                    height: '56px',
-                    borderRadius: '12px',
-                    background: newClientForm.logoUrl
-                      ? 'transparent'
-                      : 'linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(37, 99, 235, 0.2) 100%)',
-                    border: '1px solid rgba(56, 189, 248, 0.35)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    overflow: 'hidden',
-                    color: '#38BDF8',
-                    fontWeight: 800,
-                    fontSize: '1.1rem',
-                  }}
-                >
-                  {newClientForm.logoUrl ? (
-                    <img
-                      src={newClientForm.logoUrl}
-                      alt="Logo"
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
-                      onError={(e) => { e.target.style.display = 'none'; }}
-                    />
-                  ) : (
-                    <span>{newClientForm.businessName?.slice(0, 2).toUpperCase() || '?'}</span>
-                  )}
-                </div>
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block' }}>Client Business Logo (optional)</label>
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <label
-                      style={{
-                        background: 'rgba(56, 189, 248, 0.12)',
-                        border: '1px solid rgba(56, 189, 248, 0.35)',
-                        color: '#38BDF8',
-                        padding: '5px 12px',
-                        borderRadius: '6px',
-                        fontSize: '0.74rem',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '5px',
-                      }}
-                    >
-                      📁 Upload Image
-                      <input
-                        type="file"
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            const reader = new FileReader();
-                            reader.onload = (ev) => {
-                              setNewClientForm((prev) => ({ ...prev, logoUrl: ev.target.result }));
-                            };
-                            reader.readAsDataURL(file);
-                          }
-                        }}
-                      />
-                    </label>
-                    <span style={{ fontSize: '0.7rem', color: '#64748B' }}>or</span>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Business / Website Name *</label>
                     <input
                       type="text"
-                      placeholder="Paste logo URL (https://...)"
-                      value={newClientForm.logoUrl?.startsWith('data:') ? '' : (newClientForm.logoUrl || '')}
-                      onChange={(e) => setNewClientForm({ ...newClientForm, logoUrl: e.target.value })}
-                      style={{ flex: 1, minWidth: '150px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', padding: '5px 10px', color: '#fff', fontSize: '0.76rem', outline: 'none' }}
+                      required
+                      placeholder="e.g. Apex Fitness Hub"
+                      value={newClientForm.businessName}
+                      onChange={(e) => setNewClientForm({ ...newClientForm, businessName: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Business Category</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Gym &amp; Fitness Studio"
+                      value={newClientForm.businessType}
+                      onChange={(e) => setNewClientForm({ ...newClientForm, businessType: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
                     />
                   </div>
                 </div>
-              </div>
 
-              {/* Section 2: Owner Contact */}
-              <div style={{ fontSize: '0.74rem', fontFamily: 'monospace', color: '#38BDF8', letterSpacing: '0.08em', marginTop: '4px' }}>
-                2. PRIMARY OWNER &amp; CONTACT
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Owner Name *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Vikram Rathore"
-                    value={newClientForm.contactPerson}
-                    onChange={(e) => setNewClientForm({ ...newClientForm, contactPerson: e.target.value })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
+                {/* Client Logo Upload */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '10px', padding: '10px 14px' }}>
+                  <div
+                    style={{
+                      width: '48px',
+                      height: '48px',
+                      borderRadius: '10px',
+                      background: newClientForm.logoUrl
+                        ? 'transparent'
+                        : 'linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(37, 99, 235, 0.2) 100%)',
+                      border: '1px solid rgba(56, 189, 248, 0.35)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      overflow: 'hidden',
+                      color: '#38BDF8',
+                      fontWeight: 800,
+                      fontSize: '1rem',
+                    }}
+                  >
+                    {newClientForm.logoUrl ? (
+                      <img
+                        src={newClientForm.logoUrl}
+                        alt="Logo"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }}
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    ) : (
+                      <span>{newClientForm.businessName?.slice(0, 2).toUpperCase() || '?'}</span>
+                    )}
+                  </div>
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                    <label style={{ fontSize: '0.74rem', color: '#CBD5E1', display: 'block' }}>Client Business Logo (optional)</label>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                      <label
+                        style={{
+                          background: 'rgba(56, 189, 248, 0.12)',
+                          border: '1px solid rgba(56, 189, 248, 0.35)',
+                          color: '#38BDF8',
+                          padding: '5px 12px',
+                          borderRadius: '6px',
+                          fontSize: '0.72rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '5px',
+                        }}
+                      >
+                        📁 Upload Image
+                        <input
+                          type="file"
+                          accept="image/*"
+                          style={{ display: 'none' }}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onload = (ev) => {
+                                setNewClientForm((prev) => ({ ...prev, logoUrl: ev.target.result }));
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                        />
+                      </label>
+                      <span style={{ fontSize: '0.7rem', color: '#64748B' }}>or</span>
+                      <input
+                        type="text"
+                        placeholder="Paste logo URL (https://...)"
+                        value={newClientForm.logoUrl?.startsWith('data:') ? '' : (newClientForm.logoUrl || '')}
+                        onChange={(e) => setNewClientForm({ ...newClientForm, logoUrl: e.target.value })}
+                        style={{ flex: 1, minWidth: '160px', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', padding: '5px 10px', color: '#fff', fontSize: '0.76rem', outline: 'none' }}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Mobile / WhatsApp *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="+91 98111 22334"
-                    value={newClientForm.phone}
-                    onChange={(e) => setNewClientForm({ ...newClientForm, phone: e.target.value, whatsapp: e.target.value })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Owner Email</label>
-                  <input
-                    type="email"
-                    placeholder="contact@apexfit.in"
-                    value={newClientForm.email}
-                    onChange={(e) => setNewClientForm({ ...newClientForm, email: e.target.value })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
-                </div>
-              </div>
 
-              {/* Section 3: Location & Address */}
-              <div style={{ fontSize: '0.74rem', fontFamily: 'monospace', color: '#38BDF8', letterSpacing: '0.08em', marginTop: '4px' }}>
-                3. LOCATION &amp; OFFICE ADDRESS
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>City</label>
-                  <input
-                    type="text"
-                    placeholder="Patna"
-                    value={newClientForm.city}
-                    onChange={(e) => setNewClientForm({ ...newClientForm, city: e.target.value })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
+                {/* Section 2: Owner Contact */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', paddingBottom: '6px', marginTop: '4px' }}>
+                  <span style={{ fontSize: '0.7rem', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38BDF8', padding: '2px 8px', borderRadius: '12px', fontWeight: 800, fontFamily: 'monospace' }}>02</span>
+                  <span style={{ fontSize: '0.74rem', fontFamily: 'monospace', color: '#38BDF8', letterSpacing: '0.08em', fontWeight: 700 }}>PRIMARY OWNER &amp; CONTACT</span>
                 </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>State</label>
-                  <input
-                    type="text"
-                    placeholder="Bihar"
-                    value={newClientForm.state}
-                    onChange={(e) => setNewClientForm({ ...newClientForm, state: e.target.value })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>PIN Code</label>
-                  <input
-                    type="text"
-                    placeholder="800001"
-                    value={newClientForm.pinCode}
-                    onChange={(e) => setNewClientForm({ ...newClientForm, pinCode: e.target.value })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
-                </div>
-              </div>
 
-              {/* Section 4: Agreed Package Scope */}
-              <div style={{ fontSize: '0.74rem', fontFamily: 'monospace', color: '#38BDF8', letterSpacing: '0.08em', marginTop: '4px' }}>
-                4. INTENDED PROJECT SCOPE &amp; PACKAGE
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Owner Name *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Vikram Rathore"
+                      value={newClientForm.contactPerson}
+                      onChange={(e) => setNewClientForm({ ...newClientForm, contactPerson: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Mobile / WhatsApp *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="+91 98111 22334"
+                      value={newClientForm.phone}
+                      onChange={(e) => setNewClientForm({ ...newClientForm, phone: e.target.value, whatsapp: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Owner Email</label>
+                    <input
+                      type="email"
+                      placeholder="contact@apexfit.in"
+                      value={newClientForm.email}
+                      onChange={(e) => setNewClientForm({ ...newClientForm, email: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
+                </div>
+
+                {/* Section 3: Location & Address */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', paddingBottom: '6px', marginTop: '4px' }}>
+                  <span style={{ fontSize: '0.7rem', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38BDF8', padding: '2px 8px', borderRadius: '12px', fontWeight: 800, fontFamily: 'monospace' }}>03</span>
+                  <span style={{ fontSize: '0.74rem', fontFamily: 'monospace', color: '#38BDF8', letterSpacing: '0.08em', fontWeight: 700 }}>LOCATION &amp; OFFICE ADDRESS</span>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>City</label>
+                    <input
+                      type="text"
+                      placeholder="Patna"
+                      value={newClientForm.city}
+                      onChange={(e) => setNewClientForm({ ...newClientForm, city: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>State</label>
+                    <input
+                      type="text"
+                      placeholder="Bihar"
+                      value={newClientForm.state}
+                      onChange={(e) => setNewClientForm({ ...newClientForm, state: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>PIN Code</label>
+                    <input
+                      type="text"
+                      placeholder="800001"
+                      value={newClientForm.pinCode}
+                      onChange={(e) => setNewClientForm({ ...newClientForm, pinCode: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
+                </div>
+
+                {/* Section 4: Agreed Package Scope */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', paddingBottom: '6px', marginTop: '4px' }}>
+                  <span style={{ fontSize: '0.7rem', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38BDF8', padding: '2px 8px', borderRadius: '12px', fontWeight: 800, fontFamily: 'monospace' }}>04</span>
+                  <span style={{ fontSize: '0.74rem', fontFamily: 'monospace', color: '#38BDF8', letterSpacing: '0.08em', fontWeight: 700 }}>INTENDED PROJECT SCOPE &amp; PACKAGE</span>
+                </div>
+
                 <div>
                   <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Agreed Web Application Package</label>
                   <select
                     value={newClientForm.agreedPackage}
                     onChange={(e) => setNewClientForm({ ...newClientForm, agreedPackage: e.target.value })}
-                    style={{ width: '100%', background: '#0D1323', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 10px', color: '#fff', fontSize: '0.82rem' }}
+                    style={{ width: '100%', boxSizing: 'border-box', background: '#0D1323', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 10px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
                   >
                     <option value="Standard Dynamic Web App (₹35,000)">Standard Dynamic Web Application (₹35,000 &bull; 50/50 Milestones)</option>
                     <option value="Custom E-Commerce Portal (₹50,000)">Custom E-Commerce &amp; Payments Portal (₹50,000 &bull; 50/50 Milestones)</option>
@@ -3559,29 +3553,30 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                     <option value="Custom Enterprise Cloud Software (₹75,000)">Custom Enterprise Cloud Software (₹75,000 &bull; 50/50 Milestones)</option>
                   </select>
                 </div>
+
+                {/* Notice */}
+                <div style={{ background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '10px', padding: '10px 14px', fontSize: '0.74rem', color: '#93C5FD', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <ShieldCheck size={18} color="#38BDF8" style={{ flexShrink: 0 }} />
+                  <span>
+                    <strong>Phase 1 Output:</strong> Client credentials will be created immediately. Domain &amp; Server Infrastructure will be recorded in <strong>Phase 2</strong> once domain is registered.
+                  </span>
+                </div>
               </div>
 
-              {/* Notice */}
-              <div style={{ background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '10px', padding: '10px 14px', fontSize: '0.75rem', color: '#93C5FD', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <ShieldCheck size={18} color="#38BDF8" style={{ flexShrink: 0 }} />
-                <span>
-                  <strong>Phase 1 Output:</strong> Client credentials will be created immediately. Domain &amp; Server Infrastructure will be recorded in <strong>Phase 2</strong> once domain is registered. OTP credits are master-managed by Super Admin.
-                </span>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '4px' }}>
+              {/* Sticky Action Footer */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', padding: '14px 20px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', background: 'rgba(15, 23, 42, 0.8)' }}>
                 <button
                   type="button"
                   onClick={() => setIsAddClientModalOpen(false)}
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#94A3B8', padding: '8px 16px', borderRadius: '8px', fontSize: '0.82rem', cursor: 'pointer' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#94A3B8', padding: '8px 16px', borderRadius: '8px', fontSize: '0.8rem', cursor: 'pointer' }}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  style={{ background: 'linear-gradient(135deg, #38BDF8 0%, #2563EB 100%)', border: 'none', color: '#fff', padding: '8px 20px', borderRadius: '8px', fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer' }}
+                  style={{ background: 'linear-gradient(135deg, #38BDF8 0%, #2563EB 100%)', border: 'none', color: '#fff', padding: '8px 20px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
                 >
-                  🚀 Complete Phase 1 &amp; Generate Credentials →
+                  <span>🚀 Complete Phase 1 &amp; Generate Credentials →</span>
                 </button>
               </div>
             </form>
@@ -3596,227 +3591,204 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
             position: 'fixed',
             inset: 0,
             background: 'rgba(2, 4, 10, 0.88)',
-            backdropFilter: 'blur(16px)',
+            backdropFilter: 'blur(20px)',
             zIndex: 100000,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '20px',
+            padding: '16px',
+            boxSizing: 'border-box',
           }}
+          onClick={(e) => { if (e.target === e.currentTarget) setPhase2ModalClient(null); }}
         >
           <div
             style={{
-              width: '680px',
+              width: '700px',
               maxWidth: '96vw',
-              maxHeight: '92vh',
-              overflowY: 'auto',
-              background: 'linear-gradient(180deg, rgba(14, 20, 36, 0.98) 0%, rgba(8, 12, 22, 0.99) 100%)',
+              maxHeight: '88vh',
+              display: 'flex',
+              flexDirection: 'column',
+              background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(8, 12, 22, 0.99) 100%)',
               border: '1px solid rgba(74, 222, 128, 0.4)',
               borderRadius: '16px',
-              padding: '24px',
-              boxShadow: '0 25px 60px rgba(0,0,0,0.8), 0 0 35px rgba(74, 222, 128, 0.2)',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.85), 0 0 35px rgba(74, 222, 128, 0.2)',
+              overflow: 'hidden',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '12px' }}>
+            {/* Sticky Modal Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', background: 'rgba(15, 23, 42, 0.6)' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Globe size={18} color="#4ADE80" />
-                  <h2 style={{ fontSize: '1.15rem', color: '#fff', margin: 0, fontWeight: 800 }}>
+                  <h2 style={{ fontSize: '1.05rem', color: '#fff', margin: 0, fontWeight: 800 }}>
                     🌐 Phase 2: Domain &amp; Server Infrastructure Provisioning
                   </h2>
                 </div>
-                <div style={{ fontSize: '0.74rem', color: '#94A3B8', marginTop: '4px' }}>
+                <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '3px' }}>
                   For Client: <strong style={{ color: '#fff' }}>{phase2ModalClient.businessName}</strong> ({phase2ModalClient.clientCode}) &bull; Configure live domain and cloud server specs.
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => setPhase2ModalClient(null)}
-                style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', fontSize: '1.2rem' }}
+                style={{ background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#94A3B8', cursor: 'pointer', borderRadius: '6px', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handlePhase2Submit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {/* Section 1: Domain Infrastructure */}
-              <div style={{ fontSize: '0.74rem', fontFamily: 'monospace', color: '#38BDF8', letterSpacing: '0.08em' }}>
-                1. REGISTERED DOMAIN DETAILS &amp; RENEWAL SCHEDULE
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
-                <div style={{ gridColumn: 'span 2' }}>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Registered Domain Name *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. apexfit.in or www.sharmaclasses.in"
-                    value={phase2Form.domain}
-                    onChange={(e) => setPhase2Form({ ...phase2Form, domain: e.target.value })}
-                    style={{ width: '100%', background: '#0D1323', border: '1px solid rgba(56, 189, 248, 0.4)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
+            {/* Scrollable Form Body */}
+            <form onSubmit={handlePhase2Submit} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, margin: 0 }}>
+              <div style={{ padding: '20px', overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* Section 1: Domain Infrastructure */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', paddingBottom: '6px' }}>
+                  <span style={{ fontSize: '0.7rem', background: 'rgba(74, 222, 128, 0.15)', border: '1px solid rgba(74, 222, 128, 0.3)', color: '#4ADE80', padding: '2px 8px', borderRadius: '12px', fontWeight: 800, fontFamily: 'monospace' }}>01</span>
+                  <span style={{ fontSize: '0.74rem', fontFamily: 'monospace', color: '#4ADE80', letterSpacing: '0.08em', fontWeight: 700 }}>REGISTERED DOMAIN DETAILS &amp; RENEWAL SCHEDULE</span>
                 </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Domain Provider / Registrar</label>
-                  <select
-                    value={phase2Form.domainProvider}
-                    onChange={(e) => setPhase2Form({ ...phase2Form, domainProvider: e.target.value })}
-                    style={{ width: '100%', background: '#0D1323', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 10px', color: '#fff', fontSize: '0.82rem' }}
-                  >
-                    <option value="Hostinger India">Hostinger India</option>
-                    <option value="GoDaddy">GoDaddy</option>
-                    <option value="Namecheap">Namecheap</option>
-                    <option value="Cloudflare Registrar">Cloudflare Registrar</option>
-                    <option value="BigRock India">BigRock India</option>
-                    <option value="Google Domains / Squarespace">Google Domains / Squarespace</option>
-                    <option value="Porkbun">Porkbun</option>
-                    <option value="Client Own Account">Client's Own Account</option>
-                  </select>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+                  <div style={{ gridColumn: 'span 2' }}>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Registered Domain Name *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. apexfit.in or www.sharmaclasses.in"
+                      value={phase2Form.domain}
+                      onChange={(e) => setPhase2Form({ ...phase2Form, domain: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: '#0D1323', border: '1px solid rgba(56, 189, 248, 0.4)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Domain Registrar Hub</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Cloudflare, Hostinger, GoDaddy"
+                      value={phase2Form.domainRegistrar}
+                      onChange={(e) => setPhase2Form({ ...phase2Form, domainRegistrar: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Domain Registration Date</label>
+                    <input
+                      type="date"
+                      value={phase2Form.domainStartDate}
+                      onChange={(e) => setPhase2Form({ ...phase2Form, domainStartDate: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Domain Expiry / Renewal Date *</label>
+                    <input
+                      type="date"
+                      required
+                      value={phase2Form.domainRenewalDate}
+                      onChange={(e) => setPhase2Form({ ...phase2Form, domainRenewalDate: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(56, 189, 248, 0.4)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Domain Renewal Price</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. ₹999 / Year"
+                      value={phase2Form.domainPrice}
+                      onChange={(e) => setPhase2Form({ ...phase2Form, domainPrice: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Domain Registration Date</label>
-                  <input
-                    type="date"
-                    value={phase2Form.domainStartDate}
-                    onChange={(e) => setPhase2Form({ ...phase2Form, domainStartDate: e.target.value })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
+
+                {/* Section 2: Cloud Server Infrastructure */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', paddingBottom: '6px', marginTop: '4px' }}>
+                  <span style={{ fontSize: '0.7rem', background: 'rgba(74, 222, 128, 0.15)', border: '1px solid rgba(74, 222, 128, 0.3)', color: '#4ADE80', padding: '2px 8px', borderRadius: '12px', fontWeight: 800, fontFamily: 'monospace' }}>02</span>
+                  <span style={{ fontSize: '0.74rem', fontFamily: 'monospace', color: '#4ADE80', letterSpacing: '0.08em', fontWeight: 700 }}>CLOUD SERVER &amp; HOSTING INFRASTRUCTURE</span>
                 </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Domain Expiry / Renewal Date *</label>
-                  <input
-                    type="date"
-                    required
-                    value={phase2Form.domainExpiryDate}
-                    onChange={(e) => setPhase2Form({ ...phase2Form, domainExpiryDate: e.target.value })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(56, 189, 248, 0.4)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Domain Renewal Price</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. ₹899 / Year"
-                    value={phase2Form.domainPrice}
-                    onChange={(e) => setPhase2Form({ ...phase2Form, domainPrice: e.target.value })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Domain Term Duration</label>
-                  <select
-                    value={phase2Form.domainDuration}
-                    onChange={(e) => setPhase2Form({ ...phase2Form, domainDuration: e.target.value })}
-                    style={{ width: '100%', background: '#0D1323', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 10px', color: '#fff', fontSize: '0.82rem' }}
-                  >
-                    <option value="1 Year Term">1 Year Term</option>
-                    <option value="2 Years Term">2 Years Term</option>
-                    <option value="3 Years Term">3 Years Term</option>
-                    <option value="5 Years Term">5 Years Term</option>
-                    <option value="10 Years Term">10 Years Term</option>
-                  </select>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+                  <div style={{ gridColumn: 'span 2' }}>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Server / Hosting Architecture Type *</label>
+                    <select
+                      value={phase2Form.serverType}
+                      onChange={(e) => setPhase2Form({ ...phase2Form, serverType: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: '#0D1323', border: '1px solid rgba(56, 189, 248, 0.4)', borderRadius: '8px', padding: '8px 10px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    >
+                      <option value="Managed Cloud VPS (High-Performance Edge)">🚀 Managed Cloud VPS (High-Performance Edge - Fixkar Standard)</option>
+                      <option value="High-Speed cPanel Shared Hosting">🏢 High-Speed cPanel Shared Hosting</option>
+                      <option value="AWS Cloud Compute (EC2 / Lightsail)">☁️ AWS Cloud Compute (EC2 / Lightsail)</option>
+                      <option value="Google Cloud Platform (GCP Engine)">⚡ Google Cloud Platform (GCP Compute)</option>
+                      <option value="DigitalOcean Cloud Droplet VPS">🌐 DigitalOcean Cloud Droplet VPS</option>
+                      <option value="Hetzner Dedicated Cloud VPS">🛡️ Hetzner Dedicated Cloud VPS</option>
+                      <option value="Dedicated Bare-Metal Enterprise Server">🖥️ Dedicated Bare-Metal Enterprise Server</option>
+                      <option value="Serverless Edge (Vercel / Cloudflare Workers)">⚡ Serverless Edge (Vercel / Cloudflare)</option>
+                      <option value="WordPress Managed Cloud Hosting">📦 WordPress Managed Cloud Hosting</option>
+                      <option value="Private Node.js / Docker Container">🔒 Private Node.js / Docker Container</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Hosting Provider / Cloud Hub</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. DigitalOcean, AWS, Hetzner"
+                      value={phase2Form.serverProvider}
+                      onChange={(e) => setPhase2Form({ ...phase2Form, serverProvider: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Server IP (Public IPv4)</label>
+                    <input
+                      type="text"
+                      placeholder="139.59.88.214"
+                      value={phase2Form.serverIp}
+                      onChange={(e) => setPhase2Form({ ...phase2Form, serverIp: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Server Provisioning Date</label>
+                    <input
+                      type="date"
+                      value={phase2Form.serverStartDate}
+                      onChange={(e) => setPhase2Form({ ...phase2Form, serverStartDate: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Server Expiry / Renewal Date *</label>
+                    <input
+                      type="date"
+                      required
+                      value={phase2Form.hostingRenewalDate}
+                      onChange={(e) => setPhase2Form({ ...phase2Form, hostingRenewalDate: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(56, 189, 248, 0.4)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Server Renewal Price</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. ₹2,499 / Year"
+                      value={phase2Form.serverPrice}
+                      onChange={(e) => setPhase2Form({ ...phase2Form, serverPrice: e.target.value })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>DLT Sender ID (Header)</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. APEXFH"
+                      value={phase2Form.dltSenderId}
+                      onChange={(e) => setPhase2Form({ ...phase2Form, dltSenderId: e.target.value.toUpperCase() })}
+                      style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none', textTransform: 'uppercase' }}
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* Section 2: Server / Hosting Infrastructure */}
-              <div style={{ fontSize: '0.74rem', fontFamily: 'monospace', color: '#38BDF8', letterSpacing: '0.08em', marginTop: '6px' }}>
-                2. SERVER &amp; HOSTING CLOUD INFRASTRUCTURE &amp; RENEWAL SCHEDULE
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
-                <div style={{ gridColumn: 'span 2' }}>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Server / Hosting Architecture Type *</label>
-                  <select
-                    value={phase2Form.serverType}
-                    onChange={(e) => setPhase2Form({ ...phase2Form, serverType: e.target.value })}
-                    style={{ width: '100%', background: '#0D1323', border: '1px solid rgba(56, 189, 248, 0.4)', borderRadius: '8px', padding: '8px 10px', color: '#fff', fontSize: '0.82rem' }}
-                  >
-                    <option value="Managed Cloud VPS (High-Performance Edge)">🚀 Managed Cloud VPS (High-Performance Edge - Fixkar Standard)</option>
-                    <option value="High-Speed cPanel Shared Hosting">🏢 High-Speed cPanel Shared Hosting</option>
-                    <option value="AWS Cloud Compute (EC2 / Lightsail)">☁️ AWS Cloud Compute (EC2 / Lightsail)</option>
-                    <option value="Google Cloud Platform (GCP Engine)">⚡ Google Cloud Platform (GCP Compute)</option>
-                    <option value="DigitalOcean Cloud Droplet VPS">🌐 DigitalOcean Cloud Droplet VPS</option>
-                    <option value="Hetzner Dedicated Cloud VPS">🛡️ Hetzner Dedicated Cloud VPS</option>
-                    <option value="Dedicated Bare-Metal Enterprise Server">🖥️ Dedicated Bare-Metal Enterprise Server</option>
-                    <option value="Serverless Edge (Vercel / Cloudflare Workers)">⚡ Serverless Edge (Vercel / Cloudflare)</option>
-                    <option value="WordPress Managed Cloud Hosting">📦 WordPress Managed Cloud Hosting</option>
-                    <option value="Private Node.js / Docker Container">🔒 Private Node.js / Docker Container</option>
-                  </select>
-                </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Hosting Provider / Cloud Hub</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. DigitalOcean, AWS, Hetzner"
-                    value={phase2Form.serverProvider}
-                    onChange={(e) => setPhase2Form({ ...phase2Form, serverProvider: e.target.value })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Server IP (Public IPv4)</label>
-                  <input
-                    type="text"
-                    placeholder="139.59.88.214"
-                    value={phase2Form.serverIp}
-                    onChange={(e) => setPhase2Form({ ...phase2Form, serverIp: e.target.value })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Server Provisioning Date</label>
-                  <input
-                    type="date"
-                    value={phase2Form.serverStartDate}
-                    onChange={(e) => setPhase2Form({ ...phase2Form, serverStartDate: e.target.value })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Server Expiry / Renewal Date *</label>
-                  <input
-                    type="date"
-                    required
-                    value={phase2Form.hostingRenewalDate}
-                    onChange={(e) => setPhase2Form({ ...phase2Form, hostingRenewalDate: e.target.value })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(56, 189, 248, 0.4)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Server Renewal Price</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. ₹2,499 / Year"
-                    value={phase2Form.serverPrice}
-                    onChange={(e) => setPhase2Form({ ...phase2Form, serverPrice: e.target.value })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Server Billing Duration / Cycle</label>
-                  <select
-                    value={phase2Form.serverDuration}
-                    onChange={(e) => setPhase2Form({ ...phase2Form, serverDuration: e.target.value })}
-                    style={{ width: '100%', background: '#0D1323', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 10px', color: '#fff', fontSize: '0.82rem' }}
-                  >
-                    <option value="1 Year Annual Plan">1 Year Annual Plan (Standard)</option>
-                    <option value="6 Months Half-Yearly Plan">6 Months Half-Yearly Plan</option>
-                    <option value="3 Months Quarterly Plan">3 Months Quarterly Plan</option>
-                    <option value="1 Month Monthly Plan">1 Month Monthly Plan</option>
-                    <option value="2 Years Multi-Year Plan">2 Years Multi-Year Plan</option>
-                    <option value="3 Years Multi-Year Plan">3 Years Multi-Year Plan</option>
-                  </select>
-                </div>
-                <div>
-                  <label style={{ fontSize: '0.76rem', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>DLT Sender ID (Header)</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. APEXFH"
-                    value={phase2Form.dltSenderId}
-                    onChange={(e) => setPhase2Form({ ...phase2Form, dltSenderId: e.target.value.toUpperCase() })}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '0.82rem', outline: 'none', textTransform: 'uppercase' }}
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '4px' }}>
+              {/* Sticky Action Footer */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', padding: '14px 20px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', background: 'rgba(15, 23, 42, 0.8)' }}>
                 <button
                   type="button"
                   onClick={() => setPhase2ModalClient(null)}
