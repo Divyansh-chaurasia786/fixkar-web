@@ -395,10 +395,48 @@ export function AdminDashboardView({ onNavigateHome }) {
   const [inboundEmails, setInboundEmails] = useState([]);
   const [emailLogs, setEmailLogs] = useState([]);
   const [emailSearchQuery, setEmailSearchQuery] = useState('');
-  const [selectedEmailForModal, setSelectedEmailForModal] = useState(null);
   const [selectedInboundEmailModal, setSelectedInboundEmailModal] = useState(null);
+  const [showInboundReplyComposer, setShowInboundReplyComposer] = useState(false);
+  const [inboundReplyText, setInboundReplyText] = useState('');
+  const [isInboundReplying, setIsInboundReplying] = useState(false);
+  const [inboundReplyStatus, setInboundReplyStatus] = useState(null);
 
-  // AI Contract & Documentation Generator State (Phase 1 & Phase 2 Architecture)
+  const handleSendInboundReply = async () => {
+    if (!selectedInboundEmailModal || !inboundReplyText.trim()) return;
+    setIsInboundReplying(true);
+    setInboundReplyStatus(null);
+    try {
+      const recipientEmail = selectedInboundEmailModal.from.includes('<')
+        ? (selectedInboundEmailModal.from.match(/<([^>]+)>/)?.[1] || selectedInboundEmailModal.from)
+        : selectedInboundEmailModal.from;
+
+      const res = await fetch('/api/emails/reply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: recipientEmail,
+          subject: `Re: ${selectedInboundEmailModal.subject || 'Inquiry to Fixkar'}`,
+          message: inboundReplyText,
+          inReplyToId: selectedInboundEmailModal.id
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setInboundReplyStatus({ type: 'success', text: `✅ Reply sent directly to ${recipientEmail} from support@fixkar.co.in!` });
+        setInboundReplyText('');
+        setTimeout(() => {
+          setInboundReplyStatus(null);
+          setShowInboundReplyComposer(false);
+        }, 3000);
+      } else {
+        setInboundReplyStatus({ type: 'error', text: data.error || 'Failed to dispatch reply.' });
+      }
+    } catch (err) {
+      setInboundReplyStatus({ type: 'error', text: err.message });
+    } finally {
+      setIsInboundReplying(false);
+    }
+  };
   const [aiDocForm, setAiDocForm] = useState({
     phase: 'phase1', // 'phase1' | 'phase2'
     clientCode: '',
@@ -12396,30 +12434,114 @@ Fixkar Web & AI Engineering Studio (Bihar, India)`}
               )}
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '18px', paddingTop: '14px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
-              <span style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
-                Forwarded to supportfixkar@gmail.com via Cloudflare Routing
-              </span>
+            {/* ─── IN-DASHBOARD DIRECT EMAIL REPLY COMPOSER ─────────────────── */}
+            {showInboundReplyComposer ? (
+              <div style={{ marginTop: '16px', background: 'rgba(15, 23, 42, 0.8)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '12px', padding: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#38BDF8' }}>✉️ Quick Reply from support@fixkar.co.in</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { setShowInboundReplyComposer(false); setInboundReplyStatus(null); }}
+                    style={{ background: 'none', border: 'none', color: '#94A3B8', fontSize: '0.75rem', cursor: 'pointer' }}
+                  >
+                    Cancel
+                  </button>
+                </div>
 
-              <a
-                href={`mailto:${selectedInboundEmailModal.from}?subject=Re: ${encodeURIComponent(selectedInboundEmailModal.subject || '')}`}
-                style={{
-                  background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
-                  color: '#fff',
-                  padding: '8px 16px',
-                  borderRadius: '8px',
-                  fontSize: '0.78rem',
-                  fontWeight: 700,
-                  textDecoration: 'none',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                }}
-              >
-                <Send size={13} />
-                <span>Reply to Client</span>
-              </a>
-            </div>
+                <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginBottom: '8px' }}>
+                  Replying to: <strong style={{ color: '#FDE047' }}>{selectedInboundEmailModal.from}</strong> | Subject: <strong style={{ color: '#E2E8F0' }}>Re: {selectedInboundEmailModal.subject || 'Inquiry to Fixkar'}</strong>
+                </div>
+
+                <textarea
+                  value={inboundReplyText}
+                  onChange={(e) => setInboundReplyText(e.target.value)}
+                  placeholder="Type your official response to the client here... (Fixkar header, signature and branding will be added automatically)"
+                  rows={4}
+                  style={{
+                    width: '100%',
+                    background: '#0B0418',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    borderRadius: '8px',
+                    padding: '10px 12px',
+                    color: '#fff',
+                    fontSize: '0.85rem',
+                    lineHeight: 1.5,
+                    resize: 'vertical',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                />
+
+                {inboundReplyStatus && (
+                  <div style={{
+                    marginTop: '10px',
+                    padding: '8px 12px',
+                    borderRadius: '6px',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    background: inboundReplyStatus.type === 'success' ? 'rgba(34, 197, 94, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+                    color: inboundReplyStatus.type === 'success' ? '#4ADE80' : '#F87171',
+                    border: `1px solid ${inboundReplyStatus.type === 'success' ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`
+                  }}>
+                    {inboundReplyStatus.text}
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px', gap: '8px' }}>
+                  <button
+                    type="button"
+                    onClick={handleSendInboundReply}
+                    disabled={isInboundReplying || !inboundReplyText.trim()}
+                    style={{
+                      background: isInboundReplying || !inboundReplyText.trim() ? 'rgba(2, 132, 199, 0.4)' : 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
+                      color: '#fff',
+                      border: 'none',
+                      padding: '8px 18px',
+                      borderRadius: '8px',
+                      fontSize: '0.8rem',
+                      fontWeight: 800,
+                      cursor: isInboundReplying || !inboundReplyText.trim() ? 'not-allowed' : 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      transition: 'all 0.15s ease'
+                    }}
+                  >
+                    <Send size={14} />
+                    <span>{isInboundReplying ? 'Sending...' : '🚀 Send Email to Client'}</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '18px', paddingTop: '14px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                <span style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
+                  Received at support@fixkar.co.in
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() => setShowInboundReplyComposer(true)}
+                  style={{
+                    background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
+                    color: '#fff',
+                    border: 'none',
+                    padding: '8px 18px',
+                    borderRadius: '8px',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  <Send size={13} />
+                  <span>Reply to Client Directly</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
