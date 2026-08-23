@@ -4305,17 +4305,17 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                   </div>
                 </div>
               ) : (
-                <div style={{ width: '100%', overflowX: 'auto' }}>
-                  <table className="fixkar-table" style={{ width: '100%', tableLayout: 'fixed', margin: 0, minWidth: '920px' }}>
+                <div style={{ width: '100%', overflow: 'hidden' }}>
+                  <table className="fixkar-table" style={{ width: '100%', tableLayout: 'fixed', margin: 0 }}>
                     <thead>
                       <tr>
-                        <th style={{ width: '22%', padding: '10px 14px' }}>CLIENT / BUSINESS</th>
-                        <th style={{ width: '28%', padding: '10px 14px' }}>ISOLATED SUB-KEY</th>
-                        <th style={{ width: '11%', padding: '10px 14px' }}>DLT HEADER</th>
-                        <th style={{ width: '13%', padding: '10px 14px' }}>CREDITS</th>
-                        <th style={{ width: '9%', padding: '10px 14px' }}>DISPATCHES</th>
-                        <th style={{ width: '8%', padding: '10px 14px' }}>STATUS</th>
-                        <th style={{ width: '9%', padding: '10px 14px', textAlign: 'right' }}>ACTIONS</th>
+                        <th style={{ width: '20%', padding: '10px 12px' }}>CLIENT / BUSINESS</th>
+                        <th style={{ width: '28%', padding: '10px 12px' }}>ISOLATED SUB-KEY</th>
+                        <th style={{ width: '8%', padding: '10px 12px' }}>DLT</th>
+                        <th style={{ width: '12%', padding: '10px 12px' }}>CREDITS</th>
+                        <th style={{ width: '9%', padding: '10px 12px' }}>DISPATCHES</th>
+                        <th style={{ width: '8%', padding: '10px 12px' }}>STATUS</th>
+                        <th style={{ width: '15%', padding: '10px 12px', textAlign: 'right' }}>ACTIONS</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -4324,30 +4324,27 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                         const isCopied = copiedKeyId === k.id;
                         return (
                           <tr key={k.id}>
-                            <td style={{ padding: '10px 14px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                              <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.82rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            <td style={{ padding: '10px 12px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.8rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                 {k.clientName}
                               </div>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
-                                <span style={{ fontSize: '0.66rem', color: '#38BDF8', fontFamily: 'monospace', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.25)', padding: '1px 6px', borderRadius: '4px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '2px' }}>
+                                <span style={{ fontSize: '0.64rem', color: '#38BDF8', fontFamily: 'monospace', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.25)', padding: '1px 5px', borderRadius: '4px' }}>
                                   {k.clientCode}
-                                </span>
-                                <span style={{ fontSize: '0.64rem', color: '#64748B' }}>
-                                  {k.createdTimestamp ? k.createdTimestamp.split(',')[0] : 'Active'}
                                 </span>
                               </div>
                             </td>
 
-                            <td style={{ padding: '10px 14px' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <td style={{ padding: '10px 12px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                                 <div
                                   style={{
                                     fontFamily: 'monospace',
-                                    fontSize: '0.72rem',
+                                    fontSize: '0.7rem',
                                     color: '#FDE047',
                                     background: 'rgba(0, 0, 0, 0.5)',
-                                    padding: '4px 8px',
-                                    borderRadius: '6px',
+                                    padding: '4px 6px',
+                                    borderRadius: '5px',
                                     border: '1px solid rgba(255, 255, 255, 0.1)',
                                     flex: 1,
                                     overflow: 'hidden',
@@ -4356,12 +4353,12 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                                   }}
                                   title={k.apiKey}
                                 >
-                                  {isVisible ? k.apiKey : `${k.apiKey.slice(0, 14)}••••••••`}
+                                  {isVisible ? k.apiKey : `${k.apiKey.slice(0, 12)}••••••••`}
                                 </div>
                                 <button
                                   type="button"
                                   onClick={() => setVisibleKeyIds({ ...visibleKeyIds, [k.id]: !isVisible })}
-                                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#CBD5E1', padding: '4px 6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.72rem', flexShrink: 0 }}
+                                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#CBD5E1', padding: '3px 5px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem', flexShrink: 0 }}
                                   title={isVisible ? 'Hide key' : 'Reveal key'}
                                 >
                                   {isVisible ? '👁️' : '👁️‍🗨️'}
@@ -4377,9 +4374,9 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                                     background: isCopied ? '#16A34A' : 'rgba(56, 189, 248, 0.12)',
                                     border: `1px solid ${isCopied ? '#16A34A' : 'rgba(56, 189, 248, 0.3)'}`,
                                     color: isCopied ? '#fff' : '#38BDF8',
-                                    padding: '4px 8px',
+                                    padding: '3px 6px',
                                     borderRadius: '4px',
-                                    fontSize: '0.68rem',
+                                    fontSize: '0.66rem',
                                     fontWeight: 700,
                                     cursor: 'pointer',
                                     flexShrink: 0,
@@ -4391,30 +4388,30 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                               </div>
                             </td>
 
-                            <td style={{ padding: '10px 14px' }}>
-                              <span style={{ fontSize: '0.72rem', fontFamily: 'monospace', fontWeight: 800, background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.25)', color: '#93C5FD', padding: '3px 8px', borderRadius: '5px' }}>
+                            <td style={{ padding: '10px 12px' }}>
+                              <span style={{ fontSize: '0.7rem', fontFamily: 'monospace', fontWeight: 800, background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.25)', color: '#93C5FD', padding: '2px 6px', borderRadius: '4px' }}>
                                 {k.dltSenderId || 'FIXKAR'}
                               </span>
                             </td>
 
-                            <td style={{ padding: '10px 14px' }}>
-                              <div style={{ fontWeight: 800, fontSize: '0.82rem', color: (k.availableCredits || 0) < 500 ? '#F43F5E' : '#4ADE80', fontFamily: 'monospace' }}>
-                                {(k.availableCredits || 0).toLocaleString()} <span style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 600 }}>SMS</span>
+                            <td style={{ padding: '10px 12px' }}>
+                              <div style={{ fontWeight: 800, fontSize: '0.78rem', color: (k.availableCredits || 0) < 500 ? '#F43F5E' : '#4ADE80', fontFamily: 'monospace' }}>
+                                {(k.availableCredits || 0).toLocaleString()} <span style={{ fontSize: '0.64rem', color: '#94A3B8', fontWeight: 600 }}>SMS</span>
                               </div>
                             </td>
 
-                            <td style={{ padding: '10px 14px' }}>
-                              <span style={{ fontSize: '0.74rem', color: '#E2E8F0', fontFamily: 'monospace', fontWeight: 700 }}>
-                                {k.totalRequests || 0} <span style={{ fontSize: '0.66rem', color: '#94A3B8' }}>OTPs</span>
+                            <td style={{ padding: '10px 12px' }}>
+                              <span style={{ fontSize: '0.72rem', color: '#E2E8F0', fontFamily: 'monospace', fontWeight: 700 }}>
+                                {k.totalRequests || 0} <span style={{ fontSize: '0.64rem', color: '#94A3B8' }}>OTPs</span>
                               </span>
                             </td>
 
-                            <td style={{ padding: '10px 14px' }}>
+                            <td style={{ padding: '10px 12px' }}>
                               <span style={{
-                                fontSize: '0.66rem',
+                                fontSize: '0.64rem',
                                 fontWeight: 800,
-                                padding: '2px 8px',
-                                borderRadius: '12px',
+                                padding: '2px 6px',
+                                borderRadius: '10px',
                                 background: k.status === 'Active' ? 'rgba(74, 222, 128, 0.12)' : 'rgba(251, 191, 36, 0.12)',
                                 border: `1px solid ${k.status === 'Active' ? 'rgba(74, 222, 128, 0.3)' : 'rgba(251, 191, 36, 0.3)'}`,
                                 color: k.status === 'Active' ? '#4ADE80' : '#FBBF24',
@@ -4425,28 +4422,27 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                               </span>
                             </td>
 
-                            <td style={{ padding: '10px 14px', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                              <div style={{ display: 'inline-flex', gap: '4px', alignItems: 'center' }}>
+                            <td style={{ padding: '10px 12px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                              <div style={{ display: 'inline-flex', gap: '4px', alignItems: 'center', justifyContent: 'flex-end' }}>
                                 <button
                                   type="button"
                                   onClick={() => setSelectedApiKeyForSnippet(k)}
                                   title="Integration Code Snippet"
                                   style={{
+                                    width: '26px',
+                                    height: '26px',
                                     background: 'rgba(56, 189, 248, 0.12)',
                                     border: '1px solid rgba(56, 189, 248, 0.3)',
                                     color: '#38BDF8',
-                                    padding: '4px 7px',
                                     borderRadius: '5px',
-                                    fontSize: '0.7rem',
-                                    fontWeight: 700,
                                     cursor: 'pointer',
                                     display: 'inline-flex',
                                     alignItems: 'center',
-                                    gap: '3px',
+                                    justifyContent: 'center',
+                                    padding: 0,
                                   }}
                                 >
-                                  <Terminal size={11} />
-                                  <span>Code</span>
+                                  <Terminal size={12} />
                                 </button>
 
                                 <button
@@ -4462,23 +4458,22 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                                       notes: `Top-up for ${k.clientName}`,
                                     });
                                   }}
-                                  title={`Top-Up SMS credits on same API key for ${k.clientName}`}
+                                  title={`Top-Up SMS credits for ${k.clientName}`}
                                   style={{
+                                    width: '26px',
+                                    height: '26px',
                                     background: 'rgba(74, 222, 128, 0.12)',
                                     border: '1px solid rgba(74, 222, 128, 0.3)',
                                     color: '#4ADE80',
-                                    padding: '4px 7px',
                                     borderRadius: '5px',
-                                    fontSize: '0.7rem',
-                                    fontWeight: 700,
                                     cursor: 'pointer',
                                     display: 'inline-flex',
                                     alignItems: 'center',
-                                    gap: '2px',
+                                    justifyContent: 'center',
+                                    padding: 0,
                                   }}
                                 >
-                                  <Plus size={11} />
-                                  <span>Top-Up</span>
+                                  <Plus size={13} />
                                 </button>
 
                                 <button
@@ -4486,17 +4481,20 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                                   onClick={() => handleToggleClientApiKey(k.id, k.status)}
                                   title={k.status === 'Active' ? 'Pause API Key' : 'Resume API Key'}
                                   style={{
+                                    width: '26px',
+                                    height: '26px',
                                     background: k.status === 'Active' ? 'rgba(251, 191, 36, 0.12)' : 'rgba(74, 222, 128, 0.12)',
                                     border: `1px solid ${k.status === 'Active' ? 'rgba(251, 191, 36, 0.3)' : 'rgba(74, 222, 128, 0.3)'}`,
                                     color: k.status === 'Active' ? '#FBBF24' : '#4ADE80',
-                                    padding: '4px 6px',
                                     borderRadius: '5px',
-                                    fontSize: '0.68rem',
-                                    fontWeight: 700,
                                     cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    padding: 0,
                                   }}
                                 >
-                                  {k.status === 'Active' ? 'Pause' : 'Resume'}
+                                  {k.status === 'Active' ? <Pause size={11} /> : <Play size={11} />}
                                 </button>
 
                                 <button
@@ -4504,13 +4502,18 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                                   onClick={() => handleDeleteClientApiKey(k.id, k.clientName)}
                                   title="Revoke & Delete Key"
                                   style={{
+                                    width: '26px',
+                                    height: '26px',
                                     background: 'rgba(244, 63, 94, 0.12)',
                                     border: '1px solid rgba(244, 63, 94, 0.3)',
                                     color: '#FDA4AF',
-                                    padding: '4px 6px',
                                     borderRadius: '5px',
-                                    fontSize: '0.68rem',
                                     cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    padding: 0,
+                                    fontSize: '0.72rem',
                                   }}
                                 >
                                   ✕
