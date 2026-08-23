@@ -5653,6 +5653,147 @@ function getProjectStageIndex(stageStr) {
     return;
   }
 
+  // ─── POST /api/v1/email/send (Transactional Email API for Clients) ─────────
+  if (req.method === 'POST' && req.url === '/api/v1/email/send') {
+    const killState = readDataJson('kill_switch_state.json', { killSwitchActive: false });
+    if (killState.killSwitchActive) {
+      res.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({
+        success: false,
+        error: 'GLOBAL_EMERGENCY_LOCKDOWN',
+        message: '⛔ Fixkar System Emergency Lockdown Active. Outgoing API dispatches paused.'
+      }));
+      return;
+    }
+
+    const rawAuth = req.headers['authorization'] || req.headers['x-client-api-key'] || '';
+    const clientApiKey = rawAuth.startsWith('Bearer ') ? rawAuth.slice(7).trim() : String(rawAuth).trim();
+
+    if (!clientApiKey) {
+      res.writeHead(401, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({
+        success: false,
+        error: 'MISSING_API_KEY',
+        message: '⛔ Unauthorized: Please pass your Client API key in Header Authorization: Bearer <API_KEY>'
+      }));
+      return;
+    }
+
+    const apiKeys = readDataJson('client_api_keys.json', []);
+    const matchedKey = apiKeys.find(k => k.apiKey === clientApiKey);
+
+    if (!matchedKey || matchedKey.status !== 'Active') {
+      res.writeHead(401, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({
+        success: false,
+        error: 'INVALID_OR_SUSPENDED_API_KEY',
+        message: '⛔ Unauthorized: The provided Client API key is invalid or inactive.'
+      }));
+      return;
+    }
+
+    readJsonBody().then(async (body) => {
+      const { to, subject, html, text, fromName } = body || {};
+      if (!to || !subject || (!html && !text)) {
+        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: false, error: 'MISSING_FIELDS', message: 'Fields "to", "subject", and "html" or "text" are required.' }));
+        return;
+      }
+
+      // Check client wallet
+      const wallets = readDataJson('otp_wallets.json', []);
+      const wIdx = wallets.findIndex(w => w.clientCode === matchedKey.clientCode);
+      if (wIdx === -1 || (wallets[wIdx].availableCredits || 0) <= 0) {
+        res.writeHead(402, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({
+          success: false,
+          error: 'WALLET_EXHAUSTED',
+          message: '⛔ Email Dispatch Paused: Available credits exhausted. Please recharge your wallet.'
+        }));
+        return;
+      }
+
+      const clientWallet = wallets[wIdx];
+      clientWallet.availableCredits = Math.max(0, clientWallet.availableCredits - 1);
+      clientWallet.usedToday = (clientWallet.usedToday || 0) + 1;
+      clientWallet.usedThisMonth = (clientWallet.usedThisMonth || 0) + 1;
+      clientWallet.lastOtpActivity = `Transactional Email dispatched to ${to}`;
+      writeDataJson('otp_wallets.json', wallets);
+
+      matchedKey.totalRequests = (matchedKey.totalRequests || 0) + 1;
+      matchedKey.lastUsedAt = new Date().toISOString();
+      writeDataJson('client_api_keys.json', apiKeys);
+
+      const senderDisplay = `${fromName || matchedKey.clientName || 'Fixkar Client'} <notifications@fixkar.co.in>`;
+      let messageId = `msg_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      let delivered = false;
+
+      // Resend Dispatch
+      const resendApiKey = process.env.RESEND_API_KEY || '';
+      if (resendApiKey) {
+        try {
+          const resendPayload = JSON.stringify({
+            from: senderDisplay,
+            to: Array.isArray(to) ? to : [to],
+            subject: String(subject),
+            html: html || `<p>${text}</p>`
+          });
+          const rReq = https.request({
+            hostname: 'api.resend.com',
+            path: '/emails',
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${resendApiKey}`,
+              'Content-Type': 'application/json',
+              'Content-Length': Buffer.byteLength(resendPayload)
+            }
+          }, (rRes) => {
+            let rBuf = '';
+            rRes.on('data', c => rBuf += c);
+            rRes.on('end', () => {
+              try {
+                const parsed = JSON.parse(rBuf);
+                if (parsed.id) messageId = parsed.id;
+              } catch (e) {}
+            });
+          });
+          rReq.write(resendPayload);
+          rReq.end();
+          delivered = true;
+        } catch (rErr) {
+          console.error('[Client Email Send Resend Error]', rErr.message);
+        }
+      }
+
+      // Log dispatch
+      const emailLogs = readDataJson('email_dispatch_logs.json', []);
+      emailLogs.unshift({
+        id: messageId,
+        clientCode: matchedKey.clientCode,
+        clientName: matchedKey.clientName,
+        recipient: to,
+        subject,
+        status: 'DELIVERED',
+        channel: 'EMAIL',
+        engine: resendApiKey ? 'Resend Enterprise' : 'SMTP Fallback',
+        timestamp: new Date().toISOString(),
+        formattedTime: new Date().toLocaleString('en-IN')
+      });
+      writeDataJson('email_dispatch_logs.json', emailLogs.slice(0, 500));
+
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({
+        success: true,
+        messageId,
+        clientCode: matchedKey.clientCode,
+        recipient: to,
+        remainingCredits: clientWallet.availableCredits,
+        message: '✅ Email dispatched successfully via Fixkar Enterprise Cloud Engine.'
+      }));
+    });
+    return;
+  }
+
   // ─── ADMIN: BILLING (INVOICES & PAYMENTS) ──────────────────────────────────
   if (req.method === 'GET' && req.url === '/api/admin/invoices') {
     const admin = getAdminFromReq(req);
