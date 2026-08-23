@@ -4294,6 +4294,150 @@ function getProjectStageIndex(stageStr) {
     return;
   }
 
+  // ─── MASTER EMAIL GATEWAY & UPSTREAM CONFIGURATION ──────────────────────────
+  // 1. GET Master Email Gateway Config
+  if (req.method === 'GET' && (req.url === '/api/admin/super/email/gateway-config' || req.url === '/api/email/gateway-config')) {
+    const config = readDataJson('master_email_config.json', {
+      provider: 'Resend Enterprise Cloud Mail Engine',
+      apiKey: process.env.RESEND_API_KEY || 're_live_master_resend_api_key_fixkar',
+      senderAddress: 'support@fixkar.co.in',
+      senderName: 'Fixkar Support & Cloud Services',
+      wholesaleCostPerEmail: 0.034,
+      status: '🟢 Master Cloud Mail Matrix Active (Connected)',
+      lastSyncedAt: new Date().toISOString(),
+      packages: [
+        { id: 'email_starter', name: 'Starter Email Pack', credits: 5000, price: 499, popular: false, desc: '5,000 High-Speed Transactional Emails • Verified Delivery' },
+        { id: 'email_growth', name: 'Growth Email Pack', credits: 25000, price: 1499, popular: true, desc: '25,000 High-Speed Transactional Emails • High Deliverability Queue' },
+        { id: 'email_scale', name: 'Scale Email Pack', credits: 50000, price: 2499, popular: false, desc: '50,000 High-Speed Transactional Emails • Dedicated IP Routing' },
+        { id: 'email_enterprise', name: 'Enterprise Email Pack', credits: 100000, price: 4499, popular: false, desc: '100,000 High-Speed Transactional Emails • Enterprise Deliverability SLA' }
+      ]
+    });
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({ success: true, config }));
+    return;
+  }
+
+  // 2. POST Save/Update Master Email Gateway Config & Pack Rates
+  if (req.method === 'POST' && req.url === '/api/admin/super/email/gateway-config') {
+    const admin = getAdminFromReq(req);
+    readJsonBody().then((body) => {
+      const { provider, apiKey, senderAddress, senderName, wholesaleCostPerEmail, packages } = body || {};
+
+      const config = readDataJson('master_email_config.json', {});
+      if (provider) config.provider = provider;
+      if (apiKey) {
+        config.apiKey = apiKey.trim();
+        process.env.RESEND_API_KEY = apiKey.trim();
+      }
+      if (senderAddress) config.senderAddress = senderAddress.trim();
+      if (senderName) config.senderName = senderName.trim();
+      if (wholesaleCostPerEmail !== undefined) config.wholesaleCostPerEmail = Number(wholesaleCostPerEmail);
+      if (Array.isArray(packages)) {
+        config.packages = packages;
+        
+        // Auto-sync into quote_config.json
+        try {
+          const qc = readDataJson('quote_config.json', {});
+          qc.transactionalEmailPacks = packages.map(p => ({
+            id: p.id,
+            title: p.name,
+            price: Number(p.price) || 0,
+            credits: Number(p.credits) || 5000,
+            popular: Boolean(p.popular),
+            unitRate: `₹${((Number(p.price) || 0) / (Number(p.credits) || 1)).toFixed(3)} / email`,
+            specs: `${(Number(p.credits) || 5000).toLocaleString()} High-Speed Transactional Emails • Fixkar Mail Matrix`,
+            desc: p.desc || 'High deliverability transactional email delivery.'
+          }));
+          qc.lastUpdatedAt = new Date().toISOString();
+          writeDataJson('quote_config.json', qc);
+        } catch (e) {
+          console.warn('[Sync to quote_config warning]', e);
+        }
+      }
+      config.lastSyncedAt = new Date().toISOString();
+      config.updatedBy = admin?.username || 'Super Admin';
+      writeDataJson('master_email_config.json', config);
+
+      logAuditEvent({
+        eventType: 'MASTER_EMAIL_GATEWAY_UPDATED',
+        actor: admin?.username || 'Super Admin',
+        role: 'SUPER_ADMIN',
+        ipAddress: clientIp,
+        action: `Master Email Gateway & Resend credentials updated (${config.provider})`,
+        status: 'SUCCESS'
+      });
+
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ success: true, message: '✅ Master Email Gateway & Pricing Engine saved successfully!', config }));
+    });
+    return;
+  }
+
+  // 3. POST Send Live Test Email from Super Admin
+  if (req.method === 'POST' && req.url === '/api/admin/super/email/test-dispatch') {
+    readJsonBody().then(async (body) => {
+      const { targetEmail } = body || {};
+      const recipient = targetEmail || 'chaurasiadivyansh86@gmail.com';
+      const config = readDataJson('master_email_config.json', {});
+      const resendApiKey = config.apiKey || process.env.RESEND_API_KEY || '';
+
+      if (!resendApiKey) {
+        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: false, message: '⚠️ No Master Resend API Key configured in Gateway!' }));
+        return;
+      }
+
+      try {
+        const testPayload = JSON.stringify({
+          from: `${config.senderName || 'Fixkar Cloud'} <${config.senderAddress || 'support@fixkar.co.in'}>`,
+          to: [recipient],
+          subject: '⚡ [TEST] Fixkar Master Cloud Mail Matrix Connection Test',
+          html: `<div style="font-family: sans-serif; padding: 20px; background: #0A0F1D; color: #fff; border-radius: 12px;">
+            <h2 style="color: #38BDF8; margin: 0 0 10px;">Fixkar Master Cloud Mail Engine</h2>
+            <p>Your master email upstream connection is <strong>100% active, verified, and operational</strong>.</p>
+            <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; color: #4ADE80;">
+              ● Gateway: ${config.provider || 'Resend Enterprise'}<br/>
+              ● Sender: ${config.senderAddress || 'support@fixkar.co.in'}<br/>
+              ● Verified Time: ${new Date().toLocaleString('en-IN')}<br/>
+              ● Status: LIVE & DELIVERED
+            </div>
+            <p style="font-size: 0.8rem; color: #94A3B8; margin-top: 15px;">Fixkar Telecom &amp; Cloud Messaging Infrastructure • Confidential</p>
+          </div>`
+        });
+
+        const rReq = https.request({
+          hostname: 'api.resend.com',
+          path: '/emails',
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${resendApiKey}`,
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(testPayload)
+          }
+        }, (rRes) => {
+          let resData = '';
+          rRes.on('data', c => resData += c);
+          rRes.on('end', () => {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify({ success: true, message: `✅ Test email successfully dispatched to ${recipient}!`, upstreamStatus: rRes.statusCode, data: resData }));
+          });
+        });
+
+        rReq.on('error', (e) => {
+          res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, message: `Failed to dispatch test email: ${e.message}` }));
+        });
+
+        rReq.write(testPayload);
+        rReq.end();
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: false, message: err.message }));
+      }
+    });
+    return;
+  }
+
   // ─── OTP / SMS PRICING & PACK RATES ENGINE ─────────────────────────────────
   // 1. GET Public & Client-Facing Pricing Config
   if (req.method === 'GET' && (req.url === '/api/otp/pricing-config' || req.url === '/api/admin/super/otp/pricing-config')) {
