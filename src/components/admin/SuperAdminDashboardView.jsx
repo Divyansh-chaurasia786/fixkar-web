@@ -1725,7 +1725,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
             <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#fff', margin: '2px 0 0', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '10px' }}>
               {activeTab === 'dashboard' && 'Super Admin Command & Telemetry Matrix'}
               {activeTab === 'projects-governance' && 'Project QA Testing & Live Release Governance (Master Gate)'}
-              {activeTab === 'gateway' && 'Master SMS Gateway & Upstream Connection'}
+              {activeTab === 'gateway' && (gatewaySubTab === 'email' ? 'Client Email Gateway & Resend Cloud Pool' : 'Master SMS Gateway & Fast2SMS Upstream Hub')}
               {activeTab === 'client-apis' && 'Client-Specific Isolated API Provisioning'}
               {activeTab === 'provisional' && '48-Hour Bank Statement Reconciliation Radar'}
               {activeTab === 'renewals' && 'Server & Domain Renewal Radar — All Clients'}
@@ -2598,30 +2598,30 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
             )}
 
             {/* UNIFIED MESSAGING & CLOUD GATEWAYS TOP SWITCHER */}
-            <div style={{ display: 'flex', gap: '8px', background: 'rgba(5, 8, 16, 0.6)', padding: '6px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            <div style={{ display: 'flex', gap: '6px', background: 'rgba(10, 15, 29, 0.75)', backdropFilter: 'blur(12px)', padding: '5px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)' }}>
               <button
                 type="button"
                 onClick={() => setGatewaySubTab('sms')}
                 style={{
                   flex: 1,
-                  padding: '10px 16px',
+                  padding: '9px 16px',
                   borderRadius: '8px',
                   border: 'none',
-                  background: gatewaySubTab === 'sms' ? 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)' : 'transparent',
+                  background: gatewaySubTab === 'sms' ? 'linear-gradient(135deg, #1E40AF 0%, #1D4ED8 100%)' : 'transparent',
                   color: gatewaySubTab === 'sms' ? '#fff' : '#94A3B8',
-                  fontSize: '0.82rem',
+                  fontSize: '0.8rem',
                   fontWeight: 800,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  transition: 'all 0.2s ease',
-                  boxShadow: gatewaySubTab === 'sms' ? '0 4px 15px rgba(37, 99, 235, 0.35)' : 'none',
+                  boxShadow: gatewaySubTab === 'sms' ? '0 2px 12px rgba(37, 99, 235, 0.4)' : 'none',
+                  transition: 'all 0.15s ease',
                 }}
               >
-                <Globe size={15} color={gatewaySubTab === 'sms' ? '#fff' : 'currentColor'} />
-                <span>📱 SMS Gateway &amp; Fast2SMS Pool</span>
+                <Globe size={14} color={gatewaySubTab === 'sms' ? '#fff' : 'currentColor'} />
+                <span>SMS Gateway &amp; Fast2SMS Pool</span>
               </button>
 
               <button
@@ -2629,24 +2629,24 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 onClick={() => setGatewaySubTab('email')}
                 style={{
                   flex: 1,
-                  padding: '10px 16px',
+                  padding: '9px 16px',
                   borderRadius: '8px',
                   border: 'none',
-                  background: gatewaySubTab === 'email' ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' : 'transparent',
+                  background: gatewaySubTab === 'email' ? 'linear-gradient(135deg, #0369A1 0%, #0284C7 100%)' : 'transparent',
                   color: gatewaySubTab === 'email' ? '#fff' : '#94A3B8',
-                  fontSize: '0.82rem',
+                  fontSize: '0.8rem',
                   fontWeight: 800,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  transition: 'all 0.2s ease',
-                  boxShadow: gatewaySubTab === 'email' ? '0 4px 15px rgba(2, 132, 199, 0.35)' : 'none',
+                  boxShadow: gatewaySubTab === 'email' ? '0 2px 12px rgba(2, 132, 199, 0.4)' : 'none',
+                  transition: 'all 0.15s ease',
                 }}
               >
-                <Mail size={15} color={gatewaySubTab === 'email' ? '#fff' : 'currentColor'} />
-                <span>✉️ Email Gateway &amp; Resend Pool</span>
+                <Mail size={14} color={gatewaySubTab === 'email' ? '#fff' : 'currentColor'} />
+                <span>Email Gateway &amp; Resend Pool</span>
               </button>
 
               <button
@@ -2654,23 +2654,23 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 onClick={() => setActiveTab('client-apis')}
                 style={{
                   flex: 1,
-                  padding: '10px 16px',
+                  padding: '9px 16px',
                   borderRadius: '8px',
                   border: 'none',
                   background: 'transparent',
                   color: '#94A3B8',
-                  fontSize: '0.82rem',
+                  fontSize: '0.8rem',
                   fontWeight: 800,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.15s ease',
                 }}
               >
-                <KeyRound size={15} color="currentColor" />
-                <span>🔑 Client API Studio</span>
+                <KeyRound size={14} color="currentColor" />
+                <span>Client API Studio</span>
               </button>
             </div>
 
@@ -3430,21 +3430,24 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
               return (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
                   {/* 1. TOP CONTROLLER BAR */}
-                  <div className="fixkar-panel" style={{ padding: '18px 22px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
+                  <div className="fixkar-panel" style={{ padding: '16px 20px', borderLeft: '3px solid #0284C7' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                       <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <Mail size={20} color="#38BDF8" />
-                          <h2 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#fff', margin: 0 }}>
-                            Client Upstream Email Gateway &amp; Resend Pool (Client Isolated)
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <Mail size={18} color="#38BDF8" />
+                          <h2 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#fff', margin: 0 }}>
+                            Resend Cloud Mail Matrix &amp; Master Email Pool
                           </h2>
+                          <span style={{ fontSize: '0.66rem', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.12)', border: '1px solid rgba(74, 222, 128, 0.3)', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>
+                            ● {emailGatewayConfig.status || 'Client Pool Connected'}
+                          </span>
                         </div>
-                        <p style={{ fontSize: '0.78rem', color: '#94A3B8', margin: '4px 0 0' }}>
-                          Register upstream Resend API credentials dedicated for clients' websites, OTP verification, client API keys, and client portals. Fixkar's internal root system notifications (kill switch, super admin OTPs) remain protected in backend infrastructure.
+                        <p style={{ fontSize: '0.74rem', color: '#94A3B8', margin: '3px 0 0' }}>
+                          Configure upstream Resend API credentials, set wholesale margins, and publish email recharge packages for all client portals.
                         </p>
                       </div>
 
-                      <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                         <button
                           type="button"
                           onClick={handleSaveEmailGatewayConfig}
@@ -3453,19 +3456,19 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                             background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
                             border: 'none',
                             color: '#fff',
-                            padding: '9px 20px',
+                            padding: '8px 18px',
                             borderRadius: '8px',
-                            fontSize: '0.82rem',
+                            fontSize: '0.78rem',
                             fontWeight: 900,
                             cursor: emailGatewaySaving ? 'wait' : 'pointer',
                             display: 'inline-flex',
                             alignItems: 'center',
-                            gap: '8px',
-                            boxShadow: '0 4px 18px rgba(2, 132, 199, 0.45)',
+                            gap: '7px',
+                            boxShadow: '0 4px 15px rgba(2, 132, 199, 0.4)',
                           }}
                         >
-                          <Save size={15} />
-                          <span>{emailGatewaySaving ? 'Publishing Live...' : 'Save & Publish Client Email Gateway'}</span>
+                          <Save size={14} />
+                          <span>{emailGatewaySaving ? 'Publishing...' : 'Save & Publish Email Gateway'}</span>
                         </button>
                       </div>
                     </div>
@@ -3473,14 +3476,11 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
 
                   {/* 2. SECTION 1: UPSTREAM RESEND CREDENTIALS & SENDER DOMAIN */}
                   <div className="fixkar-panel">
-                    <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
+                    <div className="fixkar-panel-head" style={{ marginBottom: '12px' }}>
                       <div className="fixkar-panel-title">
-                        <Server size={16} color="#38BDF8" />
+                        <Server size={15} color="#38BDF8" />
                         <span>1. Upstream Resend Gateway Credentials &amp; Infrastructure</span>
                       </div>
-                      <span style={{ fontSize: '0.72rem', color: '#4ADE80', fontFamily: 'monospace', fontWeight: 700 }}>
-                        ● Upstream Carrier Status: {emailGatewayConfig.status || 'Connected'}
-                      </span>
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px' }}>
