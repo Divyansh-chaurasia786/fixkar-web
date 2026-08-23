@@ -68,22 +68,6 @@
       "isCustomizable": true
     },
     {
-      "id": "smsEmailGateway",
-      "title": "Fixkar SMS OTP & Transactional Email Engine",
-      "price": 1499,
-      "whatItDoes": "High-deliverability telecom gateway for instant mobile OTP verification, login codes, and transactional email order notifications (+1,000 Credits included).",
-      "whyYouNeedIt": "Essential for secure user logins, e-commerce checkout confirmation, and client notifications.",
-      "isCustomizable": true
-    },
-    {
-      "id": "businessEmail",
-      "title": "Professional Business Email (info@yourbrand.com)",
-      "price": 999,
-      "whatItDoes": "Custom domain mailbox with SPF, DKIM, DMARC security records and Cloudflare MX email routing.",
-      "whyYouNeedIt": "Builds trust and looks far more professional than using a free @gmail.com address for business deals.",
-      "isCustomizable": true
-    },
-    {
       "id": "bookingCalendar",
       "title": "Online Appointment & Booking System",
       "price": 1799,
@@ -276,6 +260,64 @@
       "isAutoSynced": true
     }
   ],
-  "lastSyncedAt": "2026-08-18T22:38:00.000Z",
-  "lastUpdatedAt": "2026-08-20T16:18:13.811Z"
+  "messagingPacks": [
+    {
+      "id": "none",
+      "title": "No SMS/Email Credits (Free Alerts Only)",
+      "price": 0,
+      "credits": 0,
+      "specs": "Standard free contact form email alerts to your personal inbox",
+      "desc": "Best for simple informational websites without client login or OTP verification."
+    },
+    {
+      "id": "starter",
+      "title": "Starter Messaging Pack (+1,000 Credits)",
+      "price": 249,
+      "credits": 1000,
+      "specs": "1,000 unified SMS OTP & Transactional Email Dispatches",
+      "desc": "Ideal for new businesses requiring mobile OTP verification and order email receipts."
+    },
+    {
+      "id": "growth",
+      "title": "Growth Messaging Pack (+5,000 Credits)",
+      "price": 999,
+      "credits": 5000,
+      "popular": true,
+      "specs": "5,000 unified SMS OTP & Transactional Email Dispatches (High Delivery Priority)",
+      "desc": "Most popular for e-commerce stores, client portals, and daily customer notifications."
+    },
+    {
+      "id": "enterprise",
+      "title": "Enterprise Messaging Pack (+25,000 Credits)",
+      "price": 3999,
+      "credits": 25000,
+      "specs": "25,000 unified SMS OTP & Transactional Email Dispatches (Dedicated DLT Route)",
+      "desc": "High-volume throughput for institutions, coaching academies, and large user bases."
+    }
+  ],
+  "customEmailPacks": [
+    {
+      "id": "none",
+      "title": "No Custom Mailbox (Use Gmail/Personal)",
+      "price": 0,
+      "specs": "Free contact alerts forwarded to your existing email",
+      "desc": "You can use your regular Gmail/Yahoo address to receive customer leads."
+    },
+    {
+      "id": "single",
+      "title": "1 Professional Mailbox (info@yourbrand.com)",
+      "price": 999,
+      "specs": "1 Verified Custom Domain Mailbox • SPF / DKIM / DMARC Anti-Spam",
+      "desc": "Builds trust and looks far more professional than sending business proposals from Gmail."
+    },
+    {
+      "id": "team",
+      "title": "5 Team Mailboxes (info@, sales@, support@, etc.)",
+      "price": 2499,
+      "specs": "5 Verified Team Mailboxes • Webmail & Mobile Sync • Cloudflare MX",
+      "desc": "Complete corporate business mail suite for your management, sales, and support staff."
+    }
+  ],
+  "lastSyncedAt": "2026-08-23T20:00:00.000Z",
+  "lastUpdatedAt": "2026-08-23T20:00:00.000Z"
 }
