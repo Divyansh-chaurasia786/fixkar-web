@@ -1336,6 +1336,22 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
       alert('Please select a client to generate their isolated API key');
       return;
     }
+
+    // 1. Strict Duplicate API Key Prevention
+    const alreadyHasKey = (clientApiKeys || []).some(k => k.clientCode === newApiKeyForm.clientCode);
+    if (alreadyHasKey) {
+      alert(`⚠️ An API Key already exists for ${newApiKeyForm.clientName || 'this client'} (${newApiKeyForm.clientCode}).\n\nPlease click the "+ Top-Up" button in the table to add more SMS credits to their existing key instead of creating duplicate keys.`);
+      return;
+    }
+
+    // 2. Strict Master Telecom Reserve Stock Limit Check
+    const masterStock = Number(gatewayConfig.smsBalance) || 200;
+    const requested = Number(newApiKeyForm.credits) || 500;
+    if (requested > masterStock) {
+      alert(`⛔ Cannot Allocate Quota:\n\nRequested initial quota: ${requested.toLocaleString()} SMS\nAvailable Master Telecom Reserve: ${masterStock.toLocaleString()} SMS\n\nPlease recharge your Master Gateway first before allocating credits exceeding your master balance.`);
+      return;
+    }
+
     const cleanUtr = (newApiKeyForm.utrNumber || '').trim();
     if (newApiKeyForm.allocationType === 'BANK_TRANSFER' && !cleanUtr) {
       alert('⚠️ Please enter a valid 12-digit Bank / UPI UTR Transaction Reference Number.');
@@ -1355,7 +1371,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
           clientName: newApiKeyForm.clientName || 'Client Website',
           dltSenderId: newApiKeyForm.dltSenderId || 'FIXKAR',
           packId: newApiKeyForm.packId || 'otp_500',
-          credits: Number(newApiKeyForm.credits) || 500,
+          credits: requested,
           price: Number(newApiKeyForm.price) || 0,
           allocationType: newApiKeyForm.allocationType || 'COMPLIMENTARY',
           utrNumber: cleanUtr,
@@ -1392,6 +1408,15 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
   const handleTopUpClientWallet = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
     if (!topupModalKey?.clientCode) return;
+
+    // Strict Master Telecom Reserve Stock Limit Check on Top-Up
+    const masterStock = Number(gatewayConfig.smsBalance) || 200;
+    const requested = Number(topupForm.credits) || 500;
+    if (requested > masterStock) {
+      alert(`⛔ Cannot Top-Up:\n\nRequested top-up: ${requested.toLocaleString()} SMS\nAvailable Master Telecom Reserve: ${masterStock.toLocaleString()} SMS\n\nPlease recharge your Master Gateway first before granting credits exceeding your master balance.`);
+      return;
+    }
+
     const cleanUtr = (topupForm.utrNumber || '').trim();
     if (topupForm.allocationType === 'BANK_TRANSFER' && !cleanUtr) {
       alert('⚠️ Please enter a valid 12-digit Bank / UPI UTR Transaction Reference Number.');
@@ -1409,7 +1434,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
           superAdminKey: superAdminToken || '9835',
           clientCode: topupModalKey.clientCode,
           packId: topupForm.packId,
-          credits: Number(topupForm.credits) || 500,
+          credits: requested,
           price: Number(topupForm.price) || 0,
           allocationType: topupForm.allocationType,
           utrNumber: cleanUtr,
