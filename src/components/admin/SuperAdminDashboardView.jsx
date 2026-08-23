@@ -946,7 +946,11 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
           Authorization: `Bearer ${adminToken}`,
           'x-super-token': superAdminToken || '9835',
         },
-        body: JSON.stringify({ superAdminKey: superAdminToken || '9835' }),
+        body: JSON.stringify({
+          superAdminKey: superAdminToken || '9835',
+          apiKey: gatewayConfig.apiKey,
+          route: gatewayConfig.route,
+        }),
       });
       const data = await res.json();
       if (data.success) {
@@ -958,7 +962,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
           lastSyncedTimestamp: data.lastSyncedTimestamp,
         }));
         setPricingNotice(`✅ ${data.message || 'Fast2SMS Upstream Balance Synced Successfully!'}`);
-        setTimeout(() => setPricingNotice(null), 5000);
+        setTimeout(() => setPricingNotice(null), 6000);
       } else {
         alert(data.message || 'Failed to sync balance');
       }
@@ -988,8 +992,10 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
       });
       const data = await res.json();
       if (data.success) {
-        setPricingNotice('✅ Master Fast2SMS Gateway Configuration Saved!');
+        setPricingNotice('✅ Master Fast2SMS Gateway Configuration Saved & Synced!');
         setTimeout(() => setPricingNotice(null), 5000);
+        // Automatically sync real live balance
+        handleSyncGatewayBalance();
       } else {
         alert(data.message || 'Failed to save configuration');
       }
