@@ -146,3 +146,92 @@ input[type=number] {
   appearance: textfield !important;
 }
 
+/* ==========================================================================
+   INTERACTIVE BUTTON HOVER MICRO-ANIMATIONS
+   ========================================================================== */
+
+/* Base SVG Transition on all interactive elements */
+button svg, a svg {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease, filter 0.2s ease;
+}
+
+/* 1. Sync / Refresh Button — Rotates smooth 180° on hover */
+button:hover svg.lucide-refresh-cw,
+button:hover svg.lucide-rotate-cw,
+button:hover svg.lucide-refresh-ccw,
+button:hover svg[data-icon="refresh"],
+.btn-sync:hover svg {
+  transform: rotate(180deg);
+  color: #60A5FA;
+}
+
+/* 2. Send / Reply Button — Airplane slides forward and tilts up */
+button:hover svg.lucide-send,
+a:hover svg.lucide-send,
+.btn-send:hover svg {
+  transform: translate(4px, -3px) rotate(-10deg) scale(1.15);
+  color: #93C5FD;
+}
+
+/* 3. Read / View / Eye Button — Scales with pulse focus */
+button:hover svg.lucide-eye,
+a:hover svg.lucide-eye {
+  transform: scale(1.25);
+  color: #38BDF8;
+}
+
+/* 4. Kill Switch / Emergency Power — Glows red & tilts alert */
+button:hover svg.lucide-power,
+button:hover svg.lucide-shield-alert,
+button:hover svg.lucide-shield {
+  transform: scale(1.18) rotate(8deg);
+  filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8));
+}
+
+/* 5. Back / Exit / LogOut — Shifts backward left */
+button:hover svg.lucide-arrow-left,
+button:hover svg.lucide-log-out,
+a:hover svg.lucide-arrow-left {
+  transform: translateX(-4px);
+  color: #F87171;
+}
+
+/* 6. External Link & Globe — Slides diagonally & expands */
+button:hover svg.lucide-external-link,
+a:hover svg.lucide-external-link {
+  transform: translate(3px, -3px);
+  color: #60A5FA;
+}
+
+button:hover svg.lucide-globe,
+a:hover svg.lucide-globe {
+  transform: rotate(25deg) scale(1.15);
+  color: #38BDF8;
+}
+
+/* 7. Download / Export — Bounces down */
+button:hover svg.lucide-download,
+a:hover svg.lucide-download {
+  transform: translateY(3px) scale(1.1);
+  color: #4ADE80;
+}
+
+/* 8. Trash / Delete — Vibrates slightly */
+button:hover svg.lucide-trash,
+button:hover svg.lucide-trash-2 {
+  transform: scale(1.18) rotate(-8deg);
+  color: #EF4444;
+}
+
+/* 9. Plus / Add — Rotates 90° */
+button:hover svg.lucide-plus {
+  transform: rotate(90deg) scale(1.15);
+  color: #38BDF8;
+}
+
+/* 10. Tactile Button Click Feedback */
+button:active {
+  transform: scale(0.97);
+}
+
+
