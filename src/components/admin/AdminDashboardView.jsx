@@ -3852,25 +3852,6 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
             </button>
 
             <button
-              onClick={() => { setActiveTab('emails'); setSelectedClientDetail(null); }}
-              className={`fixkar-nav-btn ${activeTab === 'emails' ? 'active' : ''}`}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Mail size={14} color={activeTab === 'emails' ? '#38BDF8' : 'currentColor'} />
-                <span>Inbound Mail</span>
-              </div>
-              {(() => {
-                const unreadCount = (inboundEmails || []).filter((e) => e.status === 'UNREAD').length;
-                if (unreadCount === 0) return null;
-                return (
-                  <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.2)', color: '#38BDF8', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
-                    {unreadCount}
-                  </span>
-                );
-              })()}
-            </button>
-
-            <button
               onClick={() => { setActiveTab('leads'); setSelectedClientDetail(null); }}
               className={`fixkar-nav-btn ${activeTab === 'leads' ? 'active' : ''}`}
             >
@@ -3930,16 +3911,37 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
             </button>
           </nav>
 
-          {/* GROUP 3: OTP SERVICES (Client-Level Only) */}
-          <div className="fixkar-nav-heading" style={{ marginTop: '12px' }}>OTP SERVICES</div>
+          {/* GROUP 3: SMS & EMAIL SERVICES (UNIFIED MESSAGING HUB) */}
+          <div className="fixkar-nav-heading" style={{ marginTop: '12px' }}>SMS &amp; EMAIL SERVICES</div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            {/* Inbound & Client Mail */}
+            <button
+              onClick={() => { setActiveTab('emails'); setSelectedClientDetail(null); }}
+              className={`fixkar-nav-btn ${activeTab === 'emails' ? 'active' : ''}`}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Mail size={14} color={activeTab === 'emails' ? '#38BDF8' : 'currentColor'} />
+                <span>Inbound &amp; Client Mail</span>
+              </div>
+              {(() => {
+                const unreadCount = (inboundEmails || []).filter((e) => e.status === 'UNREAD').length;
+                if (unreadCount === 0) return null;
+                return (
+                  <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.2)', color: '#38BDF8', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
+                    {unreadCount}
+                  </span>
+                );
+              })()}
+            </button>
+
+            {/* Client OTP Accounts */}
             <button
               onClick={() => { setActiveTab('otp-accounts'); setSelectedClientDetail(null); }}
               className={`fixkar-nav-btn ${activeTab === 'otp-accounts' ? 'active' : ''}`}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Smartphone size={14} color={activeTab === 'otp-accounts' ? '#38BDF8' : 'currentColor'} />
-                <span>Client OTP Accounts</span>
+                <span>Client SMS Accounts</span>
               </div>
               {lowOtpClientsCount > 0 && (
                 <span style={{ fontSize: '0.62rem', background: 'rgba(244, 63, 94, 0.2)', color: '#FDA4AF', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
@@ -3948,6 +3950,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
               )}
             </button>
 
+            {/* Recharge Requests */}
             <button
               onClick={() => { setActiveTab('recharges'); setSelectedClientDetail(null); }}
               className={`fixkar-nav-btn ${activeTab === 'recharges' ? 'active' : ''}`}
@@ -3963,13 +3966,14 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
               )}
             </button>
 
+            {/* Usage Telemetry */}
             <button
               onClick={() => { setActiveTab('otp-usage'); setSelectedClientDetail(null); }}
               className={`fixkar-nav-btn ${activeTab === 'otp-usage' ? 'active' : ''}`}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Activity size={14} color={activeTab === 'otp-usage' ? '#38BDF8' : 'currentColor'} />
-                <span>OTP Usage</span>
+                <span>SMS &amp; Email Telemetry</span>
               </div>
             </button>
           </nav>
