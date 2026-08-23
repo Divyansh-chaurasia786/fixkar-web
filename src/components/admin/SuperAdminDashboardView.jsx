@@ -1014,7 +1014,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
       });
       const data = await res.json();
       if (data.success) {
-        setPricingNotice('✅ Master Fast2SMS Gateway Configuration Saved & Synced!');
+        setPricingNotice('✅ Enterprise Master SMS Gateway Configuration Saved & Synced!');
         setTimeout(() => setPricingNotice(null), 5000);
         // Automatically sync real live balance
         handleSyncGatewayBalance();
@@ -2893,7 +2893,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                         type={showMasterApiKey ? 'text' : 'password'}
                         value={gatewayConfig.apiKey || ''}
                         onChange={(e) => setGatewayConfig({ ...gatewayConfig, apiKey: e.target.value })}
-                        placeholder="Paste SMS API Key (Fast2SMS, MSG91, Textlocal, 2Factor, Twilio...)"
+                        placeholder="Paste Enterprise SMS Gateway Authorization Key..."
                         style={{
                           width: '100%',
                           padding: '7px 10px',
@@ -3401,7 +3401,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                           type="button"
                           onClick={handleSyncEmailGatewayQuota}
                           disabled={emailGatewaySyncing}
-                          title="Fetch Realtime Brevo/Resend Account Quota"
+                          title="Fetch Realtime Upstream Cloud Mail Quota"
                           style={{
                             background: 'rgba(255, 255, 255, 0.05)',
                             border: '1px solid rgba(255, 255, 255, 0.14)',
@@ -3495,7 +3495,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                           type={showMasterEmailApiKey ? 'text' : 'password'}
                           value={emailGatewayConfig.apiKey || ''}
                           onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, apiKey: e.target.value })}
-                          placeholder="Paste Email API Key (Resend, SendGrid, Amazon SES, Postmark...)"
+                          placeholder="Paste Enterprise Email Gateway Authorization Key..."
                           style={{
                             width: '100%',
                             padding: '7px 10px',
@@ -6255,7 +6255,7 @@ echo $response;
                 </div>
               )}
               <div style={{ fontSize: '0.74rem', color: '#94A3B8', marginTop: '10px', lineHeight: 1.5 }}>
-                ✅ Cryptographically verified and delivered to recipient inbox via Resend &amp; Firebase Cloud.
+                ✅ Cryptographically verified and delivered to recipient inbox via Enterprise Sovereign Cloud Engine.
               </div>
             </div>
           </div>
@@ -6473,6 +6473,20 @@ echo $response;
                         style={{ width: '100%', padding: '6px 10px', background: '#070C18', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '6px', color: '#4ADE80', fontFamily: 'monospace', fontWeight: 700 }}
                       />
                     </div>
+                  </div>
+                )}
+
+                {/* Master Telecom Reserve Stock Info & Advisory */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '7px 10px', background: 'rgba(56, 189, 248, 0.06)', border: '1px solid rgba(56, 189, 248, 0.2)', borderRadius: '6px', fontSize: '0.72rem' }}>
+                  <span style={{ color: '#94A3B8' }}>Master Telecom Reserve Stock:</span>
+                  <strong style={{ color: (gatewayConfig.smsBalance || 200) < Number(newApiKeyForm.credits || 0) ? '#FBBF24' : '#4ADE80', fontFamily: 'monospace' }}>
+                    {(gatewayConfig.smsBalance || 200).toLocaleString()} SMS in Master Reserve
+                  </strong>
+                </div>
+
+                {Number(newApiKeyForm.credits || 0) > (gatewayConfig.smsBalance || 200) && (
+                  <div style={{ padding: '8px 10px', background: 'rgba(251, 191, 36, 0.08)', border: '1px solid rgba(251, 191, 36, 0.3)', borderRadius: '6px', fontSize: '0.7rem', color: '#FDE047', lineHeight: 1.4 }}>
+                    ⚠️ <strong>Inventory Notice:</strong> Selected initial quota (+{Number(newApiKeyForm.credits || 0).toLocaleString()} SMS) exceeds current Master Reserve ({(gatewayConfig.smsBalance || 200).toLocaleString()} SMS). Ensure upstream carrier stock is replenished before client initiates high-volume dispatches.
                   </div>
                 )}
 
