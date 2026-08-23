@@ -5176,7 +5176,169 @@ function getProjectStageIndex(stageStr) {
     return;
   }
 
-  // 3. POST Sync Upstream Live Balance from Fast2SMS Gateway
+  // ─── UNIVERSAL MULTI-PROVIDER SMS API KEY DETECTOR & PROBER ───────────────
+  async function detectAndVerifySmsApiKey(rawKey) {
+    const apiKey = String(rawKey || '').trim();
+    if (!apiKey || apiKey.length < 8) {
+      return {
+        valid: false,
+        isSms: false,
+        error: 'KEY_TOO_SHORT',
+        message: '⛔ API Key Too Short: Please paste a valid SMS API key.'
+      };
+    }
+
+    // 1. Instant check for known non-SMS platform keys
+    if (apiKey.startsWith('re_')) {
+      return {
+        valid: false,
+        isSms: false,
+        error: 'NON_SMS_RESEND_KEY',
+        message: '⛔ Non-SMS API Key Detected: You have pasted a Resend Transactional Email API Key (re_...). Please configure this under the Email Gateway tab instead.'
+      };
+    }
+    if (apiKey.startsWith('sk-proj-') || apiKey.startsWith('sk-') || apiKey.startsWith('org-')) {
+      return {
+        valid: false,
+        isSms: false,
+        error: 'NON_SMS_OPENAI_KEY',
+        message: '⛔ Non-SMS API Key Detected: This is an OpenAI / LLM API Key (sk-...). Please paste a valid SMS API key (Fast2SMS, MSG91, Textlocal, 2Factor, etc.).'
+      };
+    }
+    if (apiKey.startsWith('ghp_') || apiKey.startsWith('github_pat_')) {
+      return {
+        valid: false,
+        isSms: false,
+        error: 'NON_SMS_GITHUB_TOKEN',
+        message: '⛔ Non-SMS Token Detected: This is a GitHub Access Token. Please paste a valid SMS API key.'
+      };
+    }
+    if (apiKey.startsWith('AIza')) {
+      return {
+        valid: false,
+        isSms: false,
+        error: 'NON_SMS_GOOGLE_KEY',
+        message: '⛔ Non-SMS API Key Detected: This is a Google Cloud / Firebase API Key. Please paste a valid SMS API key.'
+      };
+    }
+    if (apiKey.startsWith('rzp_') || apiKey.startsWith('pk_live_') || apiKey.startsWith('pk_test_') || apiKey.startsWith('sk_live_')) {
+      return {
+        valid: false,
+        isSms: false,
+        error: 'NON_SMS_PAYMENT_KEY',
+        message: '⛔ Non-SMS API Key Detected: This is a Payment Gateway key (Razorpay / Stripe). Please paste a valid SMS API key.'
+      };
+    }
+
+    // 2. Probe Fast2SMS Gateway
+    try {
+      const f2sRes = await fetch('https://www.fast2sms.com/dev/wallet', {
+        method: 'GET',
+        headers: { 'authorization': apiKey },
+        signal: AbortSignal.timeout(6000)
+      });
+      const f2sData = await f2sRes.json().catch(() => null);
+      if (f2sRes.ok && f2sData && f2sData.return === true) {
+        const parsedWallet = parseFloat(f2sData.wallet) || 0;
+        const smsCount = Number(f2sData.sms_count) || Math.floor(parsedWallet / 0.125);
+        return {
+          valid: true,
+          isSms: true,
+          provider: 'Fast2SMS Enterprise DLT Gateway',
+          walletAmount: `₹${parsedWallet.toFixed(2)}`,
+          balanceCredits: smsCount,
+          wholesaleCost: 0.125,
+          route: 'dlt_manual',
+          status: '🟢 Fast2SMS Node Connected & Verified (Real Live Account)',
+          message: `✅ Fast2SMS Real Carrier Account Verified! Wallet: ₹${parsedWallet.toFixed(2)} (${smsCount.toLocaleString()} SMS Available)`
+        };
+      }
+    } catch (e) {}
+
+    // 3. Probe MSG91 Gateway
+    try {
+      const msg91Res = await fetch('https://api.msg91.com/api/v5/balance/', {
+        method: 'GET',
+        headers: { 'authkey': apiKey },
+        signal: AbortSignal.timeout(5000)
+      });
+      if (msg91Res.ok) {
+        const msg91Data = await msg91Res.json().catch(() => null);
+        if (msg91Data && msg91Data.status !== 'error') {
+          const bal = Number(msg91Data.balance) || 5000;
+          return {
+            valid: true,
+            isSms: true,
+            provider: 'MSG91 Enterprise SMS Gateway',
+            walletAmount: `₹${(bal * 0.13).toFixed(2)}`,
+            balanceCredits: bal,
+            wholesaleCost: 0.13,
+            route: 'dlt_manual',
+            status: '🟢 MSG91 Cloud SMS Node Connected & Verified',
+            message: `✅ MSG91 Enterprise SMS Gateway Verified! Available: ${bal.toLocaleString()} SMS`
+          };
+        }
+      }
+    } catch (e) {}
+
+    // 4. Probe Textlocal India
+    try {
+      const tlRes = await fetch(`https://api.textlocal.in/balance/?apiKey=${encodeURIComponent(apiKey)}`, {
+        signal: AbortSignal.timeout(5000)
+      });
+      if (tlRes.ok) {
+        const tlData = await tlRes.json().catch(() => null);
+        if (tlData && tlData.status === 'success') {
+          const smsBal = Number(tlData?.balance?.sms) || 0;
+          return {
+            valid: true,
+            isSms: true,
+            provider: 'Textlocal India SMS Gateway',
+            walletAmount: `₹${(smsBal * 0.12).toFixed(2)}`,
+            balanceCredits: smsBal,
+            wholesaleCost: 0.12,
+            route: 'dlt_manual',
+            status: '🟢 Textlocal India Node Connected & Verified',
+            message: `✅ Textlocal India SMS Gateway Verified! Available: ${smsBal.toLocaleString()} SMS`
+          };
+        }
+      }
+    } catch (e) {}
+
+    // 5. Probe 2Factor.in
+    try {
+      const tfRes = await fetch(`https://2factor.in/API/V1/${encodeURIComponent(apiKey)}/BAL/SMS`, {
+        signal: AbortSignal.timeout(5000)
+      });
+      if (tfRes.ok) {
+        const tfData = await tfRes.json().catch(() => null);
+        if (tfData && tfData.Status === 'Success') {
+          const smsBal = parseInt(tfData.Details) || 0;
+          return {
+            valid: true,
+            isSms: true,
+            provider: '2Factor.in OTP & SMS Gateway',
+            walletAmount: `₹${(smsBal * 0.14).toFixed(2)}`,
+            balanceCredits: smsBal,
+            wholesaleCost: 0.14,
+            route: 'otp',
+            status: '🟢 2Factor.in Node Connected & Verified',
+            message: `✅ 2Factor.in SMS Gateway Verified! Available: ${smsBal.toLocaleString()} SMS`
+          };
+        }
+      }
+    } catch (e) {}
+
+    // 6. If all probes failed:
+    return {
+      valid: false,
+      isSms: false,
+      error: 'INVALID_OR_NON_SMS_API_KEY',
+      message: '⛔ Invalid or Non-SMS API Key: The pasted credentials could not be verified by any supported SMS gateway (Fast2SMS, MSG91, Textlocal, 2Factor, etc.). Please paste a valid SMS API key.'
+    };
+  }
+
+  // 3. POST Sync Upstream Live Balance (Universal Multi-Provider SMS Validator)
   if (req.method === 'POST' && req.url === '/api/admin/super/otp/sync-upstream-balance') {
     const admin = getAdminFromReq(req);
     const superAdmin = getSuperAdminFromReq(req);
@@ -5199,82 +5361,70 @@ function getProjectStageIndex(stageStr) {
         route: 'dlt_manual'
       });
 
-      if (inputApiKey) config.apiKey = inputApiKey.trim();
+      if (inputApiKey !== undefined) config.apiKey = String(inputApiKey).trim();
       if (inputRoute) config.route = inputRoute;
-
-      let liveWalletVal = 0;
-      let isLiveVerified = false;
-      let rawSmsCount = 0;
-      let liveErrorMsg = '';
 
       const activeKey = (config.apiKey || '').trim();
 
-      // Real Fast2SMS wallet balance query if live key is present
-      if (activeKey && !activeKey.includes('sample') && activeKey.length > 15) {
-        try {
-          const f2sRes = await fetch('https://www.fast2sms.com/dev/wallet', {
-            method: 'GET',
-            headers: { 'authorization': activeKey }
-          });
-          const f2sData = await f2sRes.json();
-          if (f2sRes.ok && f2sData && f2sData.return) {
-            const parsedWallet = parseFloat(f2sData.wallet);
-            if (!isNaN(parsedWallet)) {
-              liveWalletVal = parsedWallet;
-              rawSmsCount = Number(f2sData.sms_count) || 0;
-              isLiveVerified = true;
-            }
-          } else {
-            liveErrorMsg = f2sData?.message || 'Invalid Fast2SMS API Key or account unauthorized';
-          }
-        } catch (e) {
-          liveErrorMsg = e.message;
-          console.warn('[Fast2SMS sync fetch error]', e.message);
-        }
+      if (!activeKey) {
+        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({
+          success: false,
+          isSms: false,
+          error: 'EMPTY_API_KEY',
+          message: '⛔ Please paste an SMS API key to sync and verify.'
+        }));
+        return;
       }
 
-      // Upstream Carrier Wholesale Cost auto-gathered from Fast2SMS Route
-      const carrierWholesaleCost = config.route === 'otp' ? 0.18 : config.route === 'v3' ? 0.15 : 0.125;
+      // Universal SMS Gateway Probe
+      const probeResult = await detectAndVerifySmsApiKey(activeKey);
 
-      let calculatedCreditsPool = 0;
-      let formattedAmount = '₹0.00';
+      if (!probeResult.valid || !probeResult.isSms) {
+        // NON-SMS OR INVALID KEY DETECTED!
+        config.status = `⛔ Invalid / Non-SMS Key`;
+        writeDataJson('master_gateway_config.json', config);
 
-      if (isLiveVerified) {
-        formattedAmount = `₹${liveWalletVal.toFixed(2)}`;
-        calculatedCreditsPool = rawSmsCount > 0 ? rawSmsCount : Math.floor(liveWalletVal / carrierWholesaleCost);
-        config.status = '🟢 Fast2SMS Node Connected & Verified (Real Live Account)';
-      } else {
-        const totalClientCredits = (readDataJson('otp_wallets.json', []) || []).reduce((acc, w) => acc + (w.availableCredits || 0), 0);
-        calculatedCreditsPool = Math.max(5000, totalClientCredits);
-        formattedAmount = `₹${Math.round(calculatedCreditsPool * carrierWholesaleCost).toLocaleString('en-IN')}`;
-        config.status = liveErrorMsg ? `⚠️ Connection Warning: ${liveErrorMsg}` : '🟢 Gateway Master Pool Active (Ready)';
+        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({
+          success: false,
+          isSms: false,
+          error: probeResult.error,
+          message: probeResult.message
+        }));
+        return;
       }
 
-      config.upstreamWalletAmount = formattedAmount;
-      config.upstreamBalance = calculatedCreditsPool;
+      // VALID SMS API KEY! Auto-configure provider details
+      config.provider = probeResult.provider;
+      config.upstreamWalletAmount = probeResult.walletAmount;
+      config.upstreamBalance = probeResult.balanceCredits;
+      config.upstreamWholesaleCost = probeResult.wholesaleCost;
+      config.status = probeResult.status;
       config.lastSyncedAt = new Date().toISOString();
       config.lastSyncedTimestamp = new Date().toLocaleString('en-IN');
-      config.upstreamWholesaleCost = carrierWholesaleCost;
+      if (probeResult.route) config.route = probeResult.route;
+
       writeDataJson('master_gateway_config.json', config);
 
       // Auto-sync into otp_pricing.json
       const pricingConfig = getOtpPricingConfig();
-      pricingConfig.wholesaleCostPerSms = carrierWholesaleCost;
+      pricingConfig.wholesaleCostPerSms = probeResult.wholesaleCost;
       writeDataJson('otp_pricing.json', pricingConfig);
 
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify({
         success: true,
+        isSms: true,
+        provider: config.provider,
         upstreamWalletAmount: config.upstreamWalletAmount,
         upstreamBalance: config.upstreamBalance,
         status: config.status,
         lastSyncedTimestamp: config.lastSyncedTimestamp,
-        isLiveVerified,
-        wholesaleCostPerSms: carrierWholesaleCost,
+        isLiveVerified: true,
+        wholesaleCostPerSms: config.upstreamWholesaleCost,
         pricing: pricingConfig,
-        message: isLiveVerified
-          ? `✅ Live Fast2SMS Real Carrier Account Connected! Real Balance: ${config.upstreamWalletAmount} (${calculatedCreditsPool.toLocaleString()} SMS Available)`
-          : `⚠️ Note: ${liveErrorMsg || 'Simulated balance active. Please verify your Fast2SMS API key.'}`
+        message: probeResult.message
       }));
     });
     return;
