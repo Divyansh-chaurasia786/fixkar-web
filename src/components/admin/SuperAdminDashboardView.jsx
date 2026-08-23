@@ -956,18 +956,28 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
       if (data.success) {
         setGatewayConfig((prev) => ({
           ...prev,
+          provider: data.provider || prev.provider,
           upstreamWalletAmount: data.upstreamWalletAmount,
           upstreamBalance: data.upstreamBalance,
           status: data.status,
           lastSyncedTimestamp: data.lastSyncedTimestamp,
         }));
-        setPricingNotice(`✅ ${data.message || 'Fast2SMS Upstream Balance Synced Successfully!'}`);
-        setTimeout(() => setPricingNotice(null), 6000);
+        if (data.pricing?.wholesaleCostPerSms) {
+          setWholesaleCostPerSms(data.pricing.wholesaleCostPerSms);
+        }
+        setPricingNotice(data.message || '✅ SMS Gateway Synced & Verified!');
+        setTimeout(() => setPricingNotice(null), 8000);
       } else {
-        alert(data.message || 'Failed to sync balance');
+        setGatewayConfig((prev) => ({
+          ...prev,
+          status: '⛔ Invalid / Non-SMS Key Detected',
+        }));
+        setPricingNotice(data.message || '⛔ Invalid or Non-SMS API key. Please paste a valid SMS API key.');
+        setTimeout(() => setPricingNotice(null), 10000);
       }
     } catch (err) {
-      alert('Error syncing balance: ' + err.message);
+      setPricingNotice('⛔ Error verifying SMS API key: ' + err.message);
+      setTimeout(() => setPricingNotice(null), 8000);
     } finally {
       setGatewaySyncing(false);
     }
