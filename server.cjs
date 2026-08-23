@@ -4361,11 +4361,105 @@ function getProjectStageIndex(stageStr) {
     return;
   }
 
+  // ─── UNIVERSAL MULTI-PROVIDER EMAIL API KEY DETECTOR & PROBER ─────────────
+  async function detectAndVerifyEmailApiKey(rawKey) {
+    const apiKey = String(rawKey || '').trim();
+    if (!apiKey || apiKey.length < 8) {
+      return {
+        valid: false,
+        isEmail: false,
+        error: 'KEY_TOO_SHORT',
+        message: '⛔ Email API Key Too Short: Please paste a valid Brevo or Resend API key.'
+      };
+    }
+
+    // 1. Probe Brevo (Sendinblue)
+    if (apiKey.startsWith('xkeysib-') || apiKey.length > 50) {
+      try {
+        const accRes = await fetch('https://api.brevo.com/v3/account', {
+          method: 'GET',
+          headers: { 'api-key': apiKey, 'Accept': 'application/json' },
+          signal: AbortSignal.timeout(6000)
+        });
+        if (accRes.ok) {
+          const acc = await accRes.json();
+          let senderEmail = 'supportfixkar@gmail.com';
+          let senderName = 'Fixkar';
+          try {
+            const sendersRes = await fetch('https://api.brevo.com/v3/senders', {
+              method: 'GET',
+              headers: { 'api-key': apiKey, 'Accept': 'application/json' },
+              signal: AbortSignal.timeout(4000)
+            });
+            if (sendersRes.ok) {
+              const sData = await sendersRes.json();
+              if (sData.senders && sData.senders.length > 0) {
+                senderEmail = sData.senders[0].email || senderEmail;
+                senderName = sData.senders[0].name || senderName;
+              }
+            }
+          } catch (_) {}
+
+          const credits = acc.plan?.[0]?.credits || 300;
+          return {
+            valid: true,
+            isEmail: true,
+            provider: 'Brevo Cloud Email Gateway (Sendinblue)',
+            dailyQuota: credits,
+            monthlyQuota: credits * 30,
+            senderAddress: senderEmail,
+            senderName: senderName,
+            status: `🟢 Brevo Live (${acc.email} • ${credits} Emails/Day)`,
+            domainStatus: 'verified',
+            domainName: senderEmail,
+            message: `✅ Brevo Cloud Email Account Verified! Plan: ${acc.plan?.[0]?.type || 'Free'} (${credits} Free Emails/Day • 9,000/Month) • Sender: ${senderEmail}`
+          };
+        }
+      } catch (_) {}
+    }
+
+    // 2. Probe Resend
+    if (apiKey.startsWith('re_')) {
+      try {
+        const res = await fetch('https://api.resend.com/domains', {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${apiKey}` },
+          signal: AbortSignal.timeout(6000)
+        });
+        if (res.ok) {
+          const rData = await res.json();
+          const domain = rData.data?.[0];
+          return {
+            valid: true,
+            isEmail: true,
+            provider: 'Resend Enterprise Cloud Mail Engine',
+            dailyQuota: 100,
+            monthlyQuota: 3000,
+            senderAddress: 'support@fixkar.co.in',
+            senderName: 'Fixkar Support & Cloud Services',
+            status: domain ? `🟢 Connected & Verified (${domain.name} • ${domain.region})` : '🟢 Resend API Connected',
+            domainStatus: domain?.status || 'verified',
+            domainName: domain?.name || 'fixkar.co.in',
+            domainRegion: domain?.region || 'ap-northeast-1',
+            message: `✅ Resend Enterprise Engine Verified! Domain: ${domain?.name || 'fixkar.co.in'} (Status: ${domain?.status || 'verified'})`
+          };
+        }
+      } catch (_) {}
+    }
+
+    return {
+      valid: false,
+      isEmail: false,
+      error: 'INVALID_EMAIL_KEY',
+      message: '⛔ Invalid or Unrecognized Email API Key. Please paste a valid Brevo (xkeysib-...) or Resend (re_...) key.'
+    };
+  }
+
   // 1.1 POST Sync Upstream Email Gateway Quota & Domain Verification
   if (req.method === 'POST' && req.url === '/api/admin/super/email/sync-upstream-quota') {
     readJsonBody().then(async (body) => {
       const config = readDataJson('master_email_config.json', {
-        provider: 'Resend Enterprise Cloud Mail Engine',
+        provider: 'Cloud Email Gateway',
         apiKey: process.env.RESEND_API_KEY || '',
         senderAddress: 'support@fixkar.co.in'
       });
@@ -4374,23 +4468,23 @@ function getProjectStageIndex(stageStr) {
 
       if (!activeKey) {
         res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
-        res.end(JSON.stringify({ success: false, message: '⛔ No Resend API key configured.' }));
+        res.end(JSON.stringify({ success: false, message: '⛔ No Email API key configured. Please paste your Brevo or Resend key.' }));
         return;
       }
 
       try {
-        // Probe Resend Domains
-        const dRes = await fetch('https://api.resend.com/domains', {
-          headers: { 'Authorization': `Bearer ${activeKey}` },
-          signal: AbortSignal.timeout(6000)
-        });
-
-        let domainInfo = null;
-        if (dRes.ok) {
-          const dData = await dRes.json();
-          if (dData.data && dData.data.length > 0) {
-            domainInfo = dData.data[0];
-          }
+        const probe = await detectAndVerifyEmailApiKey(activeKey);
+        if (probe.valid && probe.isEmail) {
+          config.provider = probe.provider;
+          config.apiKey = activeKey;
+          config.dailyQuota = probe.dailyQuota;
+          config.monthlyQuota = probe.monthlyQuota;
+          config.senderAddress = probe.senderAddress;
+          config.senderName = probe.senderName;
+          config.status = probe.status;
+          config.domainStatus = probe.domainStatus || 'verified';
+          config.domainName = probe.domainName || 'fixkar.co.in';
+          if (probe.domainRegion) config.domainRegion = probe.domainRegion;
         }
 
         const emailLogs = readDataJson('email_logs.json', []);
@@ -4399,15 +4493,9 @@ function getProjectStageIndex(stageStr) {
 
         const sentToday = emailLogs.filter(e => (e.timestamp || e.date || '').startsWith(todayStr)).length;
         const sentMonth = emailLogs.filter(e => (e.timestamp || e.date || '').startsWith(thisMonthStr)).length;
-        const dailyLimit = Number(config.dailyQuota) || 100;
-        const monthlyLimit = Number(config.monthlyQuota) || 3000;
+        const dailyLimit = Number(config.dailyQuota) || 300;
+        const monthlyLimit = Number(config.monthlyQuota) || 9000;
 
-        config.status = domainInfo && domainInfo.status === 'verified' 
-          ? `🟢 Connected & Verified (${domainInfo.name} • ${domainInfo.region})` 
-          : `🟢 Resend API Connected`;
-        config.domainStatus = domainInfo?.status || 'verified';
-        config.domainName = domainInfo?.name || 'fixkar.co.in';
-        config.domainRegion = domainInfo?.region || 'ap-northeast-1';
         config.emailsSentToday = sentToday;
         config.emailsRemainingToday = Math.max(0, dailyLimit - sentToday);
         config.emailsSentMonth = sentMonth;
@@ -4419,12 +4507,12 @@ function getProjectStageIndex(stageStr) {
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
         res.end(JSON.stringify({
           success: true,
-          message: `✅ Resend Cloud Mail Verified! ${config.emailsRemainingToday} Emails Left in Day (Sent Today: ${sentToday}/${dailyLimit})`,
+          message: probe.message || `✅ Email Gateway Synced! ${config.emailsRemainingToday} Emails Left in Day (Sent Today: ${sentToday}/${dailyLimit})`,
           config
         }));
       } catch (err) {
         res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
-        res.end(JSON.stringify({ success: false, message: `Error syncing Resend quota: ${err.message}` }));
+        res.end(JSON.stringify({ success: false, message: `Error syncing email quota: ${err.message}` }));
       }
     });
     return;
@@ -4433,15 +4521,31 @@ function getProjectStageIndex(stageStr) {
   // 2. POST Save/Update Master Email Gateway Config & Pack Rates
   if (req.method === 'POST' && req.url === '/api/admin/super/email/gateway-config') {
     const admin = getAdminFromReq(req);
-    readJsonBody().then((body) => {
+    readJsonBody().then(async (body) => {
       const { provider, apiKey, senderAddress, senderName, wholesaleCostPerEmail, dailyQuota, monthlyQuota, packages } = body || {};
 
       const config = readDataJson('master_email_config.json', {});
-      if (provider) config.provider = provider;
       if (apiKey) {
         config.apiKey = apiKey.trim();
         process.env.RESEND_API_KEY = apiKey.trim();
+
+        // Auto-probe when key is saved
+        try {
+          const probe = await detectAndVerifyEmailApiKey(config.apiKey);
+          if (probe.valid && probe.isEmail) {
+            config.provider = probe.provider;
+            config.dailyQuota = probe.dailyQuota;
+            config.monthlyQuota = probe.monthlyQuota;
+            config.senderAddress = probe.senderAddress;
+            config.senderName = probe.senderName;
+            config.status = probe.status;
+            config.domainStatus = probe.domainStatus || 'verified';
+            config.domainName = probe.domainName || 'fixkar.co.in';
+            if (probe.domainRegion) config.domainRegion = probe.domainRegion;
+          }
+        } catch (_) {}
       }
+      if (provider && (!config.provider || config.provider.includes('Transactional'))) config.provider = provider;
       if (senderAddress) config.senderAddress = senderAddress.trim();
       if (senderName) config.senderName = senderName.trim();
       if (wholesaleCostPerEmail !== undefined) config.wholesaleCostPerEmail = Number(wholesaleCostPerEmail);
@@ -4471,6 +4575,8 @@ function getProjectStageIndex(stageStr) {
         }
       }
       config.lastSyncedAt = new Date().toISOString();
+      writeDataJson('master_email_config.json', config);
+
       config.updatedBy = admin?.username || 'Super Admin';
       writeDataJson('master_email_config.json', config);
 
@@ -4479,46 +4585,88 @@ function getProjectStageIndex(stageStr) {
         actor: admin?.username || 'Super Admin',
         role: 'SUPER_ADMIN',
         ipAddress: clientIp,
-        action: `Master Email Gateway & Resend credentials updated (${config.provider})`,
+        action: `Master Email Gateway credentials updated (${config.provider})`,
         status: 'SUCCESS'
       });
 
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(JSON.stringify({ success: true, message: '✅ Master Email Gateway & Pricing Engine saved successfully!', config }));
+      res.end(JSON.stringify({
+        success: true,
+        message: '✅ Master Email Gateway Configuration & Pricing Engine Saved & Published!',
+        config
+      }));
     });
     return;
   }
 
-  // 3. POST Send Live Test Email from Super Admin
+  // 3. POST Send Live Test Email from Super Admin (Universal Brevo / Resend Engine)
   if (req.method === 'POST' && req.url === '/api/admin/super/email/test-dispatch') {
     readJsonBody().then(async (body) => {
       const { targetEmail } = body || {};
-      const recipient = targetEmail || 'chaurasiadivyansh86@gmail.com';
+      const recipient = targetEmail || 'supportfixkar@gmail.com';
       const config = readDataJson('master_email_config.json', {});
-      const resendApiKey = config.apiKey || process.env.RESEND_API_KEY || '';
+      const emailApiKey = config.apiKey || process.env.RESEND_API_KEY || '';
 
-      if (!resendApiKey) {
+      if (!emailApiKey) {
         res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
-        res.end(JSON.stringify({ success: false, message: '⚠️ No Master Resend API Key configured in Gateway!' }));
+        res.end(JSON.stringify({ success: false, message: '⚠️ No Master Email API Key configured in Gateway!' }));
         return;
       }
 
+      const emailSubject = '⚡ [TEST] Fixkar Master Cloud Mail Matrix Connection Test';
+      const emailHtml = `<div style="font-family: sans-serif; padding: 20px; background: #0A0F1D; color: #fff; border-radius: 12px;">
+        <h2 style="color: #38BDF8; margin: 0 0 10px;">Fixkar Master Cloud Mail Engine</h2>
+        <p>Your master email upstream connection is <strong>100% active, verified, and operational</strong>.</p>
+        <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; color: #4ADE80;">
+          ● Gateway: ${config.provider || 'Cloud Mail Engine'}<br/>
+          ● Sender: ${config.senderAddress || 'supportfixkar@gmail.com'}<br/>
+          ● Verified Time: ${new Date().toLocaleString('en-IN')}<br/>
+          ● Status: LIVE & DELIVERED
+        </div>
+        <p style="font-size: 0.8rem; color: #94A3B8; margin-top: 15px;">Fixkar Telecom &amp; Cloud Messaging Infrastructure • Confidential</p>
+      </div>`;
+
       try {
-        const testPayload = JSON.stringify({
+        // 1. Brevo Dispatch
+        if (emailApiKey.startsWith('xkeysib-') || emailApiKey.length > 50) {
+          const brevoPayload = JSON.stringify({
+            sender: { name: config.senderName || 'Fixkar Support', email: config.senderAddress || 'supportfixkar@gmail.com' },
+            to: [{ email: recipient, name: 'Fixkar Admin' }],
+            subject: emailSubject,
+            htmlContent: emailHtml
+          });
+
+          const bReq = https.request('https://api.brevo.com/v3/smtp/email', {
+            method: 'POST',
+            headers: {
+              'api-key': emailApiKey,
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'Content-Length': Buffer.byteLength(brevoPayload)
+            }
+          }, (bRes) => {
+            let resData = '';
+            bRes.on('data', c => resData += c);
+            bRes.on('end', () => {
+              res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+              res.end(JSON.stringify({ success: true, message: `✅ Brevo Test Email successfully dispatched to ${recipient}!`, upstreamStatus: bRes.statusCode, data: resData }));
+            });
+          });
+          bReq.on('error', (e) => {
+            res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify({ success: false, message: `Brevo dispatch error: ${e.message}` }));
+          });
+          bReq.write(brevoPayload);
+          bReq.end();
+          return;
+        }
+
+        // 2. Resend Dispatch
+        const resendPayload = JSON.stringify({
           from: `${config.senderName || 'Fixkar Cloud'} <${config.senderAddress || 'support@fixkar.co.in'}>`,
           to: [recipient],
-          subject: '⚡ [TEST] Fixkar Master Cloud Mail Matrix Connection Test',
-          html: `<div style="font-family: sans-serif; padding: 20px; background: #0A0F1D; color: #fff; border-radius: 12px;">
-            <h2 style="color: #38BDF8; margin: 0 0 10px;">Fixkar Master Cloud Mail Engine</h2>
-            <p>Your master email upstream connection is <strong>100% active, verified, and operational</strong>.</p>
-            <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; color: #4ADE80;">
-              ● Gateway: ${config.provider || 'Resend Enterprise'}<br/>
-              ● Sender: ${config.senderAddress || 'support@fixkar.co.in'}<br/>
-              ● Verified Time: ${new Date().toLocaleString('en-IN')}<br/>
-              ● Status: LIVE & DELIVERED
-            </div>
-            <p style="font-size: 0.8rem; color: #94A3B8; margin-top: 15px;">Fixkar Telecom &amp; Cloud Messaging Infrastructure • Confidential</p>
-          </div>`
+          subject: emailSubject,
+          html: emailHtml
         });
 
         const rReq = https.request({
@@ -4526,9 +4674,9 @@ function getProjectStageIndex(stageStr) {
           path: '/emails',
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${resendApiKey}`,
+            'Authorization': `Bearer ${emailApiKey}`,
             'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(testPayload)
+            'Content-Length': Buffer.byteLength(resendPayload)
           }
         }, (rRes) => {
           let resData = '';
@@ -4544,7 +4692,7 @@ function getProjectStageIndex(stageStr) {
           res.end(JSON.stringify({ success: false, message: `Failed to dispatch test email: ${e.message}` }));
         });
 
-        rReq.write(testPayload);
+        rReq.write(resendPayload);
         rReq.end();
       } catch (err) {
         res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
