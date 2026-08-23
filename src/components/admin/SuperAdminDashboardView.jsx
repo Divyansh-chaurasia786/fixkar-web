@@ -290,12 +290,25 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
       });
       const data = await res.json();
       if (res.ok && data.success) {
+        const newLogEntry = {
+          id: `reply_${Date.now()}`,
+          recipient: recipientEmail,
+          from: 'support@fixkar.co.in',
+          subject: `Re: ${selectedInboundEmailModal.subject || 'Inquiry to Fixkar'}`,
+          message: inboundReplyText,
+          inReplyToId: selectedInboundEmailModal.id,
+          status: 'DELIVERED',
+          engine: data.engine || 'Resend (support@fixkar.co.in)',
+          timestamp: new Date().toISOString(),
+          formattedTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+        };
+        setEmailLogs(prev => [newLogEntry, ...prev]);
         setInboundReplyStatus({ type: 'success', text: `✅ Reply sent directly to ${recipientEmail} from support@fixkar.co.in!` });
         setInboundReplyText('');
         setTimeout(() => {
           setInboundReplyStatus(null);
           setShowInboundReplyComposer(false);
-        }, 3000);
+        }, 2500);
       } else {
         setInboundReplyStatus({ type: 'error', text: data.error || 'Failed to dispatch reply.' });
       }
@@ -5045,6 +5058,62 @@ echo $response;
                 <div style={{ whiteSpace: 'pre-wrap' }}>{selectedInboundEmailModal.text}</div>
               )}
             </div>
+
+            {/* ─── SENT REPLIES CONVERSATION THREAD ────────────────────────── */}
+            {(() => {
+              const clientEmail = (selectedInboundEmailModal.from || '').toLowerCase();
+              const threadReplies = (emailLogs || []).filter((log) => {
+                const logRecip = (log.recipient || '').toLowerCase();
+                const logSubj = (log.subject || '').toLowerCase();
+                const modalSubj = (selectedInboundEmailModal.subject || '').toLowerCase();
+                return (
+                  (log.inReplyToId && log.inReplyToId === selectedInboundEmailModal.id) ||
+                  (logRecip && clientEmail.includes(logRecip)) ||
+                  (modalSubj && logSubj.includes(modalSubj))
+                );
+              });
+
+              if (threadReplies.length === 0) return null;
+
+              return (
+                <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.74rem', fontWeight: 800, color: '#38BDF8', letterSpacing: '0.5px' }}>
+                    <CheckCircle2 size={13} color="#4ADE80" />
+                    <span>OUR SENT REPLIES ({threadReplies.length})</span>
+                  </div>
+
+                  {threadReplies.map((reply, rIdx) => (
+                    <div
+                      key={reply.id || rIdx}
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                        border: '1px solid rgba(56, 189, 248, 0.35)',
+                        borderLeft: '4px solid #38BDF8',
+                        borderRadius: '10px',
+                        padding: '12px 16px',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: '6px' }}>
+                        <div style={{ fontSize: '0.78rem', color: '#93C5FD', fontWeight: 700 }}>
+                          From Fixkar Desk: <span style={{ fontFamily: 'monospace', color: '#fff' }}>support@fixkar.co.in</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{ fontSize: '0.68rem', background: 'rgba(34, 197, 94, 0.15)', border: '1px solid rgba(34, 197, 94, 0.35)', color: '#4ADE80', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>
+                            ✓ {reply.status || 'DELIVERED'}
+                          </span>
+                          <span style={{ fontSize: '0.7rem', color: '#94A3B8' }}>
+                            {reply.formattedTime || (reply.timestamp ? new Date(reply.timestamp).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) : 'Recently')}
+                          </span>
+                        </div>
+                      </div>
+                      <div style={{ color: '#F1F5F9', fontSize: '0.86rem', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
+                        {reply.message || reply.text}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
 
             {/* ─── IN-DASHBOARD DIRECT EMAIL REPLY COMPOSER ─────────────────── */}
             {showInboundReplyComposer ? (
