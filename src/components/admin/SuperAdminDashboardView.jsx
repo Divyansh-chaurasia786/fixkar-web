@@ -144,6 +144,28 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
   const [gatewaySaving, setGatewaySaving] = useState(false);
   const [showMasterApiKey, setShowMasterApiKey] = useState(false);
 
+  // Email Gateway Config State (Resend Enterprise Master Pool)
+  const [emailGatewayConfig, setEmailGatewayConfig] = useState({
+    provider: 'Resend Enterprise Cloud Mail Engine',
+    apiKey: '',
+    senderAddress: 'support@fixkar.co.in',
+    senderName: 'Fixkar Support & Cloud Services',
+    wholesaleCostPerEmail: 0.034,
+    status: '🟢 Master Cloud Mail Matrix Active (Connected)',
+    lastSyncedAt: new Date().toISOString(),
+    packages: [
+      { id: 'email_starter', name: 'Starter Email Pack', credits: 5000, price: 499, popular: false, desc: '5,000 High-Speed Transactional Emails • Verified Delivery' },
+      { id: 'email_growth', name: 'Growth Email Pack', credits: 25000, price: 1499, popular: true, desc: '25,000 High-Speed Transactional Emails • High Deliverability Queue' },
+      { id: 'email_scale', name: 'Scale Email Pack', credits: 50000, price: 2499, popular: false, desc: '50,000 High-Speed Transactional Emails • Dedicated IP Routing' },
+      { id: 'email_enterprise', name: 'Enterprise Email Pack', credits: 100000, price: 4499, popular: false, desc: '100,000 High-Speed Transactional Emails • Enterprise Deliverability SLA' }
+    ]
+  });
+  const [emailGatewaySaving, setEmailGatewaySaving] = useState(false);
+  const [showMasterEmailApiKey, setShowMasterEmailApiKey] = useState(false);
+  const [testEmailRecipient, setTestEmailRecipient] = useState('chaurasiadivyansh86@gmail.com');
+  const [testEmailSending, setTestEmailSending] = useState(false);
+  const [testEmailNotice, setTestEmailNotice] = useState('');
+
   // Client API Keys State
   const [clientApiKeys, setClientApiKeys] = useState([]);
   const [isGenerateApiKeyModalOpen, setIsGenerateApiKeyModalOpen] = useState(false);
@@ -358,6 +380,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
         fetch(`${API_BASE}/api/admin/super/kill-switch`, { headers }),
         fetch(`${API_BASE}/api/admin/emails/logs`, { headers }),
         fetch(`${API_BASE}/api/admin/emails/inbound`, { headers }),
+        fetch(`${API_BASE}/api/admin/super/email/gateway-config`, { headers }),
       ]);
 
       if (emailsRes && emailsRes.ok) {
@@ -368,6 +391,12 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
       if (inboundRes && inboundRes.ok) {
         const d = await inboundRes.json();
         if (d.emails && Array.isArray(d.emails)) setInboundEmails(d.emails);
+      }
+
+      const emailGwRes = arguments && arguments.length ? null : await fetch(`${API_BASE}/api/admin/super/email/gateway-config`, { headers }).catch(() => null);
+      if (emailGwRes && emailGwRes.ok) {
+        const d = await emailGwRes.json();
+        if (d.config) setEmailGatewayConfig(d.config);
       }
 
       if (gwRes.ok) {
@@ -947,6 +976,101 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
       alert('Error saving configuration: ' + err.message);
     } finally {
       setGatewaySaving(false);
+    }
+  };
+
+  // ─── Master Email Gateway Handlers (Resend Enterprise Engine) ─────────────
+  const handleSaveEmailGatewayConfig = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    setEmailGatewaySaving(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/super/email/gateway-config`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${adminToken}`,
+          'x-super-token': superAdminToken || '9835',
+        },
+        body: JSON.stringify({
+          superAdminKey: superAdminToken || '9835',
+          ...emailGatewayConfig,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPricingNotice('✅ Master Email Gateway & Pricing Engine Saved & Published!');
+        setTimeout(() => setPricingNotice(null), 5000);
+      } else {
+        alert(data.message || 'Failed to save email configuration');
+      }
+    } catch (err) {
+      alert('Error saving email configuration: ' + err.message);
+    } finally {
+      setEmailGatewaySaving(false);
+    }
+  };
+
+  const handleUpdateEmailPackField = (index, field, value) => {
+    setEmailGatewayConfig((prev) => {
+      const updatedPackages = [...(prev.packages || [])];
+      updatedPackages[index] = { ...updatedPackages[index], [field]: value };
+      return { ...prev, packages: updatedPackages };
+    });
+  };
+
+  const handleAddNewEmailPack = () => {
+    setEmailGatewayConfig((prev) => ({
+      ...prev,
+      packages: [
+        ...(prev.packages || []),
+        {
+          id: `email_pack_${Date.now()}`,
+          name: 'Custom Email Volume Pack',
+          credits: 10000,
+          price: 799,
+          popular: false,
+          desc: '10,000 High-Speed Transactional Emails • Verified Delivery',
+        },
+      ],
+    }));
+  };
+
+  const handleRemoveEmailPack = (index) => {
+    if (window.confirm('Are you sure you want to remove this email package?')) {
+      setEmailGatewayConfig((prev) => {
+        const updated = (prev.packages || []).filter((_, i) => i !== index);
+        return { ...prev, packages: updated };
+      });
+    }
+  };
+
+  const handleSendTestEmail = async () => {
+    if (!testEmailRecipient || !testEmailRecipient.trim()) {
+      alert('Please enter a recipient email address');
+      return;
+    }
+    setTestEmailSending(true);
+    setTestEmailNotice('');
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/super/email/test-dispatch`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${adminToken}`,
+          'x-super-token': superAdminToken || '9835',
+        },
+        body: JSON.stringify({ targetEmail: testEmailRecipient.trim() }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setTestEmailNotice(`✅ Test email successfully dispatched to ${testEmailRecipient}!`);
+      } else {
+        setTestEmailNotice(`❌ Failed: ${data.message}`);
+      }
+    } catch (err) {
+      setTestEmailNotice(`❌ Error: ${err.message}`);
+    } finally {
+      setTestEmailSending(false);
     }
   };
 
@@ -3259,68 +3383,410 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 }
               };
 
-              return (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  {/* Header Search & Actions Toolbar */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-                    <div style={{ position: 'relative', flex: '1 1 320px', maxWidth: '480px' }}>
-                      <Search size={14} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
-                      <input
-                        type="text"
-                        value={emailSearchQuery}
-                        onChange={(e) => setEmailSearchQuery(e.target.value)}
-                        placeholder="Search client sender, subject, or message content..."
-                        style={{
-                          width: '100%',
-                          padding: '9px 14px 9px 34px',
-                          background: 'rgba(17, 24, 39, 0.8)',
-                          border: '1px solid rgba(255, 255, 255, 0.1)',
-                          borderRadius: '10px',
-                          color: '#fff',
-                          fontSize: '0.82rem',
-                          outline: 'none',
-                        }}
-                      />
-                    </div>
+              const emailWholesaleCost = Number(emailGatewayConfig.wholesaleCostPerEmail) || 0.034;
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.76rem', color: '#94A3B8', background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', padding: '6px 12px', borderRadius: '8px' }}>
-                        <Mail size={13} color="#38BDF8" />
-                        <span>Cloud Engine: <strong style={{ color: '#38BDF8', fontFamily: 'monospace' }}>Resend + Cloudflare (support@fixkar.co.in)</strong></span>
+              return (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                  {/* 1. TOP CONTROLLER BAR */}
+                  <div className="fixkar-panel" style={{ padding: '18px 22px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <Mail size={20} color="#38BDF8" />
+                          <h2 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#fff', margin: 0 }}>
+                            Master Email Gateway &amp; Resend Cloud Connection
+                          </h2>
+                        </div>
+                        <p style={{ fontSize: '0.78rem', color: '#94A3B8', margin: '4px 0 0' }}>
+                          Configure master Resend upstream API credentials, set wholesale margins (e.g. ₹0.034/email), and publish live email pack rates.
+                        </p>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={fetchAllSuperData}
-                        style={{
-                          background: 'rgba(56, 189, 248, 0.12)',
-                          border: '1px solid rgba(56, 189, 248, 0.35)',
-                          color: '#38BDF8',
-                          padding: '8px 14px',
-                          borderRadius: '8px',
-                          fontSize: '0.78rem',
-                          fontWeight: 700,
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                        }}
-                      >
-                        <RefreshCw size={13} />
-                        <span>Refresh Inbound Feed</span>
-                      </button>
+                      <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <button
+                          type="button"
+                          onClick={handleSaveEmailGatewayConfig}
+                          disabled={emailGatewaySaving}
+                          style={{
+                            background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
+                            border: 'none',
+                            color: '#fff',
+                            padding: '9px 20px',
+                            borderRadius: '8px',
+                            fontSize: '0.82rem',
+                            fontWeight: 900,
+                            cursor: emailGatewaySaving ? 'wait' : 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            boxShadow: '0 4px 18px rgba(2, 132, 199, 0.45)',
+                          }}
+                        >
+                          <Save size={15} />
+                          <span>{emailGatewaySaving ? 'Publishing Live...' : 'Save & Publish Live Email Engine'}</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Inbound Emails Table */}
-                  <div className="fixkar-panel" style={{ padding: 0, overflow: 'hidden', width: '100%', boxSizing: 'border-box' }}>
+                  {/* 2. SECTION 1: MASTER RESEND UPSTREAM API CREDENTIALS */}
+                  <div className="fixkar-panel">
+                    <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
+                      <div className="fixkar-panel-title">
+                        <Server size={16} color="#38BDF8" />
+                        <span>1. Master Resend API Credentials &amp; Identity</span>
+                      </div>
+                      <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontFamily: 'monospace', fontWeight: 700 }}>
+                        {emailGatewayConfig.status || '🟢 Master Cloud Mail Matrix Active'}
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+                      {/* Provider */}
+                      <div>
+                        <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700, display: 'block', marginBottom: '5px' }}>
+                          Email Gateway Provider
+                        </label>
+                        <input
+                          type="text"
+                          value={emailGatewayConfig.provider || 'Resend Enterprise Cloud Mail Engine'}
+                          onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, provider: e.target.value })}
+                          style={{
+                            width: '100%',
+                            padding: '8px 12px',
+                            background: 'rgba(255, 255, 255, 0.04)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '8px',
+                            color: '#fff',
+                            fontSize: '0.8rem',
+                            fontFamily: 'monospace',
+                            boxSizing: 'border-box',
+                          }}
+                        />
+                      </div>
+
+                      {/* Master Resend API Key */}
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
+                          <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700 }}>
+                            Master Resend API Key (re_...)
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => setShowMasterEmailApiKey(!showMasterEmailApiKey)}
+                            style={{ background: 'none', border: 'none', color: '#38BDF8', fontSize: '0.68rem', cursor: 'pointer', fontWeight: 700 }}
+                          >
+                            {showMasterEmailApiKey ? 'Hide 👁️' : 'Show 👁️'}
+                          </button>
+                        </div>
+                        <input
+                          type={showMasterEmailApiKey ? 'text' : 'password'}
+                          value={emailGatewayConfig.apiKey || ''}
+                          onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, apiKey: e.target.value })}
+                          placeholder="re_xxxxxxxxxxxxxxxxxxxxxx"
+                          style={{
+                            width: '100%',
+                            padding: '8px 12px',
+                            background: 'rgba(255, 255, 255, 0.04)',
+                            border: '1px solid rgba(56, 189, 248, 0.4)',
+                            borderRadius: '8px',
+                            color: '#FDE047',
+                            fontSize: '0.8rem',
+                            fontFamily: 'monospace',
+                            fontWeight: 700,
+                            boxSizing: 'border-box',
+                          }}
+                        />
+                      </div>
+
+                      {/* Sender Email Address */}
+                      <div>
+                        <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700, display: 'block', marginBottom: '5px' }}>
+                          Default Dispatch Sender Email
+                        </label>
+                        <input
+                          type="text"
+                          value={emailGatewayConfig.senderAddress || 'support@fixkar.co.in'}
+                          onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, senderAddress: e.target.value })}
+                          style={{
+                            width: '100%',
+                            padding: '8px 12px',
+                            background: 'rgba(255, 255, 255, 0.04)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '8px',
+                            color: '#fff',
+                            fontSize: '0.8rem',
+                            fontFamily: 'monospace',
+                            boxSizing: 'border-box',
+                          }}
+                        />
+                      </div>
+
+                      {/* Wholesale Cost per Email */}
+                      <div>
+                        <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700, display: 'block', marginBottom: '5px' }}>
+                          Wholesale Cost / Email (INR ₹)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.001"
+                          value={emailGatewayConfig.wholesaleCostPerEmail !== undefined ? emailGatewayConfig.wholesaleCostPerEmail : 0.034}
+                          onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, wholesaleCostPerEmail: e.target.value })}
+                          style={{
+                            width: '100%',
+                            padding: '8px 12px',
+                            background: 'rgba(255, 255, 255, 0.04)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '8px',
+                            color: '#4ADE80',
+                            fontSize: '0.8rem',
+                            fontFamily: 'monospace',
+                            fontWeight: 800,
+                            boxSizing: 'border-box',
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Live Test Dispatcher */}
+                    <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: '1 1 300px' }}>
+                        <span style={{ fontSize: '0.74rem', color: '#94A3B8', fontWeight: 700 }}>Test Connection:</span>
+                        <input
+                          type="email"
+                          value={testEmailRecipient}
+                          onChange={(e) => setTestEmailRecipient(e.target.value)}
+                          placeholder="recipient@example.com"
+                          style={{
+                            flex: 1,
+                            padding: '6px 10px',
+                            background: 'rgba(0, 0, 0, 0.3)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '6px',
+                            color: '#fff',
+                            fontSize: '0.76rem',
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={handleSendTestEmail}
+                          disabled={testEmailSending}
+                          style={{
+                            background: 'rgba(56, 189, 248, 0.15)',
+                            border: '1px solid rgba(56, 189, 248, 0.4)',
+                            color: '#38BDF8',
+                            padding: '6px 12px',
+                            borderRadius: '6px',
+                            fontSize: '0.74rem',
+                            fontWeight: 700,
+                            cursor: testEmailSending ? 'wait' : 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                          }}
+                        >
+                          <Send size={12} />
+                          <span>{testEmailSending ? 'Sending...' : 'Send Test Mail'}</span>
+                        </button>
+                      </div>
+
+                      {testEmailNotice && (
+                        <span style={{ fontSize: '0.74rem', color: testEmailNotice.startsWith('✅') ? '#4ADE80' : '#F87171', fontWeight: 700 }}>
+                          {testEmailNotice}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* 3. SECTION 2: MASTER EMAIL LIVE PACK PRICING ENGINE TABLE */}
+                  <div className="fixkar-panel">
+                    <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
+                      <div className="fixkar-panel-title">
+                        <Layers size={16} color="#38BDF8" />
+                        <span>2. Master Email Live Pack Pricing &amp; Wholesale Margins</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleAddNewEmailPack}
+                        style={{
+                          background: 'rgba(56, 189, 248, 0.15)',
+                          border: '1px solid rgba(56, 189, 248, 0.4)',
+                          color: '#38BDF8',
+                          padding: '5px 12px',
+                          borderRadius: '6px',
+                          fontSize: '0.74rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                        }}
+                      >
+                        <Plus size={12} />
+                        <span>+ Add New Email Package</span>
+                      </button>
+                    </div>
+
+                    <div style={{ overflowX: 'auto', width: '100%' }}>
+                      <table className="fixkar-table" style={{ width: '100%', minWidth: '780px' }}>
+                        <thead>
+                          <tr>
+                            <th style={{ width: '22%' }}>PACK NAME</th>
+                            <th style={{ width: '14%' }}>EMAILS</th>
+                            <th style={{ width: '14%' }}>RETAIL RATE / EMAIL</th>
+                            <th style={{ width: '14%' }}>RETAIL PRICE (₹)</th>
+                            <th style={{ width: '14%' }}>WHOLESALE COST</th>
+                            <th style={{ width: '12%' }}>NET PROFIT</th>
+                            <th style={{ width: '10%', textAlign: 'right' }}>ACTION</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {(emailGatewayConfig.packages || []).map((pkg, idx) => {
+                            const credits = Number(pkg.credits) || 5000;
+                            const price = Number(pkg.price) || 0;
+                            const cost = credits * emailWholesaleCost;
+                            const profit = price - cost;
+                            const marginPct = price > 0 ? ((profit / price) * 100).toFixed(1) : '0.0';
+                            const unitRate = (price / credits).toFixed(3);
+
+                            return (
+                              <tr key={pkg.id || idx}>
+                                <td>
+                                  <input
+                                    type="text"
+                                    value={pkg.name}
+                                    onChange={(e) => handleUpdateEmailPackField(idx, 'name', e.target.value)}
+                                    style={{
+                                      width: '100%',
+                                      padding: '5px 8px',
+                                      background: 'rgba(255, 255, 255, 0.04)',
+                                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                                      borderRadius: '6px',
+                                      color: '#fff',
+                                      fontSize: '0.78rem',
+                                      fontWeight: 700,
+                                    }}
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    type="number"
+                                    value={pkg.credits}
+                                    onChange={(e) => handleUpdateEmailPackField(idx, 'credits', Number(e.target.value))}
+                                    style={{
+                                      width: '100%',
+                                      padding: '5px 8px',
+                                      background: 'rgba(255, 255, 255, 0.04)',
+                                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                                      borderRadius: '6px',
+                                      color: '#38BDF8',
+                                      fontSize: '0.78rem',
+                                      fontFamily: 'monospace',
+                                      fontWeight: 700,
+                                    }}
+                                  />
+                                </td>
+                                <td>
+                                  <span style={{ fontSize: '0.78rem', color: '#93C5FD', fontFamily: 'monospace', fontWeight: 700 }}>
+                                    ₹{unitRate} / email
+                                  </span>
+                                </td>
+                                <td>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                    <span style={{ color: '#FDE047', fontWeight: 800 }}>₹</span>
+                                    <input
+                                      type="number"
+                                      value={pkg.price}
+                                      onChange={(e) => handleUpdateEmailPackField(idx, 'price', Number(e.target.value))}
+                                      style={{
+                                        width: '100%',
+                                        padding: '5px 8px',
+                                        background: 'rgba(255, 255, 255, 0.04)',
+                                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                                        borderRadius: '6px',
+                                        color: '#FDE047',
+                                        fontSize: '0.8rem',
+                                        fontFamily: 'monospace',
+                                        fontWeight: 800,
+                                      }}
+                                    />
+                                  </div>
+                                </td>
+                                <td>
+                                  <span style={{ fontSize: '0.78rem', color: '#94A3B8', fontFamily: 'monospace' }}>
+                                    ₹{cost.toFixed(2)}
+                                  </span>
+                                </td>
+                                <td>
+                                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <span style={{ fontSize: '0.8rem', color: profit >= 0 ? '#4ADE80' : '#F87171', fontWeight: 800, fontFamily: 'monospace' }}>
+                                      +₹{profit.toFixed(2)}
+                                    </span>
+                                    <span style={{ fontSize: '0.66rem', color: '#38BDF8', fontWeight: 700 }}>
+                                      {marginPct}% Margin
+                                    </span>
+                                  </div>
+                                </td>
+                                <td style={{ textAlign: 'right' }}>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRemoveEmailPack(idx)}
+                                    style={{
+                                      background: 'rgba(239, 68, 68, 0.15)',
+                                      border: '1px solid rgba(239, 68, 68, 0.3)',
+                                      color: '#F87171',
+                                      padding: '4px 8px',
+                                      borderRadius: '6px',
+                                      fontSize: '0.7rem',
+                                      cursor: 'pointer',
+                                    }}
+                                  >
+                                    Delete
+                                  </button>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* 4. SECTION 3: CLIENT INBOUND MAILBOX FEED */}
+                  <div className="fixkar-panel" style={{ padding: '0', overflow: 'hidden' }}>
+                    <div className="fixkar-panel-head" style={{ padding: '16px 20px', margin: 0 }}>
+                      <div className="fixkar-panel-title">
+                        <Mail size={16} color="#38BDF8" />
+                        <span>3. Client Inbound Mailbox Feed (support@fixkar.co.in)</span>
+                      </div>
+
+                      <div style={{ position: 'relative', width: '280px' }}>
+                        <Search size={13} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                        <input
+                          type="text"
+                          value={emailSearchQuery}
+                          onChange={(e) => setEmailSearchQuery(e.target.value)}
+                          placeholder="Search sender or subject..."
+                          style={{
+                            width: '100%',
+                            padding: '6px 10px 6px 28px',
+                            background: 'rgba(0, 0, 0, 0.3)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '8px',
+                            color: '#fff',
+                            fontSize: '0.76rem',
+                          }}
+                        />
+                      </div>
+                    </div>
+
                     <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.8rem' }}>
                       <thead>
                         <tr style={{ background: 'rgba(255, 255, 255, 0.03)', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                          <th style={{ width: '28%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>CLIENT SENDER</th>
-                          <th style={{ width: '44%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>SUBJECT &amp; MESSAGE</th>
-                          <th style={{ width: '16%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>RECEIVED (IST)</th>
-                          <th style={{ width: '12%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'right' }}>ACTION</th>
+                          <th style={{ width: '28%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase' }}>CLIENT SENDER</th>
+                          <th style={{ width: '44%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase' }}>SUBJECT &amp; MESSAGE</th>
+                          <th style={{ width: '16%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase' }}>RECEIVED (IST)</th>
+                          <th style={{ width: '12%', padding: '12px 14px', color: '#94A3B8', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>ACTION</th>
                         </tr>
                       </thead>
                       <tbody>
