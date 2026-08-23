@@ -42,6 +42,8 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
   const [features, setFeatures] = useState(() => prefilledScope?.features || {
     whatsapp: true,
     contactForm: true,
+    smsEmailGateway: false,
+    businessEmail: false,
     bookingCalendar: false,
     priceCalculator: false,
     paymentGateway: false,
@@ -838,9 +840,16 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
                         }}
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
-                          <strong style={{ fontSize: '0.82rem', color: isChecked ? '#fff' : '#CBD5E1' }}>
-                            {f.title}
-                          </strong>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                            {(f.id === 'smsEmailGateway' || f.id === 'businessEmail') && (
+                              <span style={{ fontSize: '0.6rem', color: '#38BDF8', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.3)', padding: '1px 6px', borderRadius: '4px', fontWeight: 800, width: 'fit-content', letterSpacing: '0.04em' }}>
+                                ⚡ CLOUD MESSAGING &amp; EMAIL
+                              </span>
+                            )}
+                            <strong style={{ fontSize: '0.82rem', color: isChecked ? '#fff' : '#CBD5E1' }}>
+                              {f.title}
+                            </strong>
+                          </div>
                           <div
                             style={{
                               width: '18px',
@@ -859,7 +868,7 @@ export function FixkarQuote({ onBookSprint, prefilledScope }) {
                         </div>
 
                         <p style={{ fontSize: '0.7rem', color: '#94A3B8', margin: 0, lineHeight: 1.3 }}>
-                          {f.desc || 'Standard feature module.'}
+                          {f.desc || f.whatItDoes || 'Standard feature module.'}
                         </p>
 
                         <div style={{ fontSize: '0.78rem', fontWeight: 800, color: f.price === 0 ? '#4ADE80' : '#FDE047', fontFamily: 'monospace' }}>
