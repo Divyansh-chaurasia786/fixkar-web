@@ -1011,6 +1011,44 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
     }
   };
 
+  const [baseRetailRatePerEmail, setBaseRetailRatePerEmail] = useState(0.080);
+
+  const handleRecalculateEmailPacksFromBaseRate = (baseRate) => {
+    const base = parseFloat(baseRate) || 0.080;
+    setBaseRetailRatePerEmail(base);
+
+    setEmailGatewayConfig((prev) => {
+      const updated = (prev.packages || []).map((pkg) => {
+        const credits = Number(pkg.credits) || 5000;
+        let discount = 0;
+        if (credits >= 100000) discount = 0.44;
+        else if (credits >= 50000) discount = 0.35;
+        else if (credits >= 25000) discount = 0.22;
+        else if (credits >= 10000) discount = 0.10;
+
+        const effectiveRate = base * (1 - discount);
+        const calculatedPrice = Math.round(credits * effectiveRate);
+
+        return {
+          ...pkg,
+          price: calculatedPrice,
+        };
+      });
+
+      return {
+        ...prev,
+        packages: updated,
+      };
+    });
+  };
+
+  const handleApplyEmailTargetMargin = (marginPct) => {
+    const wholesale = Number(emailGatewayConfig.wholesaleCostPerEmail) || 0.034;
+    const requiredBaseRate = parseFloat((wholesale / (1 - marginPct / 100)).toFixed(3));
+    setBaseRetailRatePerEmail(requiredBaseRate);
+    handleRecalculateEmailPacksFromBaseRate(requiredBaseRate);
+  };
+
   const handleUpdateEmailPackField = (index, field, value) => {
     setEmailGatewayConfig((prev) => {
       const updatedPackages = [...(prev.packages || [])];
@@ -3526,33 +3564,18 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                         />
                       </div>
 
-                      {/* Wholesale Cost per Email */}
+                      {/* Upstream Status Badge */}
                       <div>
                         <label style={{ fontSize: '0.72rem', color: '#CBD5E1', fontWeight: 700, display: 'block', marginBottom: '5px' }}>
-                          Wholesale Cost / Email (INR ₹)
+                          Upstream Delivery Channel
                         </label>
-                        <input
-                          type="number"
-                          step="0.001"
-                          value={emailGatewayConfig.wholesaleCostPerEmail !== undefined ? emailGatewayConfig.wholesaleCostPerEmail : 0.034}
-                          onChange={(e) => setEmailGatewayConfig({ ...emailGatewayConfig, wholesaleCostPerEmail: e.target.value })}
-                          style={{
-                            width: '100%',
-                            padding: '8px 12px',
-                            background: 'rgba(255, 255, 255, 0.04)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            borderRadius: '8px',
-                            color: '#4ADE80',
-                            fontSize: '0.8rem',
-                            fontFamily: 'monospace',
-                            fontWeight: 800,
-                            boxSizing: 'border-box',
-                          }}
-                        />
+                        <div style={{ padding: '8px 12px', background: '#0D1323', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '8px', color: '#4ADE80', fontSize: '0.8rem', fontWeight: 700, fontFamily: 'monospace' }}>
+                          ⚡ Resend Pro Tier (50,000 Free / $20)
+                        </div>
                       </div>
                     </div>
 
-                    {/* Live Test Dispatcher */}
+                    {/* Resend Carrier Balance Bar & Live Test Dispatcher */}
                     <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: '1 1 300px' }}>
                         <span style={{ fontSize: '0.74rem', color: '#94A3B8', fontWeight: 700 }}>Test Connection:</span>
@@ -3602,46 +3625,232 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                     </div>
                   </div>
 
-                  {/* 3. SECTION 2: MASTER EMAIL LIVE PACK PRICING ENGINE TABLE */}
+                  {/* 3. SECTION 2: MASTER EMAIL RETAIL PRICE & PROFIT MARGIN CONTROLLERS */}
                   <div className="fixkar-panel">
                     <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
                       <div className="fixkar-panel-title">
-                        <Layers size={16} color="#38BDF8" />
-                        <span>2. Master Email Live Pack Pricing &amp; Wholesale Margins</span>
+                        <DollarSign size={16} color="#FBBF24" />
+                        <span>2. Master Email Pricing Architecture &amp; Dynamic Profit Margins</span>
                       </div>
+                      <span style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
+                        Upstream cost auto-gathered from Resend Cloud API. Adjust base rate or pick target margin presets.
+                      </span>
+                    </div>
+
+                    {/* Dynamic Target Margin Preset Buttons */}
+                    <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '12px', padding: '10px 14px', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+                      <span style={{ fontSize: '0.74rem', color: '#CBD5E1', fontWeight: 700 }}>
+                        ⚡ Quick Target Margin Presets (Auto-Calculates Base Price &amp; All Packs):
+                      </span>
+                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                        {[40, 50, 60, 70].map((m) => {
+                          const cost = Number(emailGatewayConfig.wholesaleCostPerEmail) || 0.034;
+                          const calculatedRate = (cost / (1 - m / 100)).toFixed(3);
+                          const isCurrent = Math.abs((((Number(baseRetailRatePerEmail) || 0.080) - cost) / (Number(baseRetailRatePerEmail) || 0.080)) * 100 - m) < 2.5;
+                          return (
+                            <button
+                              key={m}
+                              type="button"
+                              onClick={() => handleApplyEmailTargetMargin(m)}
+                              style={{
+                                background: isCurrent ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' : 'rgba(255, 255, 255, 0.05)',
+                                border: `1px solid ${isCurrent ? '#38BDF8' : 'rgba(255, 255, 255, 0.12)'}`,
+                                color: isCurrent ? '#fff' : '#CBD5E1',
+                                padding: '5px 12px',
+                                borderRadius: '6px',
+                                fontSize: '0.72rem',
+                                fontWeight: 800,
+                                cursor: 'pointer',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                              }}
+                              title={`Set profit margin to ${m}% (Base rate will be ₹${calculatedRate}/Email)`}
+                            >
+                              <span>🎯 {m}% Margin</span>
+                              <span style={{ fontSize: '0.64rem', color: isCurrent ? '#BAE6FD' : '#94A3B8' }}>
+                                (₹{calculatedRate})
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px', marginBottom: '16px' }}>
+                      {/* 1. Base Retail Rate per Email */}
+                      <div style={{ background: 'rgba(56, 189, 248, 0.05)', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: '14px', padding: '16px 18px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                          <label style={{ fontSize: '0.72rem', color: '#93C5FD', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                            Base Retail Price Per Email (₹)
+                          </label>
+                          <span style={{ fontSize: '0.64rem', color: '#38BDF8', fontWeight: 700 }}>Selling Rate</span>
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                          <div style={{ position: 'relative', flex: 1 }}>
+                            <span style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#38BDF8', fontWeight: 800, fontSize: '0.9rem' }}>₹</span>
+                            <input
+                              type="number"
+                              step="0.005"
+                              min="0.035"
+                              max="1.000"
+                              value={baseRetailRatePerEmail}
+                              onChange={(e) => {
+                                const val = e.target.value === '' ? '' : parseFloat(e.target.value);
+                                setBaseRetailRatePerEmail(val);
+                              }}
+                              onBlur={(e) => {
+                                const val = parseFloat(e.target.value) || 0.080;
+                                handleRecalculateEmailPacksFromBaseRate(val);
+                              }}
+                              style={{
+                                width: '100%',
+                                padding: '8px 10px 8px 24px',
+                                background: '#0B1120',
+                                border: '1px solid rgba(56, 189, 248, 0.4)',
+                                borderRadius: '8px',
+                                color: '#38BDF8',
+                                fontSize: '1rem',
+                                fontWeight: 900,
+                                fontFamily: 'monospace',
+                                boxSizing: 'border-box',
+                              }}
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleRecalculateEmailPacksFromBaseRate(baseRetailRatePerEmail || 0.080)}
+                            style={{
+                              background: 'rgba(56, 189, 248, 0.18)',
+                              border: '1px solid rgba(56, 189, 248, 0.4)',
+                              color: '#38BDF8',
+                              padding: '8px 12px',
+                              borderRadius: '8px',
+                              fontSize: '0.74rem',
+                              fontWeight: 800,
+                              cursor: 'pointer',
+                              whiteSpace: 'nowrap',
+                            }}
+                            title="Cascade this base rate across all email packs with volume discounts"
+                          >
+                            ⚡ Auto-Sync Packs
+                          </button>
+                        </div>
+                        <span style={{ fontSize: '0.68rem', color: '#94A3B8', marginTop: '6px', display: 'block' }}>
+                          Standard unit rate before volume discounts
+                        </span>
+                      </div>
+
+                      {/* 2. Upstream Resend Wholesale Cost (Locked / Auto-Gathered from Gateway API) */}
+                      <div style={{ background: 'rgba(245, 158, 11, 0.05)', border: '1px solid rgba(245, 158, 11, 0.35)', borderRadius: '14px', padding: '16px 18px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                        <div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                            <label style={{ fontSize: '0.72rem', color: '#FDE047', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                              Carrier Wholesale Cost (₹)
+                            </label>
+                            <span style={{ fontSize: '0.62rem', background: 'rgba(74, 222, 128, 0.18)', color: '#86EFAC', padding: '2px 7px', borderRadius: '4px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                              🔒 Auto-API
+                            </span>
+                          </div>
+
+                          <div style={{ background: '#0B1120', border: '1px solid rgba(245, 158, 11, 0.25)', borderRadius: '8px', padding: '8px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                              <span style={{ color: '#F59E0B', fontWeight: 900, fontSize: '1.2rem', fontFamily: 'monospace' }}>
+                                ₹{Number(emailGatewayConfig.wholesaleCostPerEmail || 0.034).toFixed(3)}
+                              </span>
+                              <span style={{ color: '#94A3B8', fontSize: '0.72rem', fontWeight: 700 }}>/EMAIL</span>
+                            </div>
+                            <span style={{ fontSize: '0.66rem', color: '#FDE047', background: 'rgba(245, 158, 11, 0.15)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>
+                              Resend Pro
+                            </span>
+                          </div>
+                        </div>
+
+                        <span style={{ fontSize: '0.68rem', color: '#94A3B8', marginTop: '8px' }}>
+                          Auto-gathered via Resend Cloud API ($20 Pro / 50k tier: ₹0.034/email)
+                        </span>
+                      </div>
+
+                      {/* 3. Live Gross Profit Margin Percentage */}
+                      {(() => {
+                        const baseVal = Number(baseRetailRatePerEmail) || 0.080;
+                        const costVal = Number(emailGatewayConfig.wholesaleCostPerEmail) || 0.034;
+                        const marginPct = baseVal > 0 ? (((baseVal - costVal) / baseVal) * 100).toFixed(1) : '0.0';
+                        const profitPerEmail = (baseVal - costVal).toFixed(3);
+                        return (
+                          <div style={{ background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.35)', borderRadius: '14px', padding: '16px 18px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                            <div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                <label style={{ fontSize: '0.72rem', color: '#6EE7B7', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                  Dynamic Gross Margin
+                                </label>
+                                <span style={{ fontSize: '0.62rem', background: 'rgba(74, 222, 128, 0.18)', color: '#86EFAC', padding: '2px 7px', borderRadius: '4px', fontWeight: 800 }}>
+                                  Real-Time
+                                </span>
+                              </div>
+
+                              <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#4ADE80', fontFamily: 'monospace', lineHeight: 1.1 }}>
+                                {marginPct}%
+                              </div>
+                            </div>
+
+                            <span style={{ fontSize: '0.72rem', color: '#A7F3D0', fontWeight: 700, marginTop: '8px' }}>
+                              Net Studio Profit: <strong style={{ color: '#4ADE80', fontFamily: 'monospace' }}>+₹{profitPerEmail}</strong> per Email
+                            </span>
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  </div>
+
+                  {/* 4. SECTION 3: EMAIL RECHARGE PACKAGE MATRIX & PLAN MANAGEMENT */}
+                  <div className="fixkar-panel">
+                    <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
+                      <div>
+                        <div className="fixkar-panel-title">
+                          <Layers size={16} color="#38BDF8" />
+                          <span>3. Email Package Matrix &amp; Plan Management ({(emailGatewayConfig.packages || []).length} Plans Active)</span>
+                        </div>
+                        <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '3px' }}>
+                          Add new plans, adjust rates, and customize descriptions. Changes persist across client portals &amp; quote configurator.
+                        </div>
+                      </div>
+
                       <button
                         type="button"
                         onClick={handleAddNewEmailPack}
                         style={{
-                          background: 'rgba(56, 189, 248, 0.15)',
-                          border: '1px solid rgba(56, 189, 248, 0.4)',
-                          color: '#38BDF8',
-                          padding: '5px 12px',
-                          borderRadius: '6px',
-                          fontSize: '0.74rem',
-                          fontWeight: 700,
+                          background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
+                          border: 'none',
+                          color: '#fff',
+                          padding: '7px 16px',
+                          borderRadius: '8px',
+                          fontSize: '0.76rem',
+                          fontWeight: 800,
                           cursor: 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '4px',
+                          gap: '6px',
+                          boxShadow: '0 4px 15px rgba(2, 132, 199, 0.4)',
                         }}
                       >
-                        <Plus size={12} />
-                        <span>+ Add New Email Package</span>
+                        <Plus size={14} />
+                        <span>+ Create &amp; Add Custom Email Plan</span>
                       </button>
                     </div>
 
                     <div style={{ overflowX: 'auto', width: '100%' }}>
-                      <table className="fixkar-table" style={{ width: '100%', minWidth: '780px' }}>
+                      <table className="fixkar-table" style={{ width: '100%', minWidth: '820px' }}>
                         <thead>
                           <tr>
-                            <th style={{ width: '22%' }}>PACK NAME</th>
-                            <th style={{ width: '14%' }}>EMAILS</th>
+                            <th style={{ width: '22%' }}>PACKAGE NAME &amp; DESCRIPTION</th>
+                            <th style={{ width: '12%' }}>CREDITS (EMAILS)</th>
                             <th style={{ width: '14%' }}>RETAIL RATE / EMAIL</th>
-                            <th style={{ width: '14%' }}>RETAIL PRICE (₹)</th>
-                            <th style={{ width: '14%' }}>WHOLESALE COST</th>
+                            <th style={{ width: '14%' }}>PACK PRICE (₹)</th>
+                            <th style={{ width: '12%' }}>WHOLESALE COST</th>
                             <th style={{ width: '12%' }}>NET PROFIT</th>
-                            <th style={{ width: '10%', textAlign: 'right' }}>ACTION</th>
+                            <th style={{ width: '8%', textAlign: 'center' }}>POPULAR</th>
+                            <th style={{ width: '6%', textAlign: 'right' }}>ACTION</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -3669,6 +3878,22 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                                       color: '#fff',
                                       fontSize: '0.78rem',
                                       fontWeight: 700,
+                                    }}
+                                  />
+                                  <input
+                                    type="text"
+                                    value={pkg.desc || ''}
+                                    placeholder="Package description / subtitle..."
+                                    onChange={(e) => handleUpdateEmailPackField(idx, 'desc', e.target.value)}
+                                    style={{
+                                      width: '100%',
+                                      padding: '3px 8px',
+                                      marginTop: '4px',
+                                      background: 'rgba(255, 255, 255, 0.02)',
+                                      border: '1px solid rgba(255, 255, 255, 0.06)',
+                                      borderRadius: '4px',
+                                      color: '#94A3B8',
+                                      fontSize: '0.68rem',
                                     }}
                                   />
                                 </td>
@@ -3731,6 +3956,24 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                                     </span>
                                   </div>
                                 </td>
+                                <td style={{ textAlign: 'center' }}>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleUpdateEmailPackField(idx, 'popular', !pkg.popular)}
+                                    style={{
+                                      background: pkg.popular ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                                      border: `1px solid ${pkg.popular ? '#38BDF8' : 'rgba(255, 255, 255, 0.1)'}`,
+                                      color: pkg.popular ? '#38BDF8' : '#64748B',
+                                      padding: '3px 8px',
+                                      borderRadius: '6px',
+                                      fontSize: '0.66rem',
+                                      fontWeight: 800,
+                                      cursor: 'pointer',
+                                    }}
+                                  >
+                                    {pkg.popular ? '⭐ MOST POPULAR' : 'Standard'}
+                                  </button>
+                                </td>
                                 <td style={{ textAlign: 'right' }}>
                                   <button
                                     type="button"
@@ -3753,6 +3996,74 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                           })}
                         </tbody>
                       </table>
+                    </div>
+                  </div>
+
+                  {/* 5. SECTION 4: LIVE CLIENT-FACING RECHARGE MATRIX PREVIEW */}
+                  <div className="fixkar-panel">
+                    <div className="fixkar-panel-head" style={{ marginBottom: '14px' }}>
+                      <div className="fixkar-panel-title">
+                        <Smartphone size={16} color="#38BDF8" />
+                        <span>4. Live Client-Facing Email Pack Preview (What Clients See in Portal)</span>
+                      </div>
+                      <span style={{ fontSize: '0.7rem', color: '#4ADE80', fontWeight: 700 }}>
+                        ● 100% White-Labeled &bull; Fixkar Mail Matrix
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+                      {(emailGatewayConfig.packages || []).map((pkg) => (
+                        <div
+                          key={pkg.id}
+                          style={{
+                            background: pkg.popular ? 'rgba(37, 99, 235, 0.18)' : 'rgba(255, 255, 255, 0.02)',
+                            border: `1px solid ${pkg.popular ? '#38BDF8' : 'rgba(255, 255, 255, 0.08)'}`,
+                            borderRadius: '12px',
+                            padding: '14px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            gap: '10px',
+                            position: 'relative',
+                          }}
+                        >
+                          {pkg.popular && (
+                            <span style={{ position: 'absolute', top: '-8px', right: '12px', background: '#38BDF8', color: '#000', fontSize: '0.62rem', fontWeight: 900, padding: '1px 6px', borderRadius: '4px', letterSpacing: '0.04em' }}>
+                              MOST POPULAR
+                            </span>
+                          )}
+
+                          <div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <strong style={{ fontSize: '0.86rem', color: '#fff' }}>{pkg.name}</strong>
+                              <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontFamily: 'monospace', fontWeight: 700 }}>
+                                ₹{((Number(pkg.price) || 0) / (Number(pkg.credits) || 1)).toFixed(3)}/email
+                              </span>
+                            </div>
+                            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#FDE047', fontFamily: 'monospace', margin: '4px 0 2px' }}>
+                              +{(Number(pkg.credits) || 0).toLocaleString()} <span style={{ fontSize: '0.74rem', color: '#94A3B8', fontWeight: 600 }}>Emails</span>
+                            </div>
+                            <p style={{ fontSize: '0.7rem', color: '#94A3B8', margin: '4px 0 0', lineHeight: 1.3 }}>
+                              {pkg.desc}
+                            </p>
+                          </div>
+
+                          <div
+                            style={{
+                              background: pkg.popular ? 'linear-gradient(135deg, #38BDF8 0%, #2563EB 100%)' : 'rgba(255, 255, 255, 0.06)',
+                              border: `1px solid ${pkg.popular ? '#38BDF8' : 'rgba(255, 255, 255, 0.15)'}`,
+                              color: '#fff',
+                              padding: '7px 12px',
+                              borderRadius: '8px',
+                              fontSize: '0.74rem',
+                              fontWeight: 700,
+                              textAlign: 'center',
+                            }}
+                          >
+                            ₹{Number(pkg.price || 0).toLocaleString('en-IN')} Top-Up
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
