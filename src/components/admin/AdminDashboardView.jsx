@@ -733,7 +733,7 @@ export function AdminDashboardView({ onNavigateHome }) {
         setLeads((prev) => (prev || []).map((l) => (l?.id === leadId ? { ...l, status: 'Converted' } : l)));
         setSelectedClientDetail(d.client);
         setActiveTab('clients');
-        setDraftSavedNotice(`🎉 SUCCESS! '${d.client.businessName}' has been converted and onboarded to Clients (${d.client.clientCode})!`);
+        setDraftSavedNotice(d.alreadyConverted ? `ℹ️ '${d.client.businessName}' was already converted (${d.client.clientCode})` : `🎉 SUCCESS! '${d.client.businessName}' converted and added to Clients (${d.client.clientCode})!`);
         setTimeout(() => setDraftSavedNotice(null), 6000);
       } else {
         alert(d.error || d.message || 'Failed to convert lead to client.');
