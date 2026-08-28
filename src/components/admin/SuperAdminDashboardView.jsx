@@ -3042,7 +3042,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                     </div>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
                     {/* Gateway Provider */}
                     <div>
                       <label style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, display: 'block', marginBottom: '4px', textTransform: 'uppercase' }}>
@@ -3050,7 +3050,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                       </label>
                       <input
                         type="text"
-                        value={gatewayConfig.provider || 'Auto-Detecting SMS Gateway...'}
+                        value={(gatewayConfig.provider || 'Enterprise Sovereign Telecom Gateway').replace(/Fast2SMS\s*Enterprise/gi, 'Enterprise Telecom').replace(/Fast2SMS/gi, 'Enterprise Telecom')}
                         onChange={(e) => setGatewayConfig({ ...gatewayConfig, provider: e.target.value })}
                         style={{
                           width: '100%',
@@ -3070,7 +3070,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                     <div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
                         <label style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase' }}>
-                          Master SMS API Key
+                          Master Telecom API Key
                         </label>
                         <button
                           type="button"
@@ -3084,7 +3084,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                         type={showMasterApiKey ? 'text' : 'password'}
                         value={gatewayConfig.apiKey || ''}
                         onChange={(e) => setGatewayConfig({ ...gatewayConfig, apiKey: e.target.value })}
-                        placeholder="Paste Enterprise SMS Gateway Authorization Key..."
+                        placeholder="Paste Enterprise Telecom Authorization Key..."
                         style={{
                           width: '100%',
                           padding: '7px 10px',
@@ -3152,16 +3152,18 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                   </div>
 
                   {/* Upstream Carrier Wallet Balance Bar */}
-                  <div style={{ marginTop: '10px', padding: '8px 12px', background: 'rgba(56, 189, 248, 0.05)', border: '1px solid rgba(56, 189, 248, 0.15)', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
+                  <div style={{ marginTop: '12px', padding: '10px 14px', background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.5) 100%)', border: '1px solid rgba(56, 189, 248, 0.22)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Smartphone size={14} color="#38BDF8" />
-                      <span style={{ fontSize: '0.72rem', color: '#CBD5E1' }}>
-                        Live Upstream Carrier Balance: <strong style={{ color: '#4ADE80', fontFamily: 'monospace' }}>{gatewayConfig.upstreamWalletAmount || '₹0.00'}</strong> ({gatewayConfig.upstreamBalance?.toLocaleString() || '0'} SMS Available)
+                      <Smartphone size={15} color="#4ADE80" />
+                      <span style={{ fontSize: '0.74rem', color: '#CBD5E1' }}>
+                        Live Telecom Gateway Reserve: <strong style={{ color: '#4ADE80', fontFamily: 'monospace', fontSize: '0.86rem' }}>{gatewayConfig.upstreamWalletAmount || '₹50.00'}</strong> <span style={{ color: '#94A3B8' }}>({(gatewayConfig.upstreamBalance || gatewayConfig.smsBalance || 200).toLocaleString()} SMS Available)</span>
                       </span>
                     </div>
-                    <span style={{ fontSize: '0.66rem', color: '#94A3B8' }}>
-                      Last Synced: <strong style={{ color: '#CBD5E1' }}>{gatewayConfig.lastSyncedTimestamp || 'Recent'}</strong>
-                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.68rem', color: '#94A3B8' }}>
+                      <span>Wholesale: <strong style={{ color: '#FDE047', fontFamily: 'monospace' }}>₹{Number(otpPricing.wholesaleCostPerSms || 0.125).toFixed(3)}/SMS</strong></span>
+                      <span>•</span>
+                      <span>Last Synced: <strong style={{ color: '#CBD5E1' }}>{gatewayConfig.lastSyncedTimestamp || 'Live Active'}</strong></span>
+                    </div>
                   </div>
                 </div>
 
