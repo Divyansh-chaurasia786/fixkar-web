@@ -295,6 +295,8 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
   const [emailLogs, setEmailLogs] = useState([]);
   const [emailLogsLoading, setEmailLogsLoading] = useState(false);
   const [emailSearchQuery, setEmailSearchQuery] = useState('');
+  const [bankRadarFilter, setBankRadarFilter] = useState('ALL');
+  const [bankRadarSearch, setBankRadarSearch] = useState('');
   const [inboundStatusFilter, setInboundStatusFilter] = useState('ALL');
   const [selectedEmailForModal, setSelectedEmailForModal] = useState(null);
   const [selectedInboundEmailModal, setSelectedInboundEmailModal] = useState(null);
@@ -5200,118 +5202,414 @@ const data = await res.json();`);
         {/* ═════════════════════════════════════════════════════════════════
             TAB 3: 48-HOUR PROVISIONAL BANK RECONCILIATION RADAR
             ═════════════════════════════════════════════════════════════════ */}
-        {activeTab === 'provisional' && (
-          <div className="fixkar-panel" style={{ padding: '0', overflow: 'hidden' }}>
-            <div className="fixkar-panel-head" style={{ padding: '16px 20px', margin: 0 }}>
-              <div className="fixkar-panel-title">
-                <ShieldCheck size={16} color="#FBBF24" />
-                <span>48-Hour Bank Statement Reconciliation Engine</span>
+        {activeTab === 'provisional' && (() => {
+          const pendingCount = (provisionalRecharges || []).filter(p => p.status === 'PENDING_SUPER_ADMIN').length;
+          const settledCount = (provisionalRecharges || []).filter(p => p.status === 'CONFIRMED_PERMANENT').length;
+          const totalExposure = (provisionalRecharges || [])
+            .filter(p => p.status === 'PENDING_SUPER_ADMIN')
+            .reduce((acc, p) => acc + (Number(String(p.amount || '0').replace(/[^0-9.]/g, '')) || 0), 0);
+
+          const filteredList = (provisionalRecharges || []).filter((prov) => {
+            if (bankRadarFilter === 'PENDING' && prov.status !== 'PENDING_SUPER_ADMIN') return false;
+            if (bankRadarFilter === 'SETTLED' && prov.status !== 'CONFIRMED_PERMANENT') return false;
+            if (!bankRadarSearch) return true;
+            const q = bankRadarSearch.toLowerCase();
+            return (
+              (prov.clientName || '').toLowerCase().includes(q) ||
+              (prov.clientCode || '').toLowerCase().includes(q) ||
+              (prov.utr || '').toLowerCase().includes(q)
+            );
+          });
+
+          return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {/* ─── 4 TOP BANK RADAR TELEMETRY CARDS (Single-Row Balanced Compact Grid) ─── */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', width: '100%', boxSizing: 'border-box' }}>
+                {/* Card 1: Pending Match */}
+                <div
+                  onClick={() => setBankRadarFilter(bankRadarFilter === 'PENDING' ? 'ALL' : 'PENDING')}
+                  style={{
+                    background: bankRadarFilter === 'PENDING'
+                      ? 'linear-gradient(180deg, rgba(120, 53, 15, 0.35) 0%, rgba(15, 23, 42, 0.95) 100%)'
+                      : 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: `1px solid ${bankRadarFilter === 'PENDING' ? 'rgba(245, 158, 11, 0.6)' : pendingCount > 0 ? 'rgba(245, 158, 11, 0.4)' : 'rgba(245, 158, 11, 0.22)'}`,
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = bankRadarFilter === 'PENDING' ? 'rgba(245, 158, 11, 0.6)' : pendingCount > 0 ? 'rgba(245, 158, 11, 0.4)' : 'rgba(245, 158, 11, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to filter Pending Verification"
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#FDE047', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      PENDING MATCH (48H SLA)
+                    </span>
+                    <Clock size={14} color="#F59E0B" />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#F59E0B', fontFamily: 'monospace' }}>
+                      {pendingCount}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Awaiting Bank Check</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: pendingCount > 0 ? '#FBBF24' : '#86EFAC' }}>{pendingCount > 0 ? '● Active Verification' : '● Zero Pending'}</span>
+                    <span style={{ color: '#94A3B8' }}>{bankRadarFilter === 'PENDING' ? 'Filtered ✓' : 'Filter Pending'}</span>
+                  </div>
+                </div>
+
+                {/* Card 2: Exposure Amount */}
+                <div
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: '1px solid rgba(56, 189, 248, 0.22)',
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#93C5FD', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      PROVISIONAL RISK EXPOSURE
+                    </span>
+                    <DollarSign size={14} color="#38BDF8" />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#38BDF8', fontFamily: 'monospace' }}>
+                      ₹{totalExposure.toLocaleString('en-IN')}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>In Transit</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#4ADE80' }}>● Auto-Clawback Guard</span>
+                    <span style={{ color: '#94A3B8' }}>Escrowed</span>
+                  </div>
+                </div>
+
+                {/* Card 3: Settled Bank Reconciliations */}
+                <div
+                  onClick={() => setBankRadarFilter(bankRadarFilter === 'SETTLED' ? 'ALL' : 'SETTLED')}
+                  style={{
+                    background: bankRadarFilter === 'SETTLED'
+                      ? 'linear-gradient(180deg, rgba(6, 78, 59, 0.35) 0%, rgba(15, 23, 42, 0.95) 100%)'
+                      : 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: `1px solid ${bankRadarFilter === 'SETTLED' ? 'rgba(74, 222, 128, 0.6)' : 'rgba(74, 222, 128, 0.22)'}`,
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = bankRadarFilter === 'SETTLED' ? 'rgba(74, 222, 128, 0.6)' : 'rgba(74, 222, 128, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to filter Settled Transactions"
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#86EFAC', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      VERIFIED SETTLEMENTS
+                    </span>
+                    <CheckCircle2 size={14} color="#4ADE80" />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#4ADE80', fontFamily: 'monospace' }}>
+                      {settledCount}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Bank Cleared</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#4ADE80' }}>● Reconciled</span>
+                    <span style={{ color: '#94A3B8' }}>{bankRadarFilter === 'SETTLED' ? 'Filtered ✓' : 'Filter Settled'}</span>
+                  </div>
+                </div>
+
+                {/* Card 4: Fraud Protection SLA */}
+                <div
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: '1px solid rgba(192, 132, 252, 0.22)',
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#D8B4FE', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      FRAUD PROTECTION SLA
+                    </span>
+                    <ShieldCheck size={14} color="#C084FC" />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#C084FC', fontFamily: 'monospace' }}>
+                      100% PROTECTED
+                    </span>
+                    <span style={{ fontSize: '0.68rem', fontWeight: 600, color: '#94A3B8' }}>Atomic Clawback</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#86EFAC', fontWeight: 600 }}>● Instant Reversal</span>
+                    <span style={{ color: '#94A3B8' }}>Ledger Locked</span>
+                  </div>
+                </div>
               </div>
 
-              <span style={{ fontSize: '0.74rem', color: '#FDE047', background: 'rgba(245, 158, 11, 0.2)', border: '1px solid rgba(245, 158, 11, 0.4)', padding: '4px 12px', borderRadius: '12px', fontWeight: 800 }}>
-                ⏳ {pendingProvisionalCount} Pending Verification
-              </span>
-            </div>
+              {/* ─── MAIN RECONCILIATION TABLE PANEL ─── */}
+              <div className="fixkar-panel" style={{ padding: '0', overflow: 'hidden' }}>
+                {/* Panel Header */}
+                <div className="fixkar-panel-head" style={{ padding: '12px 18px', margin: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                  <div className="fixkar-panel-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                    <ShieldCheck size={15} color="#FBBF24" />
+                    <span style={{ fontWeight: 800 }}>48-Hour Bank Statement Reconciliation Engine</span>
+                    <span style={{ fontSize: '0.68rem', color: pendingCount > 0 ? '#FBBF24' : '#4ADE80', background: pendingCount > 0 ? 'rgba(245, 158, 11, 0.15)' : 'rgba(74, 222, 128, 0.12)', border: `1px solid ${pendingCount > 0 ? 'rgba(245, 158, 11, 0.3)' : 'rgba(74, 222, 128, 0.3)'}`, padding: '2px 8px', borderRadius: '10px', fontWeight: 800 }}>
+                      ⏳ {pendingCount} Pending Verification &bull; {settledCount} Settled
+                    </span>
+                  </div>
 
-            <div style={{ padding: '0 20px 14px', fontSize: '0.76rem', color: '#94A3B8' }}>
-              Verify bank statement UTRs. Confirm to mark permanent or Instant Reject to auto-deduct credits from client wallet.
-            </div>
+                  <button
+                    type="button"
+                    onClick={fetchAllSuperData}
+                    disabled={loading}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      color: '#CBD5E1',
+                      padding: '5px 12px',
+                      borderRadius: '6px',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                    }}
+                  >
+                    <RefreshCw size={12} className={loading ? 'animate-spin' : ''} />
+                    <span>Refresh Radar</span>
+                  </button>
+                </div>
 
-            <div style={{ overflowX: 'auto', width: '100%' }}>
-              <table className="fixkar-table">
-                <thead>
-                  <tr>
-                    <th>CLIENT</th>
-                    <th>PROVISIONAL OTPs</th>
-                    <th>PAYMENT DUE / UTR</th>
-                    <th>ALLOCATED BY</th>
-                    <th>TIME REMAINING</th>
-                    <th style={{ textAlign: 'right' }}>SUPER ADMIN DECISION</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {provisionalRecharges.map((prov) => {
-                    const isPending = prov.status === 'PENDING_SUPER_ADMIN';
-                    return (
-                      <tr key={prov.id}>
-                        <td>
-                          <div style={{ fontWeight: 700, color: '#fff' }}>{prov.clientName}</div>
-                          <div style={{ fontSize: '0.7rem', color: '#38BDF8', fontFamily: 'monospace' }}>{prov.clientCode}</div>
-                        </td>
-                        <td>
-                          <span style={{ fontWeight: 800, color: '#4ADE80', fontFamily: 'monospace' }}>
-                            +{prov.credits.toLocaleString()} OTPs
-                          </span>
-                        </td>
-                        <td>
-                          <div style={{ fontWeight: 800, color: '#FDE047', fontFamily: 'monospace' }}>{prov.amount}</div>
-                          <div style={{ fontSize: '0.7rem', color: '#CBD5E1', fontFamily: 'monospace' }}>UTR: {prov.utr}</div>
-                        </td>
-                        <td>
-                          <div style={{ color: '#CBD5E1', fontSize: '0.76rem' }}>{prov.addedBy || 'Admin'}</div>
-                          <div style={{ fontSize: '0.66rem', color: '#94A3B8' }}>{prov.createdTimestamp ? prov.createdTimestamp.split(',')[0] : ''}</div>
-                        </td>
-                        <td>
-                          {isPending ? (
-                            <span style={{ fontSize: '0.7rem', color: '#FBBF24', background: 'rgba(251, 191, 36, 0.15)', border: '1px solid rgba(251, 191, 36, 0.3)', padding: '2px 8px', borderRadius: '6px', fontWeight: 700 }}>
-                              ⏳ {prov.hoursLeft || 48}h left
-                            </span>
-                          ) : (
-                            <span style={{ fontSize: '0.7rem', color: prov.status === 'CONFIRMED_PERMANENT' ? '#4ADE80' : '#F43F5E', fontWeight: 700 }}>
-                              ● {prov.status}
-                            </span>
-                          )}
-                        </td>
-                        <td style={{ textAlign: 'right' }}>
-                          {isPending ? (
-                            <div style={{ display: 'inline-flex', gap: '6px' }}>
-                              <button
-                                type="button"
-                                onClick={() => handleConfirmProvisional(prov.id)}
-                                style={{
-                                  background: '#16A34A',
-                                  border: 'none',
-                                  color: '#fff',
-                                  padding: '5px 12px',
-                                  borderRadius: '6px',
-                                  fontSize: '0.72rem',
-                                  fontWeight: 800,
-                                  cursor: 'pointer',
-                                }}
-                              >
-                                ✓ Confirm (Bank Match)
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => handleRejectProvisional(prov.id)}
-                                style={{
-                                  background: '#DC2626',
-                                  border: 'none',
-                                  color: '#fff',
-                                  padding: '5px 10px',
-                                  borderRadius: '6px',
-                                  fontSize: '0.72rem',
-                                  fontWeight: 800,
-                                  cursor: 'pointer',
-                                }}
-                              >
-                                ✕ Reject &amp; Deduct
-                              </button>
-                            </div>
-                          ) : (
-                            <span style={{ fontSize: '0.72rem', color: '#94A3B8' }}>Verified by Super Admin</span>
-                          )}
-                        </td>
+                {/* Search & Filter Toolbar */}
+                <div style={{ padding: '8px 18px', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', background: 'rgba(0, 0, 0, 0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                  <div style={{ position: 'relative', width: '100%', maxWidth: '360px' }}>
+                    <Search size={13} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                    <input
+                      type="text"
+                      value={bankRadarSearch}
+                      onChange={(e) => setBankRadarSearch(e.target.value)}
+                      placeholder="Search by client, UTR number, or code..."
+                      style={{
+                        width: '100%',
+                        padding: '6px 10px 6px 30px',
+                        background: '#0B1120',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '6px',
+                        color: '#fff',
+                        fontSize: '0.76rem',
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                    <button
+                      type="button"
+                      onClick={() => setBankRadarFilter('ALL')}
+                      style={{
+                        background: bankRadarFilter === 'ALL' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                        border: `1px solid ${bankRadarFilter === 'ALL' ? '#38BDF8' : 'rgba(255, 255, 255, 0.1)'}`,
+                        color: bankRadarFilter === 'ALL' ? '#fff' : '#94A3B8',
+                        padding: '4px 9px',
+                        borderRadius: '5px',
+                        fontSize: '0.68rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      All ({(provisionalRecharges || []).length})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setBankRadarFilter('PENDING')}
+                      style={{
+                        background: bankRadarFilter === 'PENDING' ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                        border: `1px solid ${bankRadarFilter === 'PENDING' ? '#F59E0B' : 'rgba(255, 255, 255, 0.1)'}`,
+                        color: bankRadarFilter === 'PENDING' ? '#FDE047' : '#94A3B8',
+                        padding: '4px 9px',
+                        borderRadius: '5px',
+                        fontSize: '0.68rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Pending Match ({pendingCount})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setBankRadarFilter('SETTLED')}
+                      style={{
+                        background: bankRadarFilter === 'SETTLED' ? 'rgba(74, 222, 128, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                        border: `1px solid ${bankRadarFilter === 'SETTLED' ? '#4ADE80' : 'rgba(255, 255, 255, 0.1)'}`,
+                        color: bankRadarFilter === 'SETTLED' ? '#86EFAC' : '#94A3B8',
+                        padding: '4px 9px',
+                        borderRadius: '5px',
+                        fontSize: '0.68rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Settled ({settledCount})
+                    </button>
+                  </div>
+                </div>
+
+                {/* Table */}
+                <div style={{ width: '100%', overflowX: 'auto' }}>
+                  <table className="fixkar-table" style={{ width: '100%', minWidth: '860px', margin: 0 }}>
+                    <thead>
+                      <tr>
+                        <th style={{ width: '20%', padding: '10px 14px' }}>CLIENT</th>
+                        <th style={{ width: '14%', padding: '10px 14px' }}>PROVISIONAL CREDITS</th>
+                        <th style={{ width: '20%', padding: '10px 14px' }}>PAYMENT DUE / UTR</th>
+                        <th style={{ width: '14%', padding: '10px 14px' }}>ALLOCATED BY</th>
+                        <th style={{ width: '14%', padding: '10px 14px' }}>TIME REMAINING</th>
+                        <th style={{ width: '18%', padding: '10px 14px', textAlign: 'right' }}>SUPER ADMIN DECISION</th>
                       </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                    </thead>
+                    <tbody>
+                      {filteredList.length === 0 ? (
+                        <tr>
+                          <td colSpan={6} style={{ padding: '36px 20px', textAlign: 'center', color: '#94A3B8' }}>
+                            <ShieldCheck size={28} color="#64748B" style={{ margin: '0 auto 8px', display: 'block', opacity: 0.5 }} />
+                            <div style={{ fontWeight: 700, color: '#fff', fontSize: '0.86rem' }}>No Provisional Bank Transfers In Current Filter</div>
+                            <div style={{ fontSize: '0.72rem', marginTop: '3px' }}>
+                              When clients submit manual bank deposits or UTRs, they appear here with a live 48h countdown.
+                            </div>
+                          </td>
+                        </tr>
+                      ) : (
+                        filteredList.map((prov) => {
+                          const isPending = prov.status === 'PENDING_SUPER_ADMIN';
+                          return (
+                            <tr key={prov.id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', background: isPending ? 'rgba(245, 158, 11, 0.04)' : 'transparent' }}>
+                              <td style={{ padding: '11px 14px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.82rem' }}>{prov.clientName}</div>
+                                <div style={{ fontSize: '0.66rem', color: '#38BDF8', fontFamily: 'monospace', marginTop: '2px' }}>{prov.clientCode}</div>
+                              </td>
+
+                              <td style={{ padding: '11px 14px' }}>
+                                <span style={{ fontWeight: 800, color: '#4ADE80', fontFamily: 'monospace', fontSize: '0.84rem' }}>
+                                  +{(Number(prov.credits) || 0).toLocaleString()} <span style={{ fontSize: '0.66rem', color: '#94A3B8', fontWeight: 600 }}>SMS</span>
+                                </span>
+                              </td>
+
+                              <td style={{ padding: '11px 14px' }}>
+                                <div style={{ fontWeight: 800, color: '#FDE047', fontFamily: 'monospace', fontSize: '0.84rem' }}>{prov.amount}</div>
+                                <div style={{ fontSize: '0.68rem', color: '#CBD5E1', fontFamily: 'monospace', marginTop: '2px' }}>
+                                  UTR: <strong style={{ color: '#93C5FD' }}>{prov.utr}</strong>
+                                </div>
+                              </td>
+
+                              <td style={{ padding: '11px 14px' }}>
+                                <div style={{ color: '#CBD5E1', fontSize: '0.74rem', fontWeight: 600 }}>{prov.addedBy || 'Admin'}</div>
+                                <div style={{ fontSize: '0.64rem', color: '#94A3B8', marginTop: '2px' }}>{prov.createdTimestamp ? prov.createdTimestamp.split(',')[0] : ''}</div>
+                              </td>
+
+                              <td style={{ padding: '11px 14px' }}>
+                                {isPending ? (
+                                  <span style={{ fontSize: '0.7rem', color: '#FBBF24', background: 'rgba(251, 191, 36, 0.15)', border: '1px solid rgba(251, 191, 36, 0.3)', padding: '3px 8px', borderRadius: '6px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                    ⏳ {prov.timeRemainingText || (prov.hoursLeft ? prov.hoursLeft + 'h left' : '48h left')}
+                                  </span>
+                                ) : (
+                                  <span style={{
+                                    fontSize: '0.66rem',
+                                    fontWeight: 800,
+                                    padding: '2px 7px',
+                                    borderRadius: '8px',
+                                    background: prov.status === 'CONFIRMED_PERMANENT' ? 'rgba(74, 222, 128, 0.12)' : 'rgba(244, 63, 94, 0.12)',
+                                    border: `1px solid ${prov.status === 'CONFIRMED_PERMANENT' ? 'rgba(74, 222, 128, 0.3)' : 'rgba(244, 63, 94, 0.3)'}`,
+                                    color: prov.status === 'CONFIRMED_PERMANENT' ? '#4ADE80' : '#FDA4AF',
+                                    display: 'inline-block',
+                                    whiteSpace: 'nowrap'
+                                  }}>
+                                    ● {prov.status === 'CONFIRMED_PERMANENT' ? 'SETTLED' : 'REJECTED'}
+                                  </span>
+                                )}
+                              </td>
+
+                              <td style={{ padding: '11px 14px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                                {isPending ? (
+                                  <div style={{ display: 'inline-flex', gap: '5px', alignItems: 'center' }}>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleConfirmProvisional(prov.id)}
+                                      title="Confirm payment received in bank statement"
+                                      style={{
+                                        background: 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)',
+                                        border: 'none',
+                                        color: '#fff',
+                                        padding: '4px 10px',
+                                        borderRadius: '5px',
+                                        fontSize: '0.68rem',
+                                        fontWeight: 800,
+                                        cursor: 'pointer',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '3px',
+                                        boxShadow: '0 2px 6px rgba(22, 163, 74, 0.3)',
+                                      }}
+                                    >
+                                      ✓ Confirm
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRejectProvisional(prov.id)}
+                                      title="Reject fake UTR & clawback provisional credits"
+                                      style={{
+                                        background: 'rgba(244, 63, 94, 0.15)',
+                                        border: '1px solid rgba(244, 63, 94, 0.35)',
+                                        color: '#FDA4AF',
+                                        padding: '4px 8px',
+                                        borderRadius: '5px',
+                                        fontSize: '0.68rem',
+                                        fontWeight: 800,
+                                        cursor: 'pointer',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '3px',
+                                      }}
+                                    >
+                                      ✕ Clawback
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <span style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 600 }}>Verified &amp; Settled</span>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
-          </div>
-        )}
-
-
+          );
+        })()}
 
         {/* ═════════════════════════════════════════════════════════════════
             TAB: RENEWAL RADAR — ALL CLIENT DOMAINS & SERVERS
