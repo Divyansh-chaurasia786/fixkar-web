@@ -1864,11 +1864,31 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 alignItems: 'center',
                 gap: '6px',
               }}
-              title="Sync Super Admin Telemetry"
+              title="Sync Super Admin Telemetry • Auto-Sync runs 3x Daily (08:00 AM • 02:00 PM • 08:00 PM IST)"
             >
               <RefreshCw size={13} className={loading ? 'animate-spin' : ''} />
               <span>Sync</span>
             </button>
+
+            {/* 3x Daily Auto-Sync Micro Badge */}
+            <div
+              style={{
+                background: 'rgba(56, 189, 248, 0.08)',
+                border: '1px solid rgba(56, 189, 248, 0.22)',
+                borderRadius: '8px',
+                padding: '6px 10px',
+                color: '#93C5FD',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+              }}
+              title="Automated Carrier Reconciliation runs 3 times daily at 08:00 AM, 02:00 PM, and 08:00 PM IST"
+            >
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#38BDF8', boxShadow: '0 0 6px #38BDF8' }} />
+              <span>3x Auto-Sync (8AM • 2PM • 8PM)</span>
+            </div>
 
             {/* Glowing Red Emergency Kill-Switch Power Button */}
             <button
