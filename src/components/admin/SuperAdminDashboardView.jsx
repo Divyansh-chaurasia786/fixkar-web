@@ -1224,14 +1224,27 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
     }
   };
 
-  const handleMarkRenewalPaid = (r) => {
-    setRenewals((prev) =>
-      prev.map((x) =>
-        x.id === r.id ? { ...x, daysRemaining: 365, renewalDate: new Date(Date.now() + 365 * 86400000).toISOString().slice(0, 10) } : x
-      )
-    );
-    setToastMessage(`✅ ${r.clientName} renewed +1 Year`);
-    setTimeout(() => setToastMessage(''), 5000);
+  const handleMarkRenewalPaid = async (r) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/renewals/${r.id || r.clientCode || r.clientId}/extend`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${adminToken}`,
+          'x-super-token': superAdminToken || '9835',
+        },
+      });
+      const data = await res.json();
+      if (data.success) {
+        setToastMessage(`✅ ${data.message || `${r.clientName} renewed +1 Year`}`);
+        setTimeout(() => setToastMessage(''), 5000);
+        fetchAllSuperData();
+      } else {
+        alert(data.message || data.error || 'Failed to extend renewal');
+      }
+    } catch (err) {
+      alert('Error extending renewal: ' + err.message);
+    }
   };
 
   // ─── Support Ticket Handlers (Super Admin & Admin Resolvable) ──────────────
@@ -5635,155 +5648,459 @@ const data = await res.json();`);
         {/* ═════════════════════════════════════════════════════════════════
             TAB: RENEWAL RADAR — ALL CLIENT DOMAINS & SERVERS
             ═════════════════════════════════════════════════════════════════ */}
-        {activeTab === 'renewals' && (
-          <div className="fixkar-panel" style={{ padding: 0, overflow: 'hidden' }}>
-            {/* Header */}
-            <div style={{ padding: '14px 18px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Clock size={16} color="#FBBF24" />
-                <span style={{ fontWeight: 800, color: '#fff', fontSize: '0.92rem' }}>Server &amp; Domain Renewals Radar</span>
-                <span style={{ fontSize: '0.72rem', background: 'rgba(56,189,248,0.15)', color: '#38BDF8', padding: '1px 8px', borderRadius: '10px', fontWeight: 700 }}>
-                  {(renewals || []).length} Total
-                </span>
-                {(renewals || []).filter((r) => (r?.daysRemaining ?? 999) <= 30).length > 0 && (
-                  <span style={{ fontSize: '0.7rem', background: 'rgba(239,68,68,0.2)', color: '#FDA4AF', padding: '1px 8px', borderRadius: '10px', fontWeight: 700 }}>
-                    🚨 {(renewals || []).filter((r) => (r?.daysRemaining ?? 999) <= 30).length} Expiring Soon
-                  </span>
-                )}
-              </div>
-              {/* Filters */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                <div className="fixkar-pill-bar">
-                  {[
-                    { id: 'All', label: `All (${(renewals || []).length})` },
-                    { id: 'Next 30 Days', label: `🚨 30 Days (${(renewals || []).filter((r) => (r?.daysRemaining ?? 999) <= 30).length})` },
-                    { id: 'Next 15 Days', label: `⚠️ 15 Days (${(renewals || []).filter((r) => (r?.daysRemaining ?? 999) <= 15).length})` },
-                  ].map((f) => (
-                    <button
-                      key={f.id}
-                      type="button"
-                      onClick={() => setRenewalFilter(f.id)}
-                      className={`fixkar-pill-btn ${renewalFilter === f.id ? 'active' : ''}`}
-                      style={{ fontSize: '0.71rem', padding: '4px 10px' }}
-                    >
-                      {f.label}
-                    </button>
-                  ))}
-                </div>
-                <div style={{ position: 'relative', minWidth: '180px' }}>
-                  <Search size={12} style={{ position: 'absolute', left: '9px', top: '50%', transform: 'translateY(-50%)', color: '#64748B', pointerEvents: 'none' }} />
-                  <input
-                    type="text"
-                    placeholder="Search client, domain..."
-                    value={renewalSearchQuery}
-                    onChange={(e) => setRenewalSearchQuery(e.target.value)}
-                    style={{ width: '100%', padding: '5px 10px 5px 28px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff', fontSize: '0.75rem', outline: 'none', boxSizing: 'border-box' }}
-                  />
-                </div>
-              </div>
-            </div>
+        {activeTab === 'renewals' && (() => {
+          const totalRenewals = (renewals || []).length;
+          const expiring30 = (renewals || []).filter(r => (r?.daysRemaining ?? 999) <= 30).length;
+          const expiring15 = (renewals || []).filter(r => (r?.daysRemaining ?? 999) <= 15).length;
+          const healthy = totalRenewals - expiring30;
+          const totalArr = (renewals || []).reduce((acc, r) => {
+            const p = Number(String(r.price || '2499').replace(/[^0-9.]/g, '')) || 2499;
+            return acc + p;
+          }, 0);
 
-            {/* Table */}
-            <div style={{ width: '100%', overflowX: 'auto' }}>
-              <table className="fixkar-table" style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
-                <thead>
-                  <tr style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                    <th style={{ width: '24%', padding: '10px 12px', textAlign: 'left' }}>CLIENT</th>
-                    <th style={{ width: '26%', padding: '10px 12px', textAlign: 'left' }}>SERVICE &amp; INFRASTRUCTURE</th>
-                    <th style={{ width: '22%', padding: '10px 12px', textAlign: 'left' }}>EXPIRY &amp; COUNTDOWN</th>
-                    <th style={{ width: '12%', padding: '10px 12px', textAlign: 'left' }}>PRICE</th>
-                    <th style={{ width: '16%', padding: '10px 12px', textAlign: 'right' }}>ACTIONS</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {(renewals || [])
-                    .filter((r) => {
-                      const days = r?.daysRemaining ?? 999;
-                      if (renewalFilter === 'Next 30 Days') return days <= 30;
-                      if (renewalFilter === 'Next 15 Days') return days <= 15;
-                      return true;
-                    })
-                    .filter((r) => {
-                      if (!renewalSearchQuery.trim()) return true;
-                      const q = renewalSearchQuery.toLowerCase();
-                      return (
-                        (r.clientName || '').toLowerCase().includes(q) ||
-                        (r.clientCode || '').toLowerCase().includes(q) ||
-                        (r.domain || '').toLowerCase().includes(q) ||
-                        (r.service || '').toLowerCase().includes(q) ||
-                        (r.renewalDate || '').toLowerCase().includes(q)
-                      );
-                    })
-                    .map((r) => (
-                      <tr key={r.id || r.clientCode} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                        <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>
-                          <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.82rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.clientName}</div>
-                          <div style={{ fontSize: '0.68rem', color: '#38BDF8', fontFamily: 'monospace', marginTop: '1px' }}>{r.clientCode}{r.domain ? ` • ${r.domain}` : ''}</div>
-                        </td>
-                        <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-                            {r.renewalType && (
-                              <span style={{ fontSize: '0.62rem', fontWeight: 800, padding: '1px 6px', borderRadius: '4px', background: r.renewalType === 'Domain' ? 'rgba(56,189,248,0.15)' : 'rgba(168,85,247,0.15)', color: r.renewalType === 'Domain' ? '#38BDF8' : '#C084FC', border: `1px solid ${r.renewalType === 'Domain' ? 'rgba(56,189,248,0.3)' : 'rgba(168,85,247,0.3)'}` }}>
-                                {r.renewalType}
-                              </span>
-                            )}
-                            <span style={{ color: '#CBD5E1', fontSize: '0.74rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.service || 'Managed Cloud VPS & Domain'}</span>
-                          </div>
-                          {r.duration && <div style={{ fontSize: '0.64rem', color: '#64748B', marginTop: '2px' }}>Cycle: {r.duration}</div>}
-                        </td>
-                        <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <span className={`fixkar-status-chip ${(r?.daysRemaining ?? 99) <= 15 ? 'danger' : (r?.daysRemaining ?? 99) <= 30 ? 'warning' : 'success'}`} style={{ fontSize: '0.66rem', padding: '2px 7px', fontWeight: 800, whiteSpace: 'nowrap' }}>
-                              {(r?.daysRemaining ?? 99) <= 30 ? `🚨 ${r.daysRemaining}d left` : `● ${r.daysRemaining} days`}
-                            </span>
-                            <span style={{ fontSize: '0.68rem', color: '#94A3B8', fontFamily: 'monospace', whiteSpace: 'nowrap' }}>{r.renewalDate}</span>
-                          </div>
-                        </td>
-                        <td style={{ padding: '10px 12px', verticalAlign: 'middle', whiteSpace: 'nowrap' }}>
-                          <div style={{ fontWeight: 800, color: '#38BDF8', fontSize: '0.82rem' }}>{r.price || '₹2,499/yr'}</div>
-                        </td>
-                        <td style={{ padding: '10px 12px', textAlign: 'right', verticalAlign: 'middle', whiteSpace: 'nowrap' }}>
-                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                            <button
-                              type="button"
-                              onClick={() => handleSendRenewalEmail(r)}
-                              title={`Email renewal invoice to ${r.clientName}`}
-                              style={{ background: 'rgba(56,189,248,0.12)', border: '1px solid rgba(56,189,248,0.3)', color: '#38BDF8', padding: '4px 7px', borderRadius: '5px', fontSize: '0.68rem', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '3px' }}
-                            >
-                              <Mail size={11} />
-                              <span>Email</span>
-                            </button>
-                            <a
-                              href={`https://wa.me/${(r.phone || '919835012345').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hello ${r.clientName}, your website hosting & domain (${r.domain || ''}) is expiring in ${r.daysRemaining} days. Renewal: ${r.price}. Pay via UPI: fixkar@upi`)}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              style={{ background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.3)', color: '#4ADE80', padding: '4px 7px', borderRadius: '5px', fontSize: '0.68rem', fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '3px' }}
-                            >
-                              WA
-                            </a>
-                            <button
-                              type="button"
-                              onClick={() => handleMarkRenewalPaid(r)}
-                              style={{ background: '#16A34A', border: 'none', color: '#fff', padding: '4px 8px', borderRadius: '5px', fontSize: '0.68rem', fontWeight: 800, cursor: 'pointer' }}
-                            >
-                              +1 Yr
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
+          const filteredRenewals = (renewals || [])
+            .filter((r) => {
+              const days = r?.daysRemaining ?? 999;
+              if (renewalFilter === 'Next 30 Days') return days <= 30;
+              if (renewalFilter === 'Next 15 Days') return days <= 15;
+              if (renewalFilter === 'Healthy') return days > 30;
+              return true;
+            })
+            .filter((r) => {
+              if (!renewalSearchQuery.trim()) return true;
+              const q = renewalSearchQuery.toLowerCase();
+              return (
+                (r.clientName || '').toLowerCase().includes(q) ||
+                (r.clientCode || '').toLowerCase().includes(q) ||
+                (r.domain || '').toLowerCase().includes(q) ||
+                (r.service || '').toLowerCase().includes(q) ||
+                (r.renewalDate || '').toLowerCase().includes(q)
+              );
+            });
+
+          return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {/* ─── 4 TOP RENEWAL RADAR KPI SUMMARY CARDS (Single-Row Balanced Compact Grid) ─── */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', width: '100%', boxSizing: 'border-box' }}>
+                {/* Card 1: Total Infrastructure */}
+                <div
+                  onClick={() => setRenewalFilter('All')}
+                  style={{
+                    background: renewalFilter === 'All'
+                      ? 'linear-gradient(180deg, rgba(30, 58, 138, 0.35) 0%, rgba(15, 23, 42, 0.95) 100%)'
+                      : 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: `1px solid ${renewalFilter === 'All' ? 'rgba(56, 189, 248, 0.6)' : 'rgba(56, 189, 248, 0.22)'}`,
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = renewalFilter === 'All' ? 'rgba(56, 189, 248, 0.6)' : 'rgba(56, 189, 248, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to view all infrastructure services"
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#93C5FD', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      MANAGED INFRASTRUCTURE
+                    </span>
+                    <Globe size={14} color="#38BDF8" />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#38BDF8', fontFamily: 'monospace' }}>
+                      {totalRenewals}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Active Nodes</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#4ADE80' }}>● 100% Online</span>
+                    <span style={{ color: '#94A3B8' }}>{renewalFilter === 'All' ? 'Filtered ✓' : 'Filter All'}</span>
+                  </div>
+                </div>
+
+                {/* Card 2: 30 Days Expiring */}
+                <div
+                  onClick={() => setRenewalFilter(renewalFilter === 'Next 30 Days' ? 'All' : 'Next 30 Days')}
+                  style={{
+                    background: renewalFilter === 'Next 30 Days'
+                      ? 'linear-gradient(180deg, rgba(120, 53, 15, 0.35) 0%, rgba(15, 23, 42, 0.95) 100%)'
+                      : 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: `1px solid ${renewalFilter === 'Next 30 Days' ? 'rgba(245, 158, 11, 0.6)' : expiring30 > 0 ? 'rgba(239, 68, 68, 0.5)' : 'rgba(245, 158, 11, 0.22)'}`,
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = renewalFilter === 'Next 30 Days' ? 'rgba(245, 158, 11, 0.6)' : expiring30 > 0 ? 'rgba(239, 68, 68, 0.5)' : 'rgba(245, 158, 11, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to filter domains expiring in next 30 days"
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#FDE047', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      EXPIRING IN 30 DAYS
+                    </span>
+                    <Clock size={14} color="#F59E0B" />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: expiring30 > 0 ? '#EF4444' : '#F59E0B', fontFamily: 'monospace' }}>
+                      {expiring30}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Notice Pipeline</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: expiring30 > 0 ? '#FDA4AF' : '#86EFAC' }}>{expiring30 > 0 ? '🚨 Action Required' : '● Zero Immediate Risk'}</span>
+                    <span style={{ color: '#94A3B8' }}>{renewalFilter === 'Next 30 Days' ? 'Filtered ✓' : 'Filter 30d'}</span>
+                  </div>
+                </div>
+
+                {/* Card 3: 15 Days Urgent */}
+                <div
+                  onClick={() => setRenewalFilter(renewalFilter === 'Next 15 Days' ? 'All' : 'Next 15 Days')}
+                  style={{
+                    background: renewalFilter === 'Next 15 Days'
+                      ? 'linear-gradient(180deg, rgba(127, 29, 29, 0.35) 0%, rgba(15, 23, 42, 0.95) 100%)'
+                      : 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: `1px solid ${renewalFilter === 'Next 15 Days' ? 'rgba(239, 68, 68, 0.6)' : expiring15 > 0 ? 'rgba(239, 68, 68, 0.6)' : 'rgba(239, 68, 68, 0.22)'}`,
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = renewalFilter === 'Next 15 Days' ? 'rgba(239, 68, 68, 0.6)' : expiring15 > 0 ? 'rgba(239, 68, 68, 0.6)' : 'rgba(239, 68, 68, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to filter urgent 15-day expiries"
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#FDA4AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      URGENT INVOICING (15 DAYS)
+                    </span>
+                    <AlertTriangle size={14} color="#EF4444" />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: expiring15 > 0 ? '#EF4444' : '#FCA5A5', fontFamily: 'monospace' }}>
+                      {expiring15}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Critical Status</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: expiring15 > 0 ? '#FDA4AF' : '#86EFAC' }}>{expiring15 > 0 ? '🚨 Invoice Client Now' : '● All Protected'}</span>
+                    <span style={{ color: '#94A3B8' }}>{renewalFilter === 'Next 15 Days' ? 'Filtered ✓' : 'Filter 15d'}</span>
+                  </div>
+                </div>
+
+                {/* Card 4: Total ARR */}
+                <div
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: '1px solid rgba(74, 222, 128, 0.22)',
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#86EFAC', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      ANNUAL RECURRING REVENUE
+                    </span>
+                    <DollarSign size={14} color="#4ADE80" />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#4ADE80', fontFamily: 'monospace' }}>
+                      ₹{totalArr.toLocaleString('en-IN')}<span style={{ fontSize: '0.72rem', color: '#94A3B8' }}>/yr</span>
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#4ADE80' }}>● Auto-Renew Enabled</span>
+                    <span style={{ color: '#94A3B8' }}>Direct Invoicing</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* ─── MAIN RENEWALS RADAR TABLE PANEL ─── */}
+              <div className="fixkar-panel" style={{ padding: '0', overflow: 'hidden' }}>
+                {/* Panel Header */}
+                <div className="fixkar-panel-head" style={{ padding: '12px 18px', margin: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                  <div className="fixkar-panel-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                    <Clock size={15} color="#FBBF24" />
+                    <span style={{ fontWeight: 800 }}>Server &amp; Domain Renewals Radar</span>
+                    <span style={{ fontSize: '0.68rem', color: '#38BDF8', background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.3)', padding: '2px 8px', borderRadius: '10px', fontWeight: 800 }}>
+                      {totalRenewals} Total Subscriptions
+                    </span>
+                    {expiring30 > 0 && (
+                      <span style={{ fontSize: '0.68rem', background: 'rgba(239,68,68,0.2)', color: '#FDA4AF', border: '1px solid rgba(239,68,68,0.4)', padding: '2px 8px', borderRadius: '10px', fontWeight: 800 }}>
+                        🚨 {expiring30} Expiring Soon
+                      </span>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={fetchAllSuperData}
+                    disabled={loading}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      color: '#CBD5E1',
+                      padding: '5px 12px',
+                      borderRadius: '6px',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                    }}
+                  >
+                    <RefreshCw size={12} className={loading ? 'animate-spin' : ''} />
+                    <span>Sync Infrastructure</span>
+                  </button>
+                </div>
+
+                {/* Search & Filter Toolbar */}
+                <div style={{ padding: '8px 18px', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', background: 'rgba(0, 0, 0, 0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                  <div style={{ position: 'relative', width: '100%', maxWidth: '360px' }}>
+                    <Search size={13} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                    <input
+                      type="text"
+                      placeholder="Search client, domain, service, or date..."
+                      value={renewalSearchQuery}
+                      onChange={(e) => setRenewalSearchQuery(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '6px 10px 6px 30px',
+                        background: '#0B1120',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '6px',
+                        color: '#fff',
+                        fontSize: '0.76rem',
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    {[
+                      { id: 'All', label: `All (${totalRenewals})` },
+                      { id: 'Next 30 Days', label: `🚨 30 Days (${expiring30})` },
+                      { id: 'Next 15 Days', label: `⚠️ 15 Days (${expiring15})` },
+                      { id: 'Healthy', label: `🟢 Healthy (${healthy})` },
+                    ].map((f) => (
+                      <button
+                        key={f.id}
+                        type="button"
+                        onClick={() => setRenewalFilter(f.id)}
+                        style={{
+                          background: renewalFilter === f.id ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                          border: `1px solid ${renewalFilter === f.id ? '#38BDF8' : 'rgba(255, 255, 255, 0.1)'}`,
+                          color: renewalFilter === f.id ? '#fff' : '#94A3B8',
+                          padding: '4px 9px',
+                          borderRadius: '5px',
+                          fontSize: '0.68rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {f.label}
+                      </button>
                     ))}
-                  {(renewals || []).length === 0 && (
-                    <tr>
-                      <td colSpan={4} style={{ padding: '32px', textAlign: 'center', color: '#64748B', fontSize: '0.82rem' }}>
-                        ✓ No renewal records found. Sync to load client infrastructure data.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                  </div>
+                </div>
+
+                {/* Table */}
+                <div style={{ width: '100%', overflowX: 'auto' }}>
+                  <table className="fixkar-table" style={{ width: '100%', minWidth: '900px', margin: 0 }}>
+                    <thead>
+                      <tr>
+                        <th style={{ width: '22%', padding: '10px 14px' }}>CLIENT &amp; DOMAIN</th>
+                        <th style={{ width: '26%', padding: '10px 14px' }}>SERVICE &amp; INFRASTRUCTURE</th>
+                        <th style={{ width: '22%', padding: '10px 14px' }}>EXPIRY &amp; COUNTDOWN</th>
+                        <th style={{ width: '12%', padding: '10px 14px' }}>ANNUAL PRICE</th>
+                        <th style={{ width: '18%', padding: '10px 14px', textAlign: 'right' }}>RENEWAL ACTIONS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredRenewals.length === 0 ? (
+                        <tr>
+                          <td colSpan={5} style={{ padding: '36px 20px', textAlign: 'center', color: '#94A3B8' }}>
+                            <Clock size={28} color="#64748B" style={{ margin: '0 auto 8px', display: 'block', opacity: 0.5 }} />
+                            <div style={{ fontWeight: 700, color: '#fff', fontSize: '0.86rem' }}>No Renewal Records Found In Current Filter</div>
+                            <div style={{ fontSize: '0.72rem', marginTop: '3px' }}>
+                              All client hosting servers and domain expiration dates are synced and healthy.
+                            </div>
+                          </td>
+                        </tr>
+                      ) : (
+                        filteredRenewals.map((r) => {
+                          const days = r?.daysRemaining ?? 999;
+                          const isCritical = days <= 15;
+                          const isWarning = days <= 30 && days > 15;
+                          return (
+                            <tr key={r.id || r.clientCode} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                              <td style={{ padding: '11px 14px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.82rem' }}>{r.clientName}</div>
+                                <div style={{ fontSize: '0.68rem', color: '#38BDF8', fontFamily: 'monospace', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                  <span>{r.clientCode}</span>
+                                  {r.domain && (
+                                    <>
+                                      <span>&bull;</span>
+                                      <a
+                                        href={`https://${r.domain}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        style={{ color: '#93C5FD', textDecoration: 'none', fontWeight: 600 }}
+                                        title={`Visit ${r.domain}`}
+                                      >
+                                        {r.domain} ↗
+                                      </a>
+                                    </>
+                                  )}
+                                </div>
+                              </td>
+
+                              <td style={{ padding: '11px 14px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                  <span style={{
+                                    fontSize: '0.62rem',
+                                    fontWeight: 800,
+                                    padding: '2px 6px',
+                                    borderRadius: '4px',
+                                    background: r.renewalType === 'Domain' ? 'rgba(56,189,248,0.15)' : 'rgba(168,85,247,0.15)',
+                                    color: r.renewalType === 'Domain' ? '#38BDF8' : '#C084FC',
+                                    border: `1px solid ${r.renewalType === 'Domain' ? 'rgba(56,189,248,0.3)' : 'rgba(168,85,247,0.3)'}`
+                                  }}>
+                                    {r.renewalType || 'Cloud + Domain'}
+                                  </span>
+                                  <span style={{ color: '#CBD5E1', fontSize: '0.76rem', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                    {r.service || 'Fixkar Enterprise Cloud VPS + Domain'}
+                                  </span>
+                                </div>
+                                <div style={{ fontSize: '0.64rem', color: '#64748B', marginTop: '2px' }}>
+                                  Cycle: {r.duration || 'Annual (12 Months)'} &bull; Auto-Invoicing
+                                </div>
+                              </td>
+
+                              <td style={{ padding: '11px 14px', whiteSpace: 'nowrap' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                  <span style={{
+                                    fontSize: '0.68rem',
+                                    fontWeight: 800,
+                                    padding: '3px 8px',
+                                    borderRadius: '6px',
+                                    background: isCritical ? 'rgba(239, 68, 68, 0.18)' : isWarning ? 'rgba(245, 158, 11, 0.18)' : 'rgba(74, 222, 128, 0.14)',
+                                    border: `1px solid ${isCritical ? 'rgba(239, 68, 68, 0.45)' : isWarning ? 'rgba(245, 158, 11, 0.45)' : 'rgba(74, 222, 128, 0.35)'}`,
+                                    color: isCritical ? '#FDA4AF' : isWarning ? '#FDE047' : '#86EFAC',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    fontFamily: 'monospace'
+                                  }}>
+                                    {isCritical ? `🚨 ${days}d left` : isWarning ? `⚠️ ${days}d left` : `● ${days} days`}
+                                  </span>
+                                  <span style={{ fontSize: '0.7rem', color: '#94A3B8', fontFamily: 'monospace' }}>
+                                    {r.renewalDate}
+                                  </span>
+                                </div>
+                              </td>
+
+                              <td style={{ padding: '11px 14px', whiteSpace: 'nowrap' }}>
+                                <div style={{ fontWeight: 800, color: '#38BDF8', fontSize: '0.84rem', fontFamily: 'monospace' }}>
+                                  {r.price || '₹2,499/yr'}
+                                </div>
+                              </td>
+
+                              <td style={{ padding: '11px 14px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleSendRenewalEmail(r)}
+                                    title={`Email renewal invoice to ${r.clientName}`}
+                                    style={{
+                                      background: 'rgba(56, 189, 248, 0.12)',
+                                      border: '1px solid rgba(56, 189, 248, 0.35)',
+                                      color: '#38BDF8',
+                                      padding: '4px 9px',
+                                      borderRadius: '5px',
+                                      fontSize: '0.68rem',
+                                      fontWeight: 700,
+                                      cursor: 'pointer',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '4px',
+                                    }}
+                                  >
+                                    <Mail size={11} />
+                                    <span>Email</span>
+                                  </button>
+                                  <a
+                                    href={`https://wa.me/${(r.phone || '919835012345').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hello ${r.clientName}, your website hosting & domain (${r.domain || ''}) is expiring on ${r.renewalDate} (${r.daysRemaining} days remaining). Renewal Price: ${r.price || '₹2,499'}. Pay via UPI / Bank Transfer.`)}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    title="Send WhatsApp renewal alert"
+                                    style={{
+                                      background: 'rgba(74, 222, 128, 0.12)',
+                                      border: '1px solid rgba(74, 222, 128, 0.35)',
+                                      color: '#4ADE80',
+                                      padding: '4px 9px',
+                                      borderRadius: '5px',
+                                      fontSize: '0.68rem',
+                                      fontWeight: 700,
+                                      textDecoration: 'none',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '4px',
+                                    }}
+                                  >
+                                    <span>💬 WA</span>
+                                  </a>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleMarkRenewalPaid(r)}
+                                    title="Extend client subscription by +1 Year"
+                                    style={{
+                                      background: 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)',
+                                      border: 'none',
+                                      color: '#fff',
+                                      padding: '4px 10px',
+                                      borderRadius: '5px',
+                                      fontSize: '0.68rem',
+                                      fontWeight: 800,
+                                      cursor: 'pointer',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '3px',
+                                      boxShadow: '0 2px 6px rgba(22, 163, 74, 0.3)',
+                                    }}
+                                  >
+                                    <span>+1 Yr</span>
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* ═════════════════════════════════════════════════════════════════
             TAB: CLIENT SUPPORT HELPDESK & TICKETS (ADMIN & SUPER ADMIN SHARED)
