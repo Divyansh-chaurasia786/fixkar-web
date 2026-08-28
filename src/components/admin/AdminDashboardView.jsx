@@ -717,38 +717,34 @@ export function AdminDashboardView({ onNavigateHome }) {
     }
   };
 
-  const handleConvertToClientFromLead = async (leadId) => {
-    try {
-      setLoading(true);
-      const res = await fetch(`${API_BASE}/api/admin/leads/${leadId}/convert`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${adminToken}`,
-        },
-      });
-      const d = await res.json();
-      if (d.success && d.client) {
-        setClients((prev) => [d.client, ...(prev || []).filter((c) => c?.clientCode !== d.client.clientCode)]);
-        setLeads((prev) => (prev || []).map((l) => (l?.id === leadId ? { ...l, status: 'Converted' } : l)));
-        setSelectedClientDetail(d.client);
-        setActiveTab('clients');
-        setDraftSavedNotice(d.alreadyConverted ? `ℹ️ '${d.client.businessName}' was already converted (${d.client.clientCode})` : `🎉 SUCCESS! '${d.client.businessName}' converted and added to Clients (${d.client.clientCode})!`);
-        setTimeout(() => setDraftSavedNotice(null), 6000);
-      } else {
-        alert(d.error || d.message || 'Failed to convert lead to client.');
-      }
-    } catch (err) {
-      console.error('Error converting lead to client:', err);
-      alert('Network Error: ' + err.message);
-    } finally {
-      setLoading(false);
-    }
+  const handleConvertToClientFromLead = (leadId) => {
+    const lead = (leads || []).find((l) => l?.id === leadId);
+    if (!lead) return;
+
+    setNewClientForm({
+      businessName: lead.businessName || lead.name || '',
+      businessType: lead.packageSelected || lead.serviceRequired || 'Coaching & IT Education',
+      contactPerson: lead.name || '',
+      phone: lead.phone || '',
+      whatsapp: lead.phone || '',
+      email: lead.email || '',
+      website: lead.domain ? `https://${lead.domain}` : '',
+      domain: lead.domain || '',
+      logoUrl: '',
+      street: '',
+      city: lead.city || 'Patna',
+      state: 'Bihar',
+      pinCode: '800001',
+      agreedPackage: lead.packageSelected || lead.serviceRequired || 'Standard Dynamic Web App (₹35,000)',
+      convertingLeadId: lead.id,
+      notes: lead.message || lead.notes || '',
+    });
+    setIsAddClientModalOpen(true);
   };
 
   const handleUpdateLeadStatus = async (leadId, newStatus) => {
     if (newStatus === 'Converted') {
-      await handleConvertToClientFromLead(leadId);
+      handleConvertToClientFromLead(leadId);
       return;
     }
     try {
@@ -887,7 +883,18 @@ export function AdminDashboardView({ onNavigateHome }) {
 
       if (res.ok) {
         const data = await res.json();
-        setClients((prev) => [data.client, ...prev]);
+        setClients((prev) => [data.client, ...(prev || []).filter(c => c?.clientCode !== data.client?.clientCode)]);
+        if (newClientForm.convertingLeadId) {
+          fetch(`${API_BASE}/api/admin/leads/${newClientForm.convertingLeadId}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${adminToken}`,
+            },
+            body: JSON.stringify({ status: 'Converted' }),
+          }).catch(console.error);
+          setLeads((prev) => (prev || []).map(l => l?.id === newClientForm.convertingLeadId ? { ...l, status: 'Converted' } : l));
+        }
         setIsAddClientModalOpen(false);
         // Show Welcome Dispatch Alert Modal
         setCreatedClientWelcome(data.client);
