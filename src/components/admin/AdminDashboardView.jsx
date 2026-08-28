@@ -1558,15 +1558,15 @@ export function AdminDashboardView({ onNavigateHome }) {
   };
 
   // Metric Calculations (100% Dynamic)
-  const pendingEnquiriesCount = leads.filter((l) => l?.status === 'New' || l?.status === 'In Discussion').length;
-  const activeClientsCount = clients.filter((c) => c?.status === 'Active' || !c?.status).length;
-  const liveProjectsCount = projects.filter((p) => p.sprintStatus && p.sprintStatus.includes('Live')).length;
-  const inSprintProjectsCount = projects.filter((p) => !p.sprintStatus || !p.sprintStatus.includes('Live')).length;
-  const pendingInvoicesCount = invoices.filter((i) => i?.status !== 'Paid').length;
+  const pendingEnquiriesCount = (leads || []).filter(Boolean).filter((l) => l?.status === 'New' || l?.status === 'In Discussion').length;
+  const activeClientsCount = (clients || []).filter(Boolean).filter((c) => c?.status === 'Active' || !c?.status).length;
+  const liveProjectsCount = (projects || []).filter(Boolean).filter((p) => p.sprintStatus && p.sprintStatus.includes('Live')).length;
+  const inSprintProjectsCount = (projects || []).filter(Boolean).filter((p) => !p.sprintStatus || !p.sprintStatus.includes('Live')).length;
+  const pendingInvoicesCount = (invoices || []).filter(Boolean).filter((i) => i?.status !== 'Paid').length;
   const pendingRevenueTotal = invoices
     .filter((i) => i?.status !== 'Paid')
     .reduce((sum, i) => sum + (Number(i.amount || i.total) || 0), 0);
-  const pendingRechargesCount = recharges.filter((r) => r?.status === 'Pending').length;
+  const pendingRechargesCount = (recharges || []).filter(Boolean).filter((r) => r?.status === 'Pending').length;
 
   // Dynamic exact-day renewals calculation
   const todayDate = new Date();
@@ -1591,12 +1591,12 @@ export function AdminDashboardView({ onNavigateHome }) {
       : `🚨 ${upcomingRenewalsCount} Renewal in ${nearestRenewal.calculatedDaysRemaining}d`
     : 'Renewals Up to Date';
 
-  const lowOtpClientsCount = otpWallets.filter((w) => Number(w.availableCredits || w.balance || w.credits || 0) < 1000).length;
-  const openSupportTicketsCount = supportTickets.filter((t) => t?.status === 'Open' || t?.status === 'In Progress').length;
+  const lowOtpClientsCount = (otpWallets || []).filter(Boolean).filter((w) => Number(w.availableCredits || w.balance || w.credits || 0) < 1000).length;
+  const openSupportTicketsCount = (supportTickets || []).filter(Boolean).filter((t) => t?.status === 'Open' || t?.status === 'In Progress').length;
   const unreadNotificationsCount = notifications.filter((n) => !n.isRead).length;
 
   // Filtered Clients
-  const filteredClients = clients.filter((c) => {
+  const filteredClients = (clients || []).filter(Boolean).filter((c) => {
     const bName = c.businessName || '';
     const cCode = c.clientCode || '';
     const phone = c.phone || '';
@@ -1612,7 +1612,7 @@ export function AdminDashboardView({ onNavigateHome }) {
   });
 
   // Filtered Leads
-  const filteredLeads = leads.filter((ld) => {
+  const filteredLeads = (leads || []).filter(Boolean).filter((ld) => {
     const q = (leadSearchQuery || '').toLowerCase();
     const name = ld.name || ld.businessName || '';
     const phone = ld.phone || '';
@@ -7819,7 +7819,7 @@ echo $response;
           const updatingProjects = projects.filter(p => String(p.sprintStatus).includes('Feedback') || String(p.sprintStatus).includes('Updating') || String(p.sprintStatus).includes('Revision')).length;
           const devProjects = projects.filter(p => String(p.sprintStatus).includes('Sprint') || String(p.sprintStatus).includes('Wireframing') || String(p.sprintStatus).includes('Planning')).length;
 
-          const filteredProjects = projects.filter((p) => {
+          const filteredProjects = (projects || []).filter(Boolean).filter((p) => {
             if (projectStageFilter === 'Live') return String(p.sprintStatus).includes('Live') || String(p.sprintStatus).includes('SLA');
             if (projectStageFilter === 'QA') return String(p.sprintStatus).includes('Testing') || String(p.sprintStatus).includes('QA') || String(p.sprintStatus).includes('Staging') || String(p.sprintStatus).includes('UAT');
             if (projectStageFilter === 'Updating') return String(p.sprintStatus).includes('Feedback') || String(p.sprintStatus).includes('Updating') || String(p.sprintStatus).includes('Revision');
