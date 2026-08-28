@@ -1870,7 +1870,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
               <span>Sync</span>
             </button>
 
-            {/* 3x Daily Auto-Sync Micro Badge */}
+            {/* Hourly Auto-Sync Micro Badge */}
             <div
               style={{
                 background: 'rgba(56, 189, 248, 0.08)',
@@ -1884,10 +1884,10 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 alignItems: 'center',
                 gap: '6px',
               }}
-              title="Automated Carrier Reconciliation runs 3 times daily at 08:00 AM, 02:00 PM, and 08:00 PM IST"
+              title="Automated Carrier Reconciliation runs automatically every 1 hour (24 times/day)"
             >
               <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#38BDF8', boxShadow: '0 0 6px #38BDF8' }} />
-              <span>3x Auto-Sync (8AM • 2PM • 8PM)</span>
+              <span>Hourly Auto-Sync Active (Every 1 Hr)</span>
             </div>
 
             {/* Glowing Red Emergency Kill-Switch Power Button */}
