@@ -3064,7 +3064,7 @@ Reference ID: FIX-MSA-${Math.floor(1000 + Math.random() * 9000)} | Date: ${new D
 ================================================================================
 
 1. PARTIES INVOLVED:
-- SERVICE PROVIDER: Fixkar Web & AI Engineering Studio (Bihar, India | support@fixkar.co.in)
+- SERVICE PROVIDER: Fixkar Web & AI Engineering Studio (Lucknow, Uttar Pradesh, India | support@fixkar.co.in)
 - CLIENT: ${createdClientWelcome.businessName} (Contact: ${createdClientWelcome.contactPerson || createdClientWelcome.businessName})
 - CLIENT DOMAIN: ${createdClientWelcome.domain || 'Registered Web Domain'}
 - PHONE: ${createdClientWelcome.phone || 'Verified Phone'} | CLIENT CODE: ${createdClientWelcome.clientCode}
@@ -10960,7 +10960,7 @@ Reference ID: FIX-MSA-${refCode} | Effective Date: ${currentDate}
 ================================================================================
 
 1. PARTIES & LEGAL IDENTITIES:
-- SERVICE PROVIDER: Fixkar Web & AI Engineering Studio (Bihar, India | support@fixkar.co.in)
+- SERVICE PROVIDER: Fixkar Web & AI Engineering Studio (Lucknow, Uttar Pradesh, India | support@fixkar.co.in)
 - CLIENT ENTITY: ${clientObj.businessName} (Authorized Signatory: ${clientObj.contactPerson || clientObj.businessName})
 - CLIENT DOMAIN: ${clientObj.domain || 'clientwebsite.in'}
 - PHONE: ${clientObj.phone || 'Verified Phone'} | EMAIL: ${clientObj.email || 'Verified Email'}
@@ -11003,7 +11003,7 @@ Reference ID: FIX-SLA-${refCode} | Handover Date: ${currentDate}
 ================================================================================
 
 1. PARTIES & PRODUCTION DEPLOYMENT IDENTIFICATION:
-- SERVICE PROVIDER: Fixkar Web & AI Engineering Studio (Bihar, India | support@fixkar.co.in)
+- SERVICE PROVIDER: Fixkar Web & AI Engineering Studio (Lucknow, Uttar Pradesh, India | support@fixkar.co.in)
 - CLIENT ENTITY: ${clientObj.businessName} (Authorized Signatory: ${clientObj.contactPerson || clientObj.businessName})
 - PRODUCTION LIVE DOMAIN: https://${clientObj.domain || 'clientwebsite.in'}
 - CLIENT SYSTEM CODE: ${aiDocForm.clientCode || clientObj.clientCode || 'FIX-NEW-001'}
@@ -12139,7 +12139,7 @@ ${selectedDocPreview.summary || 'Official engineering document securely stored i
 STATUS: 
 ✓ Digitally Verified & Linked with Client Portal Dashboard
 
-Fixkar Web & AI Engineering Studio (Bihar, India)`}
+Fixkar Web & AI Engineering Studio (Lucknow, Uttar Pradesh, India)`}
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '14px' }}>
