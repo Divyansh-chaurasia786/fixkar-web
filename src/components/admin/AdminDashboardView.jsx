@@ -63,6 +63,7 @@ import {
 } from 'lucide-react';
 import '../../styles/admin-console.css';
 import { ReceiptModal } from './ReceiptModal';
+import { AgreementModal } from './AgreementModal';
 import { AdminCopilotDrawer } from './AdminCopilotDrawer';
 import { AdminCommandPalette } from './AdminCommandPalette';
 import { SuperAdminLoginModal } from './SuperAdminLoginModal';
@@ -3339,141 +3340,11 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
 
       {/* ─── GLOBAL OFFICIAL AGREEMENT & DOCUMENT PREVIEW / PRINT MODAL ─── */}
       {selectedDocPreview && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(2, 4, 10, 0.88)',
-            backdropFilter: 'blur(20px)',
-            zIndex: 100000,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '16px',
-            boxSizing: 'border-box',
-          }}
-          onClick={(e) => { if (e.target === e.currentTarget) setSelectedDocPreview(null); }}
-        >
-          <div
-            style={{
-              width: '800px',
-              maxWidth: '96vw',
-              maxHeight: '90vh',
-              background: 'linear-gradient(180deg, #0B1120 0%, #060913 100%)',
-              border: '1px solid rgba(56, 189, 248, 0.4)',
-              borderRadius: '16px',
-              padding: '24px',
-              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(56, 189, 248, 0.2)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '16px',
-              overflowY: 'auto',
-            }}
-          >
-            {/* Modal Top Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '14px' }}>
-              <div>
-                <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 800 }}>
-                  📜 OFFICIAL CLIENT LEGAL CONTRACT • {selectedDocPreview.id || 'DOC-MSA'}
-                </span>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#fff', margin: '3px 0 0' }}>
-                  {selectedDocPreview.title || selectedDocPreview.name}
-                </h3>
-                <div style={{ fontSize: '0.78rem', color: '#94A3B8', marginTop: '3px' }}>
-                  Client: <strong style={{ color: '#F1F5F9' }}>{selectedDocPreview.client}</strong> ({selectedDocPreview.clientCode})
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setSelectedDocPreview(null)}
-                style={{ background: 'rgba(255, 255, 255, 0.08)', border: 'none', color: '#94A3B8', width: '30px', height: '30px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' }}
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Printable Agreement Document Canvas */}
-            <div
-              id="fixkar-printable-agreement"
-              style={{
-                background: '#070B14',
-                border: '1px solid rgba(56, 189, 248, 0.2)',
-                borderRadius: '10px',
-                padding: '20px',
-                color: '#E2E8F0',
-                fontSize: '0.80rem',
-                lineHeight: 1.6,
-                fontFamily: 'monospace',
-                whiteSpace: 'pre-wrap',
-                maxHeight: '52vh',
-                overflowY: 'auto',
-                boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.5)'
-              }}
-            >
-              {selectedDocPreview.content || `================================================================================
-FIXKAR WEB & AI STUDIO — OFFICIAL MASTER SERVICE AGREEMENT (MSA)
-File: ${selectedDocPreview.name} | Date: ${selectedDocPreview.date || new Date().toISOString().split('T')[0]}
-Client: ${selectedDocPreview.client} (${selectedDocPreview.clientCode})
-================================================================================
-
-1. PROJECT SUMMARY & SCOPE:
-${selectedDocPreview.summary || 'Official 50/50 milestone agreement with managed cloud VPS hosting and 1-year SLA warranty.'}
-
-2. COMMERCIAL TERMS:
-- 50% Kickstart Advance
-- 50% Final Handover & Live Release
-- 12 Months SLA Technical Warranty Included
-
-Fixkar Web & AI Engineering Studio (support@fixkar.co.in)`}
-            </div>
-
-            {/* Modal Bottom Action Bar */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '14px' }}>
-              <span style={{ fontSize: '0.72rem', color: '#64748B' }}>
-                📄 {selectedDocPreview.name} • {selectedDocPreview.size || '1.5 MB'} • {selectedDocPreview.date || new Date().toISOString().split('T')[0]}
-              </span>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const printContent = document.getElementById('fixkar-printable-agreement');
-                    if (printContent) {
-                      const win = window.open('', '_blank');
-                      win.document.write(`<html><head><title>${selectedDocPreview.name}</title><style>body { font-family: monospace; padding: 30px; white-space: pre-wrap; font-size: 13px; line-height: 1.5; }</style></head><body>${printContent.innerText}</body></html>`);
-                      win.document.close();
-                      win.print();
-                    } else {
-                      window.print();
-                    }
-                  }}
-                  style={{
-                    background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                    border: '1px solid rgba(74, 222, 128, 0.4)',
-                    color: '#fff',
-                    padding: '8px 18px',
-                    borderRadius: '8px',
-                    fontSize: '0.82rem',
-                    fontWeight: 800,
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    boxShadow: '0 4px 14px rgba(16, 185, 129, 0.4)',
-                  }}
-                >
-                  <span>🖨️ Print Agreement PDF</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedDocPreview(null)}
-                  style={{ background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#CBD5E1', padding: '8px 16px', borderRadius: '8px', fontSize: '0.82rem', cursor: 'pointer' }}
-                >
-                  Close Preview
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <AgreementModal
+          doc={selectedDocPreview}
+          clientData={selectedDocPreview.clientData || selectedDocPreview}
+          onClose={() => setSelectedDocPreview(null)}
+        />
       )}
 
       {/* ─── PHASE 1: CLIENT REGISTRATION & IDENTITY ONBOARDING MODAL ─────────── */}
