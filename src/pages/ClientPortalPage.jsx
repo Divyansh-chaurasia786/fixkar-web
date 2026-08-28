@@ -1581,12 +1581,12 @@ export function ClientPortalPage({ onNavigateHome }) {
                                 fontWeight: 700,
                                 padding: '3px 8px',
                                 borderRadius: '12px',
-                                background: rev.status === 'Solved' ? 'rgba(74, 222, 128, 0.15)' : rev.status === 'Working' ? 'rgba(251, 191, 36, 0.15)' : 'rgba(56, 189, 248, 0.15)',
-                                color: rev.status === 'Solved' ? '#4ADE80' : rev.status === 'Working' ? '#FBBF24' : '#38BDF8',
-                                border: `1px solid ${rev.status === 'Solved' ? 'rgba(74, 222, 128, 0.3)' : rev.status === 'Working' ? 'rgba(251, 191, 36, 0.3)' : 'rgba(56, 189, 248, 0.3)'}`,
+                                background: rev?.status === 'Solved' ? 'rgba(74, 222, 128, 0.15)' : rev?.status === 'Working' ? 'rgba(251, 191, 36, 0.15)' : 'rgba(56, 189, 248, 0.15)',
+                                color: rev?.status === 'Solved' ? '#4ADE80' : rev?.status === 'Working' ? '#FBBF24' : '#38BDF8',
+                                border: `1px solid ${rev?.status === 'Solved' ? 'rgba(74, 222, 128, 0.3)' : rev?.status === 'Working' ? 'rgba(251, 191, 36, 0.3)' : 'rgba(56, 189, 248, 0.3)'}`,
                               }}
                             >
-                              {rev.status === 'Solved' ? '✅ Solved & Updated' : rev.status === 'Working' ? '🔨 Working (Super Admin)' : '⏳ In Review'}
+                              {rev?.status === 'Solved' ? '✅ Solved & Updated' : rev?.status === 'Working' ? '🔨 Working (Super Admin)' : '⏳ In Review'}
                             </span>
                           </div>
                         ))}
@@ -1646,7 +1646,7 @@ export function ClientPortalPage({ onNavigateHome }) {
                         <LifeBuoy size={16} color="#60A5FA" />
                       </div>
                       <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#fff', margin: '6px 0 2px' }}>
-                        {tickets.filter((t) => t.status === 'Open').length} Open
+                        {tickets.filter((t) => t?.status === 'Open').length} Open
                       </div>
                       <div style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
                         Priority Technical Helpdesk
@@ -1804,7 +1804,7 @@ export function ClientPortalPage({ onNavigateHome }) {
                         <td style={{ padding: '12px 18px', color: '#fff' }}>{log.purpose}</td>
                         <td style={{ padding: '12px 18px', fontFamily: 'monospace', color: '#38BDF8' }}>{log.maskedMobile}</td>
                         <td style={{ padding: '12px 18px', fontFamily: 'monospace', color: '#F43F5E' }}>-{log.creditUsed}</td>
-                        <td style={{ padding: '12px 18px', color: '#4ADE80' }}>{log.status}</td>
+                        <td style={{ padding: '12px 18px', color: '#4ADE80' }}>{log?.status}</td>
                         <td style={{ padding: '12px 18px', color: '#94A3B8', fontSize: '0.74rem' }}>{log.timestamp}</td>
                       </tr>
                     ))}
@@ -2016,12 +2016,12 @@ export function ClientPortalPage({ onNavigateHome }) {
                         <span style={{
                           fontSize: '0.72rem',
                           fontWeight: 700,
-                          background: tkt.status === 'Resolved' ? 'rgba(74, 222, 128, 0.15)' : tkt.status === 'In Progress' ? 'rgba(56, 189, 248, 0.18)' : 'rgba(251, 191, 36, 0.15)',
-                          color: tkt.status === 'Resolved' ? '#4ADE80' : tkt.status === 'In Progress' ? '#38BDF8' : '#FDE047',
+                          background: tkt?.status === 'Resolved' ? 'rgba(74, 222, 128, 0.15)' : tkt?.status === 'In Progress' ? 'rgba(56, 189, 248, 0.18)' : 'rgba(251, 191, 36, 0.15)',
+                          color: tkt?.status === 'Resolved' ? '#4ADE80' : tkt?.status === 'In Progress' ? '#38BDF8' : '#FDE047',
                           padding: '3px 8px',
                           borderRadius: '6px',
                         }}>
-                          ● {tkt.status}
+                          ● {tkt?.status}
                         </span>
                       </div>
 
