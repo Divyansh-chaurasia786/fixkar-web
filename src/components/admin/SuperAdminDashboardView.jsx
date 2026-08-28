@@ -5198,39 +5198,162 @@ echo $response;
 
           return (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {/* ─── 3 SUMMARY KPI CARDS ─── */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', width: '100%', boxSizing: 'border-box' }}>
-                <div style={{ background: 'linear-gradient(135deg, rgba(244, 63, 94, 0.15) 0%, rgba(15, 23, 42, 0.9) 100%)', border: '1px solid rgba(244, 63, 94, 0.35)', borderRadius: '14px', padding: '14px 16px' }}>
+              {/* ─── 4 SUMMARY KPI CARDS (Single-Row Balanced Compact Grid) ─── */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', width: '100%', boxSizing: 'border-box' }}>
+                {/* Card 1: Total Support Tickets */}
+                <div
+                  onClick={() => setSupportFilter('All')}
+                  style={{
+                    background: supportFilter === 'All'
+                      ? 'linear-gradient(180deg, rgba(30, 58, 138, 0.3) 0%, rgba(15, 23, 42, 0.95) 100%)'
+                      : 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: `1px solid ${supportFilter === 'All' ? 'rgba(56, 189, 248, 0.6)' : 'rgba(56, 189, 248, 0.22)'}`,
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = supportFilter === 'All' ? 'rgba(56, 189, 248, 0.6)' : 'rgba(56, 189, 248, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to view all support tickets"
+                >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.68rem', color: '#FDA4AF', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.05em' }}>ACTION REQUIRED (OPEN)</span>
-                    <HelpCircle size={15} color="#F43F5E" />
+                    <span style={{ fontSize: '0.62rem', color: '#93C5FD', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      TOTAL HELPDESK TICKETS
+                    </span>
+                    <LifeBuoy size={14} color="#38BDF8" />
                   </div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#F43F5E', fontFamily: 'monospace', margin: '4px 0 2px' }}>
-                    {totalOpen} Open
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#38BDF8', fontFamily: 'monospace' }}>
+                      {(supportTickets || []).length}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Total Logged</span>
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: '#CBD5E1' }}>Awaiting developer review &amp; fix</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#86EFAC', fontWeight: 600 }}>● SLA Active</span>
+                    <span style={{ color: '#94A3B8' }}>Show All</span>
+                  </div>
                 </div>
 
-                <div style={{ background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(15, 23, 42, 0.9) 100%)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '14px', padding: '14px 16px' }}>
+                {/* Card 2: Action Required (Open) */}
+                <div
+                  onClick={() => setSupportFilter(supportFilter === 'Open' ? 'All' : 'Open')}
+                  style={{
+                    background: supportFilter === 'Open'
+                      ? 'linear-gradient(180deg, rgba(159, 18, 57, 0.3) 0%, rgba(15, 23, 42, 0.95) 100%)'
+                      : 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: `1px solid ${supportFilter === 'Open' ? 'rgba(244, 63, 94, 0.6)' : totalOpen > 0 ? 'rgba(244, 63, 94, 0.4)' : 'rgba(244, 63, 94, 0.22)'}`,
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(244, 63, 94, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = supportFilter === 'Open' ? 'rgba(244, 63, 94, 0.6)' : totalOpen > 0 ? 'rgba(244, 63, 94, 0.4)' : 'rgba(244, 63, 94, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to filter Open tickets needing review"
+                >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.68rem', color: '#38BDF8', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.05em' }}>IN PROGRESS</span>
-                    <Zap size={15} color="#38BDF8" />
+                    <span style={{ fontSize: '0.62rem', color: '#FDA4AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      ACTION REQUIRED (OPEN)
+                    </span>
+                    <HelpCircle size={14} color="#F43F5E" />
                   </div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#38BDF8', margin: '4px 0 2px' }}>
-                    {totalInProgress} Tasks
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#F43F5E', fontFamily: 'monospace' }}>
+                      {totalOpen}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Awaiting Review</span>
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: '#CBD5E1' }}>Active development / fixes</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: totalOpen > 0 ? '#FCA5A5' : '#86EFAC' }}>{totalOpen > 0 ? '● Needs Developer' : '● Zero Pending'}</span>
+                    <span style={{ color: '#94A3B8' }}>Filter Open</span>
+                  </div>
                 </div>
 
-                <div style={{ background: 'linear-gradient(135deg, rgba(74, 222, 128, 0.12) 0%, rgba(15, 23, 42, 0.9) 100%)', border: '1px solid rgba(74, 222, 128, 0.3)', borderRadius: '14px', padding: '14px 16px' }}>
+                {/* Card 3: In Progress Tasks */}
+                <div
+                  onClick={() => setSupportFilter(supportFilter === 'In Progress' ? 'All' : 'In Progress')}
+                  style={{
+                    background: supportFilter === 'In Progress'
+                      ? 'linear-gradient(180deg, rgba(120, 53, 15, 0.3) 0%, rgba(15, 23, 42, 0.95) 100%)'
+                      : 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: `1px solid ${supportFilter === 'In Progress' ? 'rgba(245, 158, 11, 0.6)' : 'rgba(245, 158, 11, 0.22)'}`,
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = supportFilter === 'In Progress' ? 'rgba(245, 158, 11, 0.6)' : 'rgba(245, 158, 11, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to filter In-Progress tickets"
+                >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.68rem', color: '#86EFAC', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.05em' }}>RESOLVED &amp; COMPLETED</span>
-                    <CheckCircle2 size={15} color="#4ADE80" />
+                    <span style={{ fontSize: '0.62rem', color: '#FDE047', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      IN PROGRESS (DEV / FIXES)
+                    </span>
+                    <Zap size={14} color="#F59E0B" />
                   </div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#4ADE80', margin: '4px 0 2px' }}>
-                    {totalResolved} Resolved
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#F59E0B', fontFamily: 'monospace' }}>
+                      {totalInProgress}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Active Fixes</span>
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: '#CBD5E1' }}>Deployed &amp; verified live</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#FBBF24' }}>● Under Work</span>
+                    <span style={{ color: '#94A3B8' }}>Filter Active</span>
+                  </div>
+                </div>
+
+                {/* Card 4: Resolved & Completed */}
+                <div
+                  onClick={() => setSupportFilter(supportFilter === 'Resolved' ? 'All' : 'Resolved')}
+                  style={{
+                    background: supportFilter === 'Resolved'
+                      ? 'linear-gradient(180deg, rgba(6, 78, 59, 0.3) 0%, rgba(15, 23, 42, 0.95) 100%)'
+                      : 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: `1px solid ${supportFilter === 'Resolved' ? 'rgba(74, 222, 128, 0.6)' : 'rgba(74, 222, 128, 0.22)'}`,
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = supportFilter === 'Resolved' ? 'rgba(74, 222, 128, 0.6)' : 'rgba(74, 222, 128, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to filter Resolved tickets"
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#86EFAC', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      RESOLVED &amp; COMPLETED
+                    </span>
+                    <CheckCircle2 size={14} color="#4ADE80" />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#4ADE80', fontFamily: 'monospace' }}>
+                      {totalResolved}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Verified Live</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#4ADE80' }}>● Deployed</span>
+                    <span style={{ color: '#94A3B8' }}>Filter Resolved</span>
+                  </div>
                 </div>
               </div>
 
