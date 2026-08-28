@@ -8296,12 +8296,12 @@ echo $response;
                 <table className="fixkar-table" style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', margin: 0 }}>
                   <thead>
                     <tr>
-                      <th style={{ width: '24%', textAlign: 'left', padding: '10px 14px' }}>PROSPECT &amp; CLIENT</th>
-                      <th style={{ width: '24%', textAlign: 'left', padding: '10px 14px' }}>SERVICE REQUIRED</th>
-                      <th style={{ width: '13%', textAlign: 'left', padding: '10px 14px' }}>EST. BUDGET</th>
-                      <th style={{ width: '13%', textAlign: 'center', padding: '10px 14px' }}>STATUS</th>
-                      <th style={{ width: '10%', textAlign: 'center', padding: '10px 14px' }}>DATE</th>
-                      <th style={{ width: '16%', textAlign: 'right', padding: '10px 14px' }}>ACTIONS</th>
+                      <th style={{ width: '20%', textAlign: 'left', padding: '10px 8px' }}>PROSPECT &amp; CLIENT</th>
+                      <th style={{ width: '20%', textAlign: 'left', padding: '10px 8px' }}>SERVICE REQUIRED</th>
+                      <th style={{ width: '12%', textAlign: 'left', padding: '10px 8px' }}>EST. BUDGET</th>
+                      <th style={{ width: '14%', textAlign: 'center', padding: '10px 8px' }}>STATUS</th>
+                      <th style={{ width: '8%', textAlign: 'center', padding: '10px 8px' }}>DATE</th>
+                      <th style={{ width: '26%', textAlign: 'right', padding: '10px 8px' }}>ACTIONS</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -8331,7 +8331,7 @@ echo $response;
                               }}
                             >
                               {/* 1. Prospect Column */}
-                              <td style={{ verticalAlign: 'middle', padding: '10px 14px' }}>
+                              <td style={{ verticalAlign: 'middle', padding: '10px 8px' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                   {renderClientAvatar({ businessName: ld.businessName || ld.name, logoUrl: ld.logoUrl }, 30)}
                                   <div style={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
@@ -8346,7 +8346,7 @@ echo $response;
                               </td>
 
                               {/* 2. Service Required */}
-                              <td style={{ verticalAlign: 'middle', padding: '10px 14px' }}>
+                              <td style={{ verticalAlign: 'middle', padding: '10px 8px' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
                                   <span style={{
                                     fontSize: '0.62rem',
@@ -8367,7 +8367,7 @@ echo $response;
                               </td>
 
                               {/* 3. Estimated Budget */}
-                              <td style={{ verticalAlign: 'middle', padding: '10px 14px', whiteSpace: 'nowrap' }}>
+                              <td style={{ verticalAlign: 'middle', padding: '10px 8px', whiteSpace: 'nowrap' }}>
                                 <div style={{ fontWeight: 800, color: '#FDE047', fontFamily: 'monospace', fontSize: '0.86rem' }}>
                                   {ld.estimatedQuote || ld.budget || 'Custom'}
                                 </div>
@@ -8375,7 +8375,7 @@ echo $response;
                               </td>
 
                               {/* 4. Status Selector */}
-                              <td style={{ verticalAlign: 'middle', padding: '10px 14px', textAlign: 'center', whiteSpace: 'nowrap' }}>
+                              <td style={{ verticalAlign: 'middle', padding: '10px 8px', textAlign: 'center', whiteSpace: 'nowrap' }}>
                                 <select
                                   value={ld.status || 'New'}
                                   onChange={(e) => handleUpdateLeadStatus(ld.id, e.target.value)}
@@ -8423,14 +8423,14 @@ echo $response;
                               </td>
 
                               {/* 5. Date */}
-                              <td style={{ verticalAlign: 'middle', padding: '10px 14px', textAlign: 'center', whiteSpace: 'nowrap' }}>
+                              <td style={{ verticalAlign: 'middle', padding: '10px 8px', textAlign: 'center', whiteSpace: 'nowrap' }}>
                                 <div style={{ color: '#CBD5E1', fontSize: '0.74rem', fontWeight: 600, fontFamily: 'monospace' }}>
                                   {ld.createdAt ? new Date(ld.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : ld.date || 'Today'}
                                 </div>
                               </td>
 
                               {/* 6. Action Buttons */}
-                              <td style={{ verticalAlign: 'middle', padding: '10px 14px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                              <td style={{ verticalAlign: 'middle', padding: '10px 8px', textAlign: 'right', whiteSpace: 'nowrap' }}>
                                 <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'flex-end', gap: '4px' }}>
                                   {/* WhatsApp Button */}
                                   <a
