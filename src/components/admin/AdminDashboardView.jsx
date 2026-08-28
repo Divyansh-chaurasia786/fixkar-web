@@ -4879,7 +4879,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                     style={{ background: 'linear-gradient(135deg, #38BDF8 0%, #2563EB 100%)', border: 'none', color: '#fff', padding: '8px 16px', borderRadius: '10px', fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
                   >
                     <Plus size={14} />
-                    <span>+ Onboard New Client</span>
+                    <span>Onboard Client</span>
                   </button>
                 </div>
               </div>
@@ -5126,7 +5126,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                     }}
                   >
                     <Plus size={12} />
-                    <span>+ New Invoice</span>
+                    <span>New Invoice</span>
                   </button>
 
                   <a
@@ -5262,7 +5262,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                   {/* Card 4: Location / City */}
                   <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '12px 14px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.04)' }}>
                     <div style={{ fontSize: '0.68rem', color: '#FBBF24', fontFamily: 'monospace', fontWeight: 700 }}>LOCATION &amp; PINCODE</div>
-                    <div style={{ fontWeight: 700, color: '#fff', marginTop: '3px', fontSize: '0.88rem' }}>{selectedClientDetail.city || 'Patna'}, {selectedClientDetail.state || 'Bihar'}</div>
+                    <div style={{ fontWeight: 700, color: '#fff', marginTop: '3px', fontSize: '0.88rem' }}>{[selectedClientDetail.city, selectedClientDetail.state].filter(Boolean).join(', ') || 'Patna, Bihar'}</div>
                     <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '2px' }}>PIN: {selectedClientDetail.pinCode || '800001'}</div>
                   </div>
                 </div>
