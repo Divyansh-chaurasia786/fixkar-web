@@ -1920,85 +1920,149 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
             ═════════════════════════════════════════════════════════════════ */}
         {activeTab === 'dashboard' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {/* 4 Compact, Balanced KPI Cards (Exclusively in Super Dashboard) */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
-              {/* Card 1: Upstream SMS Pool */}
+            {/* 4 Ultra-Sleek, Professional KPI Stat Cards (Single-Row Balanced Layout) */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
+              {/* Card 1: Master Telecom SMS Reserve */}
               <div
-                className="fixkar-stat-card"
                 onClick={() => { setActiveTab('gateway'); setGatewaySubTab('sms'); }}
-                style={{ cursor: 'pointer', padding: '14px 16px' }}
+                style={{
+                  background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                  border: '1px solid rgba(251, 191, 36, 0.22)',
+                  borderRadius: '10px',
+                  padding: '11px 13px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '6px',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(251, 191, 36, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(251, 191, 36, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
               >
-                <div className="fixkar-card-top" style={{ marginBottom: '6px' }}>
-                  <span className="fixkar-card-tag" style={{ fontSize: '0.66rem' }}>UPSTREAM SMS GATEWAY</span>
-                  <Globe size={16} color="#FBBF24" />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.05em', color: '#94A3B8', textTransform: 'uppercase' }}>
+                    MASTER TELECOM GATEWAY
+                  </span>
+                  <Globe size={14} color="#FBBF24" />
                 </div>
-                <div className="fixkar-card-num" style={{ color: '#FDE047', fontSize: '1.28rem', marginBottom: '6px' }}>
-                  {(gatewayConfig.upstreamBalance || 0).toLocaleString()}{' '}
-                  <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#94A3B8' }}>SMS Left</span>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                  <span style={{ color: '#FDE047', fontSize: '1.22rem', fontWeight: 800, fontFamily: 'monospace' }}>
+                    {(gatewayConfig.upstreamBalance || 0).toLocaleString()}
+                  </span>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>SMS in Reserve</span>
                 </div>
-                <div className="fixkar-card-footer" style={{ fontSize: '0.72rem' }}>
-                  <span style={{ color: '#4ADE80' }}>● {gatewayConfig.provider ? gatewayConfig.provider.split(' ')[0] : 'Active'}</span>
-                  <span style={{ color: '#93C5FD' }}>Reserve: {gatewayConfig.upstreamWalletAmount || '₹0.00'}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                  <span style={{ color: '#4ADE80', fontWeight: 600 }}>● Enterprise Active</span>
+                  <span style={{ color: '#93C5FD', fontFamily: 'monospace' }}>Bal: {gatewayConfig.upstreamWalletAmount || '₹50.00'}</span>
                 </div>
               </div>
 
-              {/* Card 2: Upstream Email Pool & Daily Quota */}
+              {/* Card 2: Cloud Email Gateway */}
               <div
-                className="fixkar-stat-card"
                 onClick={() => { setActiveTab('gateway'); setGatewaySubTab('email'); }}
-                style={{ cursor: 'pointer', padding: '14px 16px' }}
+                style={{
+                  background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                  border: '1px solid rgba(56, 189, 248, 0.22)',
+                  borderRadius: '10px',
+                  padding: '11px 13px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '6px',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
               >
-                <div className="fixkar-card-top" style={{ marginBottom: '6px' }}>
-                  <span className="fixkar-card-tag" style={{ fontSize: '0.66rem' }}>CLOUD EMAIL GATEWAY</span>
-                  <Mail size={16} color="#38BDF8" />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.05em', color: '#94A3B8', textTransform: 'uppercase' }}>
+                    CLOUD EMAIL GATEWAY
+                  </span>
+                  <Mail size={14} color="#38BDF8" />
                 </div>
-                <div className="fixkar-card-num" style={{ color: '#38BDF8', fontSize: '1.28rem', marginBottom: '6px' }}>
-                  {emailGatewayConfig.emailsRemainingToday ?? 99}{' '}
-                  <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#94A3B8' }}>Left Today</span>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                  <span style={{ color: '#38BDF8', fontSize: '1.22rem', fontWeight: 800, fontFamily: 'monospace' }}>
+                    {emailGatewayConfig.emailsRemainingToday ?? 99}
+                  </span>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Left Today</span>
                 </div>
-                <div className="fixkar-card-footer" style={{ fontSize: '0.72rem' }}>
-                  <span style={{ color: '#FDE047' }}>Sent Today: {emailGatewayConfig.emailsSentToday ?? 1}/{emailGatewayConfig.dailyLimit || 100}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                  <span style={{ color: '#FDE047', fontWeight: 600 }}>Sent: {emailGatewayConfig.emailsSentToday ?? 1}/{emailGatewayConfig.dailyLimit || 100}</span>
                   <span style={{ color: '#4ADE80' }}>● {emailGatewayConfig.domainName || 'fixkar.co.in'}</span>
                 </div>
               </div>
 
               {/* Card 3: Client Distributed Pool */}
               <div
-                className="fixkar-stat-card"
                 onClick={() => setActiveTab('client-apis')}
-                style={{ cursor: 'pointer', padding: '14px 16px' }}
+                style={{
+                  background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                  border: '1px solid rgba(74, 222, 128, 0.22)',
+                  borderRadius: '10px',
+                  padding: '11px 13px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '6px',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
               >
-                <div className="fixkar-card-top" style={{ marginBottom: '6px' }}>
-                  <span className="fixkar-card-tag" style={{ fontSize: '0.66rem' }}>CLIENT DISTRIBUTED POOL</span>
-                  <Smartphone size={16} color="#4ADE80" />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.05em', color: '#94A3B8', textTransform: 'uppercase' }}>
+                    CLIENT DISTRIBUTED POOL
+                  </span>
+                  <Smartphone size={14} color="#4ADE80" />
                 </div>
-                <div className="fixkar-card-num" style={{ color: '#4ADE80', fontSize: '1.28rem', marginBottom: '6px' }}>
-                  {totalDistributedCredits.toLocaleString()}{' '}
-                  <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#94A3B8' }}>OTPs</span>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                  <span style={{ color: '#4ADE80', fontSize: '1.22rem', fontWeight: 800, fontFamily: 'monospace' }}>
+                    {totalDistributedCredits.toLocaleString()}
+                  </span>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>OTPs Allocated</span>
                 </div>
-                <div className="fixkar-card-footer" style={{ fontSize: '0.72rem' }}>
-                  <span style={{ color: '#86EFAC' }}>● Atomic Deduction</span>
-                  <span style={{ color: '#94A3B8' }}>{wallets.length || 4} Client Wallets</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                  <span style={{ color: '#86EFAC', fontWeight: 600 }}>● Atomic Wallets</span>
+                  <span style={{ color: '#94A3B8' }}>{wallets.length || 0} Clients</span>
                 </div>
               </div>
 
               {/* Card 4: Provisioned Client API Keys */}
               <div
-                className="fixkar-stat-card"
                 onClick={() => setActiveTab('client-apis')}
-                style={{ cursor: 'pointer', padding: '14px 16px' }}
+                style={{
+                  background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                  border: '1px solid rgba(192, 132, 252, 0.22)',
+                  borderRadius: '10px',
+                  padding: '11px 13px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '6px',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(192, 132, 252, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(192, 132, 252, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
               >
-                <div className="fixkar-card-top" style={{ marginBottom: '6px' }}>
-                  <span className="fixkar-card-tag" style={{ fontSize: '0.66rem' }}>PROVISIONED SUB-KEYS</span>
-                  <KeyRound size={16} color="#C084FC" />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.05em', color: '#94A3B8', textTransform: 'uppercase' }}>
+                    PROVISIONED SUB-KEYS
+                  </span>
+                  <KeyRound size={14} color="#C084FC" />
                 </div>
-                <div className="fixkar-card-num" style={{ color: '#C084FC', fontSize: '1.28rem', marginBottom: '6px' }}>
-                  {clientApiKeys.length}{' '}
-                  <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#94A3B8' }}>Active Keys</span>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                  <span style={{ color: '#C084FC', fontSize: '1.22rem', fontWeight: 800, fontFamily: 'monospace' }}>
+                    {clientApiKeys.length}
+                  </span>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Active Sub-Keys</span>
                 </div>
-                <div className="fixkar-card-footer" style={{ fontSize: '0.72rem' }}>
-                  <span style={{ color: '#E879F9' }}>● 100% Isolated</span>
-                  <span style={{ color: '#94A3B8' }}>{totalApiDispatches.toLocaleString()} Sent</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                  <span style={{ color: '#E879F9', fontWeight: 600 }}>● 100% Isolated</span>
+                  <span style={{ color: '#94A3B8' }}>{totalApiDispatches.toLocaleString()} Dispatched</span>
                 </div>
               </div>
             </div>
@@ -2023,7 +2087,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.78rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                     <span style={{ color: '#94A3B8' }}>Provider:</span>
-                    <span style={{ color: '#fff', fontWeight: 600 }}>{gatewayConfig.provider || 'Auto-Detected SMS Gateway'}</span>
+                    <span style={{ color: '#fff', fontWeight: 600 }}>{(gatewayConfig.provider || 'Enterprise Sovereign Telecom Gateway').replace(/Fast2SMS/gi, 'Enterprise Telecom')}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                     <span style={{ color: '#94A3B8' }}>Delivery Route:</span>
