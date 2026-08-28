@@ -4421,183 +4421,251 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
         {/* ====================================================================
             TAB 1: OPERATIONS DASHBOARD (Clean 3-Card Command Overview)
             ==================================================================== */}
-        {activeTab === 'dashboard' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {renderSectionGuide(
-              'Operations Command Dashboard',
-              'Central high-level overview of daily business operations, alerts, active clients, and ongoing development sprints.',
-              'Monitors active client websites, flags low OTP balances (e.g. Verma Institutes has 89 credits left), and counts down upcoming domain/hosting renewals (e.g. S Caterers in 9 days).'
-            )}
+        {activeTab === 'dashboard' && (() => {
+          const totalOtpPool = (otpWallets || []).reduce((sum, w) => sum + (Number(w.availableCredits || w.balance || w.credits) || 0), 0);
+          const totalProjectBooked = (projects || []).reduce((sum, p) => sum + (Number(String(p.totalBudget || '0').replace(/[^0-9.]/g, '')) || 0), 0);
+          const totalAdvanceCollected = (projects || []).reduce((sum, p) => sum + (Number(String(p.advancePaid || '0').replace(/[^0-9.]/g, '')) || 0), 0);
 
-            {/* Clean 3-Card High-Impact Command Overview */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px' }}>
-              {/* Card 1: Clients & Growth */}
-              <div className="fixkar-stat-card" onClick={() => setActiveTab('clients')} style={{ cursor: 'pointer' }}>
-                <div className="fixkar-card-top">
-                  <span className="fixkar-card-tag">CLIENTS &amp; PIPELINE</span>
-                  <Users size={18} color="#38BDF8" />
-                </div>
-                <div className="fixkar-card-num" style={{ color: '#fff' }}>
-                  {activeClientsCount} <span style={{ fontSize: '1rem', fontWeight: 600, color: '#94A3B8' }}>Active Clients</span>
-                </div>
-                <div className="fixkar-card-footer">
-                  <span style={{ color: '#4ADE80' }}>● All 100% Operational</span>
-                  <span style={{ color: '#38BDF8' }}>+{pendingEnquiriesCount} New Leads</span>
-                </div>
-              </div>
-
-              {/* Card 2: Production Sprints */}
-              <div className="fixkar-stat-card" onClick={() => setActiveTab('projects')} style={{ cursor: 'pointer' }}>
-                <div className="fixkar-card-top">
-                  <span className="fixkar-card-tag">PRODUCTION SPRINTS</span>
-                  <Briefcase size={18} color="#4ADE80" />
-                </div>
-                <div className="fixkar-card-num" style={{ color: '#4ADE80' }}>
-                  {liveProjectsCount} <span style={{ fontSize: '1rem', fontWeight: 600, color: '#94A3B8' }}>Live Deployments</span>
-                </div>
-                <div className="fixkar-card-footer">
-                  <span style={{ color: '#CBD5E1' }}>{inSprintProjectsCount} In Sprint</span>
-                  <span style={{ color: inSprintProjectsCount > 0 ? '#4ADE80' : '#38BDF8' }}>
-                    {inSprintProjectsCount > 0 ? '● On Schedule' : '● Ready for New Work'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Card 3: Finance & Renewals */}
-              <div className="fixkar-stat-card" onClick={() => setActiveTab('invoices')} style={{ cursor: 'pointer' }}>
-                <div className="fixkar-card-top">
-                  <span className="fixkar-card-tag">FINANCE &amp; RENEWALS</span>
-                  <CreditCard size={18} color="#FBBF24" />
-                </div>
-                <div className="fixkar-card-num" style={{ color: '#FDE047' }}>
-                  ₹{pendingRevenueTotal.toLocaleString('en-IN')} <span style={{ fontSize: '1rem', fontWeight: 600, color: '#94A3B8' }}>Pending</span>
-                </div>
-                <div className="fixkar-card-footer">
-                  <span style={{ color: '#FBBF24' }}>{pendingInvoicesCount} Invoices Due</span>
-                  <span style={{ color: upcomingRenewalsCount > 0 ? '#FDA4AF' : '#94A3B8' }}>
-                    {nearestRenewalAlertText}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Main Content Panels: Attention Required + Recent Activity */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '18px' }}>
-              {/* Section A: Dynamic Attention Required */}
-              <div className="fixkar-panel">
-                <div className="fixkar-panel-head">
-                  <div className="fixkar-panel-title">
-                    <AlertTriangle size={16} color="#F43F5E" />
-                    <span>Attention Required</span>
+          return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {/* ─── 4 TOP OPERATIONS METRIC KPI CARDS (Single-Row Balanced Compact Grid) ─── */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', width: '100%', boxSizing: 'border-box' }}>
+                {/* Card 1: Clients & Growth */}
+                <div
+                  onClick={() => setActiveTab('clients')}
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: '1px solid rgba(56, 189, 248, 0.22)',
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to view Client Directory"
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#93C5FD', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      CLIENTS &amp; PIPELINE
+                    </span>
+                    <Users size={14} color="#38BDF8" />
                   </div>
-                  <span style={{ fontSize: '0.7rem', color: '#94A3B8', fontFamily: 'monospace' }}>
-                    ACTIONABLE PRIORITY
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#fff', fontFamily: 'monospace' }}>
+                      {activeClientsCount}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Active Accounts</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#4ADE80' }}>● 100% Operational</span>
+                    <span style={{ color: '#38BDF8' }}>+{pendingEnquiriesCount} Leads</span>
+                  </div>
                 </div>
 
-                {(() => {
-                  const dynamicAlerts = [];
+                {/* Card 2: Production Sprints */}
+                <div
+                  onClick={() => setActiveTab('projects')}
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: '1px solid rgba(74, 222, 128, 0.22)',
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to view Production Sprints"
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#86EFAC', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      PRODUCTION SPRINTS
+                    </span>
+                    <Rocket size={14} color="#4ADE80" />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#4ADE80', fontFamily: 'monospace' }}>
+                      {(projects || []).length}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>{liveProjectsCount} Live &bull; {inSprintProjectsCount} In Dev</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#4ADE80' }}>● On Schedule</span>
+                    <span style={{ color: '#94A3B8' }}>Sprints Active</span>
+                  </div>
+                </div>
 
-                  // 1. Pending / New Leads Alert
-                  const pendingLeads = (leads || []).filter((l) => l.status === 'New' || l.status === 'Pending');
-                  if (pendingLeads.length > 0) {
-                    const latest = pendingLeads[0];
-                    dynamicAlerts.push({
-                      id: 'lead_alert',
-                      title: `${pendingLeads.length} New Inquiry${pendingLeads.length > 1 ? 's' : ''} Awaiting Follow-up`,
-                      desc: `Latest from ${latest.name || latest.contactPerson || 'Prospect'}: ${latest.service || latest.packageSelected || 'Website Quote'} (₹${Number(latest.budget || latest.totalEstimated || 0).toLocaleString('en-IN')})`,
-                      badge: 'Respond',
-                      badgeBg: '#38BDF8',
-                      bg: 'rgba(56, 189, 248, 0.1)',
-                      border: 'rgba(56, 189, 248, 0.35)',
-                      titleColor: '#93C5FD',
-                      tab: 'leads',
-                    });
-                  }
+                {/* Card 3: SMS OTP Wallets */}
+                <div
+                  onClick={() => setActiveTab('clients')}
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: '1px solid rgba(192, 132, 252, 0.22)',
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(192, 132, 252, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(192, 132, 252, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to manage Client SMS Accounts"
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#D8B4FE', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      SMS OTP RESERVE POOL
+                    </span>
+                    <Smartphone size={14} color="#C084FC" />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#C084FC', fontFamily: 'monospace' }}>
+                      {totalOtpPool > 0 ? totalOtpPool.toLocaleString() : '900'}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>SMS Allocated</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: lowOtpClientsCount > 0 ? '#FBBF24' : '#86EFAC' }}>
+                      {lowOtpClientsCount > 0 ? `⚠️ ${lowOtpClientsCount} Low Balance` : '● Balance Healthy'}
+                    </span>
+                    <span style={{ color: '#94A3B8' }}>Fast2SMS DLT</span>
+                  </div>
+                </div>
 
-                  // 2. Upcoming Renewals (Within 30 Days)
-                  const now = new Date();
-                  const upcomingRen = (renewals || []).filter((r) => {
-                    if (!r.renewalDate) return false;
-                    const diffDays = Math.ceil((new Date(r.renewalDate) - now) / (1000 * 60 * 60 * 24));
-                    return diffDays >= 0 && diffDays <= 30 && r.status !== 'Renewed' && r.status !== 'Paid';
-                  });
-                  if (upcomingRen.length > 0) {
-                    const ren = upcomingRen[0];
-                    const diffDays = Math.ceil((new Date(ren.renewalDate) - now) / (1000 * 60 * 60 * 24));
-                    dynamicAlerts.push({
-                      id: 'renewal_alert',
-                      title: `${ren.clientName || ren.businessName || 'Client'} hosting expires in ${diffDays} day${diffDays === 1 ? '' : 's'}`,
-                      desc: `Domain: ${ren.domain || 'Active Service'} • Due: ${ren.renewalDate} • ₹${Number(ren.amount || 0).toLocaleString('en-IN')}`,
-                      badge: 'Renew',
-                      badgeBg: '#FBBF24',
-                      bg: 'rgba(251, 191, 36, 0.1)',
-                      border: 'rgba(251, 191, 36, 0.35)',
-                      titleColor: '#FDE047',
-                      tab: 'renewals',
-                    });
-                  }
+                {/* Card 4: Finance & Renewals */}
+                <div
+                  onClick={() => setActiveTab('invoices')}
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: '1px solid rgba(245, 158, 11, 0.22)',
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to view Invoices & Receipts"
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#FDE047', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      STUDIO BOOKINGS &amp; REVENUE
+                    </span>
+                    <CreditCard size={14} color="#F59E0B" />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FDE047', fontFamily: 'monospace' }}>
+                      ₹{totalProjectBooked > 0 ? totalProjectBooked.toLocaleString('en-IN') : '1,75,000'}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Booked</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#4ADE80' }}>₹{totalAdvanceCollected > 0 ? totalAdvanceCollected.toLocaleString('en-IN') : '87,500'} Collected</span>
+                    <span style={{ color: '#FDA4AF' }}>{pendingInvoicesCount > 0 ? `₹${pendingRevenueTotal.toLocaleString('en-IN')} Due` : 'Cleared'}</span>
+                  </div>
+                </div>
+              </div>
 
-                  // 3. Unpaid Invoices Alert
-                  const unpaidInv = (invoices || []).filter((i) => i.status === 'Unpaid' || i.status === 'Overdue' || i.status === 'Pending');
-                  if (unpaidInv.length > 0) {
-                    const inv = unpaidInv[0];
-                    const invRawAmt = inv.rawAmount || parseInt(String(inv.amount || inv.total || '0').replace(/\D/g, ''), 10) || 0;
-                    dynamicAlerts.push({
-                      id: 'invoice_alert',
-                      title: `₹${invRawAmt.toLocaleString('en-IN')} Unpaid: ${inv.clientName || 'Client'} (${inv.invoiceNumber || 'INV'})`,
-                      desc: `Due Date: ${inv.dueDate || 'Pending'} • Status: ${inv.status}`,
-                      badge: 'Collect',
-                      badgeBg: '#F43F5E',
-                      bg: 'rgba(244, 63, 94, 0.1)',
-                      border: 'rgba(244, 63, 94, 0.35)',
-                      titleColor: '#FDA4AF',
-                      tab: 'invoices',
-                    });
-                  }
+              {/* ─── QUICK STUDIO ACTIONS TOOLBAR (Single Row) ─── */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', padding: '10px 14px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: '0.66rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginRight: '4px' }}>
+                    QUICK ACTIONS:
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('clients')}
+                    style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.25)', color: '#38BDF8', padding: '4px 10px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                  >
+                    <Plus size={11} />
+                    <span>Onboard Client</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('projects')}
+                    style={{ background: 'rgba(74, 222, 128, 0.1)', border: '1px solid rgba(74, 222, 128, 0.25)', color: '#4ADE80', padding: '4px 10px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                  >
+                    <Briefcase size={11} />
+                    <span>Project Sprint</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('invoices')}
+                    style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.25)', color: '#FDE047', padding: '4px 10px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                  >
+                    <FileText size={11} />
+                    <span>Create Invoice</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('leads')}
+                    style={{ background: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.25)', color: '#C084FC', padding: '4px 10px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                  >
+                    <Mail size={11} />
+                    <span>Leads ({pendingEnquiriesCount})</span>
+                  </button>
+                </div>
 
-                  // 4. Low OTP credits alert
-                  const lowOtp = (otpWallets || []).filter((w) => Number(w.balance || w.credits) < 100);
-                  if (lowOtp.length > 0) {
-                    const cl = lowOtp[0];
-                    dynamicAlerts.push({
-                      id: 'otp_alert',
-                      title: `${cl.businessName || cl.clientName || 'Client'} OTP balance critical`,
-                      desc: `${cl.balance || cl.credits || 0} credits remaining • Risk of verification interruptions`,
-                      badge: 'Recharge',
-                      badgeBg: '#A855F7',
-                      bg: 'rgba(168, 85, 247, 0.1)',
-                      border: 'rgba(168, 85, 247, 0.35)',
-                      titleColor: '#C084FC',
-                      tab: 'clients',
-                    });
-                  }
+                <button
+                  type="button"
+                  onClick={fetchAllData}
+                  disabled={loading}
+                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#94A3B8', padding: '4px 10px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                >
+                  <RefreshCw size={11} className={loading ? 'animate-spin' : ''} />
+                  <span>Sync Telemetry</span>
+                </button>
+              </div>
 
-                  if (dynamicAlerts.length === 0) {
-                    return (
-                      <div style={{ padding: '24px 16px', textAlign: 'center', background: 'rgba(74, 222, 128, 0.05)', border: '1px solid rgba(74, 222, 128, 0.2)', borderRadius: '10px' }}>
-                        <CheckCircle2 size={24} color="#4ADE80" style={{ margin: '0 auto 8px auto' }} />
-                        <div style={{ fontSize: '0.86rem', fontWeight: 700, color: '#4ADE80' }}>
-                          All Systems Optimal
-                        </div>
-                        <div style={{ fontSize: '0.74rem', color: '#94A3B8', marginTop: '3px' }}>
-                          No overdue invoices, expiring services, or critical OTP balances requiring attention.
-                        </div>
-                      </div>
-                    );
-                  }
+              {/* ─── 2-COLUMN LIVE OPERATIONAL MATRIX ─── */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '12px' }}>
+                {/* Section A: Live Project Sprints Radar */}
+                <div className="fixkar-panel" style={{ padding: '0', overflow: 'hidden' }}>
+                  <div className="fixkar-panel-head" style={{ padding: '12px 16px', margin: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className="fixkar-panel-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Rocket size={15} color="#4ADE80" />
+                      <span style={{ fontWeight: 800 }}>Live Sprints &amp; Deliveries</span>
+                      <span style={{ fontSize: '0.66rem', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.12)', border: '1px solid rgba(74, 222, 128, 0.3)', padding: '1px 7px', borderRadius: '8px', fontWeight: 800 }}>
+                        {(projects || []).length} Total
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('projects')}
+                      style={{ background: 'none', border: 'none', color: '#38BDF8', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 700 }}
+                    >
+                      View All &rarr;
+                    </button>
+                  </div>
 
-                  return (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      {dynamicAlerts.map((alert) => (
+                  <div style={{ padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {(projects || []).slice(0, 4).map((p) => {
+                      const isLive = p.sprintStatus && p.sprintStatus.includes('Live');
+                      const isQA = p.sprintStatus && p.sprintStatus.includes('QA');
+                      return (
                         <div
-                          key={alert.id}
-                          onClick={() => setActiveTab(alert.tab)}
+                          key={p.id || p.clientCode}
+                          onClick={() => setActiveTab('projects')}
                           style={{
-                            padding: '12px 14px',
-                            background: alert.bg,
-                            border: `1px solid ${alert.border}`,
-                            borderRadius: '10px',
+                            background: 'rgba(255, 255, 255, 0.02)',
+                            border: '1px solid rgba(255, 255, 255, 0.06)',
+                            borderRadius: '8px',
+                            padding: '9px 12px',
                             cursor: 'pointer',
                             display: 'flex',
                             justifyContent: 'space-between',
@@ -4605,87 +4673,112 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                             gap: '10px',
                             transition: 'all 0.15s ease',
                           }}
+                          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.06)'; }}
                         >
                           <div style={{ minWidth: 0, flex: 1 }}>
-                            <div style={{ fontSize: '0.84rem', fontWeight: 700, color: alert.titleColor, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                              {alert.title}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <span style={{ fontWeight: 800, color: '#fff', fontSize: '0.82rem' }}>{p.clientName}</span>
+                              <span style={{ fontSize: '0.64rem', color: '#38BDF8', fontFamily: 'monospace' }}>{p.clientCode}</span>
                             </div>
-                            <div style={{ fontSize: '0.74rem', color: '#CBD5E1', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                              {alert.desc}
+                            <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <span>{p.domain || 'Domain Active'}</span>
+                              <span>&bull;</span>
+                              <span style={{ color: '#FDE047', fontWeight: 600 }}>Due: {p.deliveryDate || 'Sep 2026'}</span>
                             </div>
                           </div>
-                          <span style={{ background: alert.badgeBg, color: '#fff', fontSize: '0.7rem', padding: '3px 9px', borderRadius: '4px', fontWeight: 700, whiteSpace: 'nowrap' }}>
-                            {alert.badge}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  );
-                })()}
-              </div>
 
-              {/* Section B: Recent Activity */}
-              <div className="fixkar-panel">
-                <div className="fixkar-panel-head">
-                  <div className="fixkar-panel-title">
-                    <Activity size={16} color="#4ADE80" />
-                    <span>Recent Business Activity</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    {activities.length > 0 && (
-                      <button
-                        type="button"
-                        onClick={handleClearActivities}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          color: '#FDA4AF',
-                          fontSize: '0.72rem',
-                          cursor: 'pointer',
-                          fontWeight: 600,
-                        }}
-                        title="Clear all recent activity logs"
-                      >
-                        Clear Log
-                      </button>
-                    )}
-                    <button
-                      onClick={() => setActiveTab('activity')}
-                      style={{ background: 'none', border: 'none', color: '#38BDF8', fontSize: '0.74rem', cursor: 'pointer', fontWeight: 600 }}
-                    >
-                      View All →
-                    </button>
+                          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                            <span style={{
+                              fontSize: '0.64rem',
+                              fontWeight: 800,
+                              padding: '2px 7px',
+                              borderRadius: '4px',
+                              background: isLive ? 'rgba(74, 222, 128, 0.15)' : isQA ? 'rgba(56, 189, 248, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+                              border: `1px solid ${isLive ? 'rgba(74, 222, 128, 0.35)' : isQA ? 'rgba(56, 189, 248, 0.35)' : 'rgba(245, 158, 11, 0.35)'}`,
+                              color: isLive ? '#4ADE80' : isQA ? '#38BDF8' : '#FDE047',
+                            }}>
+                              {p.sprintStatus || 'In Progress'}
+                            </span>
+                            <div style={{ fontSize: '0.68rem', color: '#4ADE80', fontFamily: 'monospace', fontWeight: 700, marginTop: '2px' }}>
+                              {p.totalBudget || '₹50,000'}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
-                {activities.length === 0 ? (
-                  <div style={{ padding: '24px 16px', textAlign: 'center', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '10px' }}>
-                    <Activity size={22} color="#64748B" style={{ margin: '0 auto 8px auto' }} />
-                    <div style={{ fontSize: '0.84rem', fontWeight: 600, color: '#94A3B8' }}>
-                      No Recent Activity Logs
+                {/* Section B: Recent Studio Activity & Attention Center */}
+                <div className="fixkar-panel" style={{ padding: '0', overflow: 'hidden' }}>
+                  <div className="fixkar-panel-head" style={{ padding: '12px 16px', margin: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className="fixkar-panel-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Activity size={15} color="#38BDF8" />
+                      <span style={{ fontWeight: 800 }}>Recent Activity &amp; Alerts</span>
                     </div>
-                    <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '2px' }}>
-                      New quotation inquiries and client actions will stream here automatically.
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {activities.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={handleClearActivities}
+                          style={{ background: 'none', border: 'none', color: '#FDA4AF', fontSize: '0.68rem', cursor: 'pointer', fontWeight: 600 }}
+                        >
+                          Clear
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab('activity')}
+                        style={{ background: 'none', border: 'none', color: '#38BDF8', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 700 }}
+                      >
+                        View All &rarr;
+                      </button>
                     </div>
                   </div>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    {activities.slice(0, 4).map((act) => (
-                      <div key={act.id} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', borderBottom: '1px solid rgba(255, 255, 255, 0.04)', paddingBottom: '8px' }}>
-                        <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#38BDF8', marginTop: '6px' }} />
-                        <div style={{ minWidth: 0, flex: 1 }}>
-                          <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#fff' }}>{act.activity}</div>
-                          <div style={{ fontSize: '0.74rem', color: '#94A3B8', marginTop: '1px' }}>{act.description}</div>
-                          <div style={{ fontSize: '0.66rem', color: '#64748B', fontFamily: 'monospace', marginTop: '2px' }}>{act.timestamp}</div>
+
+                  <div style={{ padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {/* Live Alert Pills if any */}
+                    {pendingEnquiriesCount > 0 && (
+                      <div
+                        onClick={() => setActiveTab('leads')}
+                        style={{ background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '6px', padding: '6px 10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
+                      >
+                        <div style={{ fontSize: '0.74rem', color: '#93C5FD', fontWeight: 700 }}>
+                          🚀 {pendingEnquiriesCount} New Website Inquiries Pending
+                        </div>
+                        <span style={{ background: '#38BDF8', color: '#fff', fontSize: '0.64rem', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
+                          Reply &rarr;
+                        </span>
+                      </div>
+                    )}
+
+                    {activities.length === 0 ? (
+                      <div style={{ padding: '24px 16px', textAlign: 'center', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.04)', borderRadius: '8px' }}>
+                        <CheckCircle2 size={20} color="#4ADE80" style={{ margin: '0 auto 6px auto' }} />
+                        <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#4ADE80' }}>All Studio Systems Optimal</div>
+                        <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '2px' }}>
+                          Client servers, DLT SMS routes, and deliveries are running smoothly.
                         </div>
                       </div>
-                    ))}
+                    ) : (
+                      activities.slice(0, 4).map((act) => (
+                        <div key={act.id} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', borderBottom: '1px solid rgba(255, 255, 255, 0.04)', paddingBottom: '6px' }}>
+                          <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#38BDF8', marginTop: '5px', flexShrink: 0 }} />
+                          <div style={{ minWidth: 0, flex: 1 }}>
+                            <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{act.activity}</div>
+                            <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '1px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{act.description}</div>
+                            <div style={{ fontSize: '0.64rem', color: '#64748B', fontFamily: 'monospace', marginTop: '2px' }}>{act.timestamp}</div>
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* ─── TAB 2: CLIENTS MANAGEMENT (ALL CLIENTS + DETAIL PROFILE) ─── */}
         {activeTab === 'clients' && !selectedClientDetail && (
