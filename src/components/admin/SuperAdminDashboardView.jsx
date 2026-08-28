@@ -5481,11 +5481,11 @@ const data = await res.json();`);
                   <table className="fixkar-table" style={{ width: '100%', minWidth: '860px', margin: 0 }}>
                     <thead>
                       <tr>
-                        <th style={{ width: '20%', padding: '10px 14px' }}>CLIENT</th>
+                        <th style={{ width: '18%', padding: '10px 14px' }}>CLIENT</th>
                         <th style={{ width: '14%', padding: '10px 14px' }}>PROVISIONAL CREDITS</th>
-                        <th style={{ width: '20%', padding: '10px 14px' }}>PAYMENT DUE / UTR</th>
+                        <th style={{ width: '18%', padding: '10px 14px' }}>PAYMENT DUE / UTR</th>
                         <th style={{ width: '14%', padding: '10px 14px' }}>ALLOCATED BY</th>
-                        <th style={{ width: '14%', padding: '10px 14px' }}>TIME REMAINING</th>
+                        <th style={{ width: '18%', padding: '10px 14px' }}>TIME REMAINING (48H SLA)</th>
                         <th style={{ width: '18%', padding: '10px 14px', textAlign: 'right' }}>SUPER ADMIN DECISION</th>
                       </tr>
                     </thead>
@@ -5528,7 +5528,7 @@ const data = await res.json();`);
                                 <div style={{ fontSize: '0.64rem', color: '#94A3B8', marginTop: '2px' }}>{prov.createdTimestamp ? prov.createdTimestamp.split(',')[0] : ''}</div>
                               </td>
 
-                              <td style={{ padding: '11px 14px' }}>
+                              <td style={{ padding: '11px 14px', whiteSpace: 'nowrap' }}>
                                 {isPending ? (() => {
                                   const diff = Math.max(0, new Date(prov.expiresAt || (Date.now() + 48*3600*1000)).getTime() - Date.now());
                                   const h = Math.floor(diff / (1000 * 60 * 60));
@@ -5536,7 +5536,21 @@ const data = await res.json();`);
                                   const s = Math.floor((diff % (1000 * 60)) / 1000);
                                   const countdownStr = diff <= 0 ? 'EXPIRED (Review)' : `${h}h ${m}m ${s < 10 ? '0' : ''}${s}s left`;
                                   return (
-                                    <span style={{ fontSize: '0.7rem', color: '#FBBF24', background: 'rgba(251, 191, 36, 0.15)', border: '1px solid rgba(251, 191, 36, 0.3)', padding: '3px 8px', borderRadius: '6px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'monospace' }}>
+                                    <span style={{
+                                      fontSize: '0.72rem',
+                                      color: '#FDE047',
+                                      background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(120, 53, 15, 0.3) 100%)',
+                                      border: '1px solid rgba(245, 158, 11, 0.45)',
+                                      padding: '4px 10px',
+                                      borderRadius: '6px',
+                                      fontWeight: 800,
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '5px',
+                                      fontFamily: 'monospace',
+                                      whiteSpace: 'nowrap',
+                                      boxShadow: '0 2px 8px rgba(245, 158, 11, 0.15)',
+                                    }}>
                                       ⏳ {countdownStr}
                                     </span>
                                   );
