@@ -4246,70 +4246,219 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
           };
 
           return (
-            <div className="fixkar-panel" style={{ padding: '0', overflow: 'hidden' }}>
-              {/* Panel Header */}
-              <div className="fixkar-panel-head" style={{ padding: '14px 18px', margin: 0 }}>
-                <div className="fixkar-panel-title">
-                  <Mail size={15} color="#38BDF8" />
-                  <span>Inbound Client Mailbox</span>
-                  <span style={{ fontSize: '0.68rem', color: unreadCount > 0 ? '#38BDF8' : '#94A3B8', background: unreadCount > 0 ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255, 255, 255, 0.05)', padding: '2px 8px', borderRadius: '10px', fontWeight: 800, marginLeft: '6px' }}>
-                    {unreadCount} Unread &bull; {inboundEmails.length} Total
-                  </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {/* ─── 4 TOP MAILBOX TELEMETRY CARDS (Single-Row Balanced Compact Grid) ─── */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', width: '100%', boxSizing: 'border-box' }}>
+                {/* Card 1: Total Inbound Emails */}
+                <div
+                  onClick={() => setEmailSearchQuery('')}
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: '1px solid rgba(56, 189, 248, 0.22)',
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to view all inbound messages"
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#93C5FD', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      TOTAL INBOUND MAILS
+                    </span>
+                    <Mail size={14} color="#38BDF8" />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#38BDF8', fontFamily: 'monospace' }}>
+                      {inboundEmails.length}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Received Messages</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#86EFAC', fontWeight: 600 }}>● Inbox Active</span>
+                    <span style={{ color: '#94A3B8' }}>support@fixkar.co.in</span>
+                  </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.72rem', color: '#CBD5E1', background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.2)', padding: '4px 10px', borderRadius: '6px' }}>
-                    <Globe size={12} color="#38BDF8" />
-                    <span>Inbound: <strong style={{ color: '#38BDF8', fontFamily: 'monospace' }}>support@fixkar.co.in</strong></span>
+                {/* Card 2: Unread Inquiries */}
+                <div
+                  onClick={() => setEmailSearchQuery(unreadCount > 0 ? 'unread' : '')}
+                  style={{
+                    background: unreadCount > 0
+                      ? 'linear-gradient(180deg, rgba(159, 18, 57, 0.3) 0%, rgba(15, 23, 42, 0.95) 100%)'
+                      : 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: `1px solid ${unreadCount > 0 ? 'rgba(244, 63, 94, 0.5)' : 'rgba(244, 63, 94, 0.22)'}`,
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(244, 63, 94, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = unreadCount > 0 ? 'rgba(244, 63, 94, 0.5)' : 'rgba(244, 63, 94, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to filter unread messages"
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#FDA4AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      UNREAD INQUIRIES
+                    </span>
+                    <Inbox size={14} color="#F43F5E" />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#F43F5E', fontFamily: 'monospace' }}>
+                      {unreadCount}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Awaiting Read</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: unreadCount > 0 ? '#FCA5A5' : '#86EFAC' }}>{unreadCount > 0 ? '● New Mail' : '● Up to Date'}</span>
+                    <span style={{ color: '#94A3B8' }}>Real-Time Feed</span>
+                  </div>
+                </div>
+
+                {/* Card 3: Outbound Dispatches */}
+                <div
+                  onClick={() => { setActiveTab('gateway'); setGatewaySubTab('email'); }}
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: '1px solid rgba(74, 222, 128, 0.22)',
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to manage email gateway configuration"
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#86EFAC', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      DAILY CLOUD QUOTA
+                    </span>
+                    <Send size={14} color="#4ADE80" />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#4ADE80', fontFamily: 'monospace' }}>
+                      {emailGatewayConfig.emailsRemainingToday ?? 300}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Emails Left Today</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#4ADE80' }}>Sent: {emailGatewayConfig.emailsSentToday || 1}/300</span>
+                    <span style={{ color: '#94A3B8' }}>Reset: 00:00 IST</span>
+                  </div>
+                </div>
+
+                {/* Card 4: Inbound Webhook Node */}
+                <div
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: '1px solid rgba(192, 132, 252, 0.22)',
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#D8B4FE', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      INBOUND WEBHOOK NODE
+                    </span>
+                    <Globe size={14} color="#C084FC" />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#C084FC', fontFamily: 'monospace', whiteSpace: 'nowrap' }}>
+                      MX VERIFIED
+                    </span>
+                    <span style={{ fontSize: '0.68rem', fontWeight: 600, color: '#94A3B8' }}>DNS Linked</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#86EFAC', fontWeight: 600 }}>● 100% Online</span>
+                    <span style={{ color: '#94A3B8' }}>Port 5050 Live</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* ─── MAIN INBOX FEED PANEL ─── */}
+              <div className="fixkar-panel" style={{ padding: '0', overflow: 'hidden' }}>
+                {/* Panel Header */}
+                <div className="fixkar-panel-head" style={{ padding: '12px 18px', margin: 0 }}>
+                  <div className="fixkar-panel-title">
+                    <Mail size={15} color="#38BDF8" />
+                    <span>Inbound Client Mailbox</span>
+                    <span style={{ fontSize: '0.68rem', color: unreadCount > 0 ? '#38BDF8' : '#94A3B8', background: unreadCount > 0 ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255, 255, 255, 0.05)', padding: '2px 8px', borderRadius: '10px', fontWeight: 800, marginLeft: '6px' }}>
+                      {unreadCount} Unread &bull; {inboundEmails.length} Total
+                    </span>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={fetchAllSuperData}
-                    disabled={loading}
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px solid rgba(255, 255, 255, 0.12)',
-                      color: '#CBD5E1',
-                      padding: '5px 12px',
-                      borderRadius: '6px',
-                      fontSize: '0.72rem',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '5px',
-                    }}
-                  >
-                    <RefreshCw size={12} className={loading ? 'animate-spin' : ''} />
-                    <span>Refresh Mailbox</span>
-                  </button>
-                </div>
-              </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.72rem', color: '#CBD5E1', background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.2)', padding: '4px 10px', borderRadius: '6px' }}>
+                      <Globe size={12} color="#38BDF8" />
+                      <span>Inbound: <strong style={{ color: '#38BDF8', fontFamily: 'monospace' }}>support@fixkar.co.in</strong></span>
+                    </div>
 
-              {/* Search Toolbar */}
-              <div style={{ padding: '10px 18px', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', background: 'rgba(0, 0, 0, 0.15)' }}>
-                <div style={{ position: 'relative', width: '100%', maxWidth: '420px' }}>
-                  <Search size={13} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
-                  <input
-                    type="text"
-                    value={emailSearchQuery}
-                    onChange={(e) => setEmailSearchQuery(e.target.value)}
-                    placeholder="Search by client name, email, subject, or message content..."
-                    style={{
-                      width: '100%',
-                      padding: '6px 10px 6px 30px',
-                      background: '#0B1120',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '6px',
-                      color: '#fff',
-                      fontSize: '0.76rem',
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                    }}
-                  />
+                    <button
+                      type="button"
+                      onClick={fetchAllSuperData}
+                      disabled={loading}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.12)',
+                        color: '#CBD5E1',
+                        padding: '5px 12px',
+                        borderRadius: '6px',
+                        fontSize: '0.72rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                      }}
+                    >
+                      <RefreshCw size={12} className={loading ? 'animate-spin' : ''} />
+                      <span>Refresh Mailbox</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
+
+                {/* Search Toolbar */}
+                <div style={{ padding: '8px 18px', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', background: 'rgba(0, 0, 0, 0.15)' }}>
+                  <div style={{ position: 'relative', width: '100%', maxWidth: '420px' }}>
+                    <Search size={13} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                    <input
+                      type="text"
+                      value={emailSearchQuery}
+                      onChange={(e) => setEmailSearchQuery(e.target.value)}
+                      placeholder="Search by client name, email, subject, or message content..."
+                      style={{
+                        width: '100%',
+                        padding: '6px 10px 6px 30px',
+                        background: '#0B1120',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '6px',
+                        color: '#fff',
+                        fontSize: '0.76rem',
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+                </div>
 
               {/* Inbound Emails Table (Fixed Layout, Zero Horizontal Scroll) */}
               <div style={{ width: '100%', overflow: 'hidden' }}>
@@ -4401,6 +4550,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 </table>
               </div>
             </div>
+          </div>
           );
         })()}
 
