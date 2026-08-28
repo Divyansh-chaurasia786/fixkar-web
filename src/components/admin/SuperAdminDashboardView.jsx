@@ -978,7 +978,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
           provider: data.provider || prev.provider,
           upstreamWalletAmount: data.upstreamWalletAmount,
           upstreamBalance: data.upstreamBalance,
-          status: data.status,
+          status: data?.status,
           lastSyncedTimestamp: data.lastSyncedTimestamp,
         }));
         const newCost = Number(data.wholesaleCostPerSms || data.pricing?.wholesaleCostPerSms || data.wholesaleCost || 0.25);
@@ -1591,7 +1591,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
     }
   };
 
-  const pendingProvisionalCount = provisionalRecharges.filter((p) => p.status === 'PENDING_SUPER_ADMIN').length;
+  const pendingProvisionalCount = provisionalRecharges.filter((p) => p?.status === 'PENDING_SUPER_ADMIN').length;
   const totalDistributedCredits = wallets.reduce((a, b) => a + (b.availableCredits || 0), 0);
   const totalApiDispatches = clientApiKeys.reduce((a, b) => a + (b.totalRequests || 0), 0);
 
@@ -1653,7 +1653,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 <span>Project Approvals</span>
               </div>
               {(() => {
-                const pendingTesting = (projects || []).filter(p => p.stage === 'testing' || p.status === 'Testing' || p.stage === 'review').length;
+                const pendingTesting = (projects || []).filter(p => p.stage === 'testing' || p?.status === 'Testing' || p.stage === 'review').length;
                 if (pendingTesting === 0) return null;
                 return (
                   <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.2)', color: '#38BDF8', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
@@ -1674,7 +1674,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 <span>Support Tickets</span>
               </div>
               {(() => {
-                const openCount = (supportTickets || []).filter((t) => t.status === 'Open' || t.status === 'In Progress').length;
+                const openCount = (supportTickets || []).filter((t) => t?.status === 'Open' || t?.status === 'In Progress').length;
                 if (openCount === 0) return null;
                 return (
                   <span style={{ fontSize: '0.62rem', background: 'rgba(244, 63, 94, 0.2)', color: '#FDA4AF', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
@@ -1711,7 +1711,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 <span>Inbound &amp; Client Mail</span>
               </div>
               {(() => {
-                const unreadCount = (inboundEmails || []).filter((e) => e.status === 'UNREAD').length;
+                const unreadCount = (inboundEmails || []).filter((e) => e?.status === 'UNREAD').length;
                 if (unreadCount === 0) return null;
                 return (
                   <span style={{ fontSize: '0.62rem', background: '#EF4444', color: '#fff', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
@@ -2164,7 +2164,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                       <span>Support Tickets</span>
                     </div>
                     <div style={{ color: '#94A3B8', fontSize: '0.68rem' }}>
-                      {(supportTickets || []).filter((t) => t.status === 'Open' || t.status === 'In Progress').length} Active Tasks
+                      {(supportTickets || []).filter((t) => t?.status === 'Open' || t?.status === 'In Progress').length} Active Tasks
                     </div>
                   </button>
                   <button
@@ -3001,7 +3001,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                       <Server size={15} color="#38BDF8" />
                       <span style={{ fontWeight: 800 }}>1. Upstream SMS Gateway Infrastructure</span>
                       <span style={{ fontSize: '0.66rem', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.12)', border: '1px solid rgba(74, 222, 128, 0.3)', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>
-                        ● {gatewayConfig.status || 'Connected'}
+                        ● {gatewayConfig?.status || 'Connected'}
                       </span>
                     </div>
 
@@ -3606,7 +3606,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                         <Server size={15} color="#38BDF8" />
                         <span style={{ fontWeight: 800 }}>1. Upstream Email Gateway Infrastructure</span>
                         <span style={{ fontSize: '0.66rem', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.12)', border: '1px solid rgba(74, 222, 128, 0.3)', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>
-                          ● {emailGatewayConfig.status || 'Connected'}
+                          ● {emailGatewayConfig?.status || 'Connected'}
                         </span>
                       </div>
 
@@ -4233,13 +4233,13 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
             TAB: DEDICATED INBOUND & CLIENT MAILBOX FEED (support@fixkar.co.in)
             ═════════════════════════════════════════════════════════════════ */}
         {activeTab === 'emails' && (() => {
-          const unreadCount = (inboundEmails || []).filter((e) => e.status === 'UNREAD').length;
-          const readCount = (inboundEmails || []).filter((e) => e.status !== 'UNREAD').length;
+          const unreadCount = (inboundEmails || []).filter((e) => e?.status === 'UNREAD').length;
+          const readCount = (inboundEmails || []).filter((e) => e?.status !== 'UNREAD').length;
           const totalCount = (inboundEmails || []).length;
 
           const filteredInbound = (inboundEmails || []).filter((email) => {
-            if (inboundStatusFilter === 'UNREAD' && email.status !== 'UNREAD') return false;
-            if (inboundStatusFilter === 'READ' && email.status === 'UNREAD') return false;
+            if (inboundStatusFilter === 'UNREAD' && email?.status !== 'UNREAD') return false;
+            if (inboundStatusFilter === 'READ' && email?.status === 'UNREAD') return false;
             if (!emailSearchQuery) return true;
             const q = emailSearchQuery.toLowerCase();
             return (
@@ -4252,7 +4252,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
 
           const handleMarkInboundRead = async (email) => {
             setSelectedInboundEmailModal(email);
-            if (email.status === 'UNREAD') {
+            if (email?.status === 'UNREAD') {
               try {
                 await fetch(`${API_BASE}/api/admin/emails/inbound/mark-read`, {
                   method: 'POST',
@@ -4533,7 +4533,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                           const rawFrom = email.from || 'Unknown Client';
                           const fromName = rawFrom.includes('<') ? rawFrom.split('<')[0].trim() : rawFrom;
                           const fromEmail = rawFrom.includes('<') ? rawFrom.match(/<([^>]+)>/)?.[1] || rawFrom : rawFrom;
-                          const isUnread = email.status === 'UNREAD';
+                          const isUnread = email?.status === 'UNREAD';
 
                           return (
                             <tr
@@ -4611,14 +4611,14 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
             TAB 2: CLIENT API STUDIO (ISOLATED TOKENS FOR CLIENT PORTALS)
             ═════════════════════════════════════════════════════════════════ */}
         {activeTab === 'client-apis' && (() => {
-          const activeCount = (clientApiKeys || []).filter(k => k.status === 'Active').length;
+          const activeCount = (clientApiKeys || []).filter(k => k?.status === 'Active').length;
           const pausedCount = (clientApiKeys || []).length - activeCount;
           const totalDispatches = (clientApiKeys || []).reduce((acc, k) => acc + (k.totalRequests || 0), 0);
           const totalCredits = (clientApiKeys || []).reduce((acc, k) => acc + (k.availableCredits || 0), 0);
 
           const filteredKeys = (clientApiKeys || []).filter((k) => {
-            if (clientApiStatusFilter === 'ACTIVE' && k.status !== 'Active') return false;
-            if (clientApiStatusFilter === 'PAUSED' && k.status === 'Active') return false;
+            if (clientApiStatusFilter === 'ACTIVE' && k?.status !== 'Active') return false;
+            if (clientApiStatusFilter === 'PAUSED' && k?.status === 'Active') return false;
             if (!clientApiSearchQuery) return true;
             const q = clientApiSearchQuery.toLowerCase();
             return (
@@ -4996,13 +4996,13 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                                   fontWeight: 800,
                                   padding: '2px 7px',
                                   borderRadius: '8px',
-                                  background: k.status === 'Active' ? 'rgba(74, 222, 128, 0.12)' : 'rgba(251, 191, 36, 0.12)',
-                                  border: `1px solid ${k.status === 'Active' ? 'rgba(74, 222, 128, 0.3)' : 'rgba(251, 191, 36, 0.3)'}`,
-                                  color: k.status === 'Active' ? '#4ADE80' : '#FBBF24',
+                                  background: k?.status === 'Active' ? 'rgba(74, 222, 128, 0.12)' : 'rgba(251, 191, 36, 0.12)',
+                                  border: `1px solid ${k?.status === 'Active' ? 'rgba(74, 222, 128, 0.3)' : 'rgba(251, 191, 36, 0.3)'}`,
+                                  color: k?.status === 'Active' ? '#4ADE80' : '#FBBF24',
                                   display: 'inline-block',
                                   whiteSpace: 'nowrap'
                                 }}>
-                                  ● {k.status}
+                                  ● {k?.status}
                                 </span>
                               </td>
 
@@ -5069,12 +5069,12 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                                   {/* Pause / Resume Key */}
                                   <button
                                     type="button"
-                                    onClick={() => handleToggleClientApiKey(k.id, k.status)}
-                                    title={k.status === 'Active' ? 'Pause API Key' : 'Resume API Key'}
+                                    onClick={() => handleToggleClientApiKey(k.id, k?.status)}
+                                    title={k?.status === 'Active' ? 'Pause API Key' : 'Resume API Key'}
                                     style={{
-                                      background: k.status === 'Active' ? 'rgba(251, 191, 36, 0.12)' : 'rgba(74, 222, 128, 0.12)',
-                                      border: `1px solid ${k.status === 'Active' ? 'rgba(251, 191, 36, 0.3)' : 'rgba(74, 222, 128, 0.3)'}`,
-                                      color: k.status === 'Active' ? '#FBBF24' : '#4ADE80',
+                                      background: k?.status === 'Active' ? 'rgba(251, 191, 36, 0.12)' : 'rgba(74, 222, 128, 0.12)',
+                                      border: `1px solid ${k?.status === 'Active' ? 'rgba(251, 191, 36, 0.3)' : 'rgba(74, 222, 128, 0.3)'}`,
+                                      color: k?.status === 'Active' ? '#FBBF24' : '#4ADE80',
                                       padding: '3px 6px',
                                       borderRadius: '5px',
                                       fontSize: '0.66rem',
@@ -5085,7 +5085,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                                       transition: 'all 0.15s ease',
                                     }}
                                   >
-                                    {k.status === 'Active' ? <Pause size={11} /> : <Play size={11} />}
+                                    {k?.status === 'Active' ? <Pause size={11} /> : <Play size={11} />}
                                   </button>
 
                                   {/* Revoke / Delete Key */}
@@ -5218,15 +5218,15 @@ const data = await res.json();`);
             TAB 3: 48-HOUR PROVISIONAL BANK RECONCILIATION RADAR
             ═════════════════════════════════════════════════════════════════ */}
         {activeTab === 'provisional' && (() => {
-          const pendingCount = (provisionalRecharges || []).filter(p => p.status === 'PENDING_SUPER_ADMIN').length;
-          const settledCount = (provisionalRecharges || []).filter(p => p.status === 'CONFIRMED_PERMANENT').length;
+          const pendingCount = (provisionalRecharges || []).filter(p => p?.status === 'PENDING_SUPER_ADMIN').length;
+          const settledCount = (provisionalRecharges || []).filter(p => p?.status === 'CONFIRMED_PERMANENT').length;
           const totalExposure = (provisionalRecharges || [])
-            .filter(p => p.status === 'PENDING_SUPER_ADMIN')
+            .filter(p => p?.status === 'PENDING_SUPER_ADMIN')
             .reduce((acc, p) => acc + (Number(String(p.amount || '0').replace(/[^0-9.]/g, '')) || 0), 0);
 
           const filteredList = (provisionalRecharges || []).filter((prov) => {
-            if (bankRadarFilter === 'PENDING' && prov.status !== 'PENDING_SUPER_ADMIN') return false;
-            if (bankRadarFilter === 'SETTLED' && prov.status !== 'CONFIRMED_PERMANENT') return false;
+            if (bankRadarFilter === 'PENDING' && prov?.status !== 'PENDING_SUPER_ADMIN') return false;
+            if (bankRadarFilter === 'SETTLED' && prov?.status !== 'CONFIRMED_PERMANENT') return false;
             if (!bankRadarSearch) return true;
             const q = bankRadarSearch.toLowerCase();
             return (
@@ -5517,7 +5517,7 @@ const data = await res.json();`);
                         </tr>
                       ) : (
                         filteredList.map((prov) => {
-                          const isPending = prov.status === 'PENDING_SUPER_ADMIN';
+                          const isPending = prov?.status === 'PENDING_SUPER_ADMIN';
                           return (
                             <tr key={prov.id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', background: isPending ? 'rgba(245, 158, 11, 0.04)' : 'transparent' }}>
                               <td style={{ padding: '11px 14px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -5575,13 +5575,13 @@ const data = await res.json();`);
                                     fontWeight: 800,
                                     padding: '2px 7px',
                                     borderRadius: '8px',
-                                    background: prov.status === 'CONFIRMED_PERMANENT' ? 'rgba(74, 222, 128, 0.12)' : 'rgba(244, 63, 94, 0.12)',
-                                    border: `1px solid ${prov.status === 'CONFIRMED_PERMANENT' ? 'rgba(74, 222, 128, 0.3)' : 'rgba(244, 63, 94, 0.3)'}`,
-                                    color: prov.status === 'CONFIRMED_PERMANENT' ? '#4ADE80' : '#FDA4AF',
+                                    background: prov?.status === 'CONFIRMED_PERMANENT' ? 'rgba(74, 222, 128, 0.12)' : 'rgba(244, 63, 94, 0.12)',
+                                    border: `1px solid ${prov?.status === 'CONFIRMED_PERMANENT' ? 'rgba(74, 222, 128, 0.3)' : 'rgba(244, 63, 94, 0.3)'}`,
+                                    color: prov?.status === 'CONFIRMED_PERMANENT' ? '#4ADE80' : '#FDA4AF',
                                     display: 'inline-block',
                                     whiteSpace: 'nowrap'
                                   }}>
-                                    ● {prov.status === 'CONFIRMED_PERMANENT' ? 'SETTLED' : 'REJECTED'}
+                                    ● {prov?.status === 'CONFIRMED_PERMANENT' ? 'SETTLED' : 'REJECTED'}
                                   </span>
                                 )}
                               </td>
@@ -6108,15 +6108,15 @@ const data = await res.json();`);
             TAB: CLIENT SUPPORT HELPDESK & TICKETS (ADMIN & SUPER ADMIN SHARED)
             ═════════════════════════════════════════════════════════════════ */}
         {activeTab === 'support' && (() => {
-          const totalOpen = (supportTickets || []).filter((t) => t.status === 'Open').length;
-          const totalInProgress = (supportTickets || []).filter((t) => t.status === 'In Progress').length;
-          const totalResolved = (supportTickets || []).filter((t) => t.status === 'Resolved').length;
+          const totalOpen = (supportTickets || []).filter((t) => t?.status === 'Open').length;
+          const totalInProgress = (supportTickets || []).filter((t) => t?.status === 'In Progress').length;
+          const totalResolved = (supportTickets || []).filter((t) => t?.status === 'Resolved').length;
 
           const filteredTickets = (supportTickets || [])
             .filter((t) => {
-              if (supportFilter === 'Open') return t.status === 'Open';
-              if (supportFilter === 'In Progress') return t.status === 'In Progress';
-              if (supportFilter === 'Resolved') return t.status === 'Resolved';
+              if (supportFilter === 'Open') return t?.status === 'Open';
+              if (supportFilter === 'In Progress') return t?.status === 'In Progress';
+              if (supportFilter === 'Resolved') return t?.status === 'Resolved';
               return true;
             })
             .filter((t) => {
@@ -6403,13 +6403,13 @@ const data = await res.json();`);
                             </span>
                           </td>
                           <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>
-                            <span className={`fixkar-status-chip ${t.status === 'Resolved' ? 'success' : t.status === 'In Progress' ? 'info' : 'danger'}`} style={{ fontSize: '0.68rem', padding: '2px 7px', fontWeight: 700 }}>
-                              ● {t.status || 'Open'}
+                            <span className={`fixkar-status-chip ${t?.status === 'Resolved' ? 'success' : t?.status === 'In Progress' ? 'info' : 'danger'}`} style={{ fontSize: '0.68rem', padding: '2px 7px', fontWeight: 700 }}>
+                              ● {t?.status || 'Open'}
                             </span>
                           </td>
                           <td style={{ padding: '10px 12px', textAlign: 'right', verticalAlign: 'middle', whiteSpace: 'nowrap' }}>
                             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                              {t.status !== 'Resolved' ? (
+                              {t?.status !== 'Resolved' ? (
                                 <button
                                   type="button"
                                   onClick={() => handleResolveTicket(t.id)}
@@ -6560,7 +6560,7 @@ const data = await res.json();`);
                           Status
                         </label>
                         <select
-                          value={selectedTicket.status}
+                          value={selectedTicket?.status}
                           onChange={(e) => {
                             const newStatus = e.target.value;
                             setSelectedTicket((prev) => ({ ...prev, status: newStatus }));
@@ -6647,7 +6647,7 @@ const data = await res.json();`);
                       </button>
 
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        {selectedTicket.status !== 'Resolved' && (
+                        {selectedTicket?.status !== 'Resolved' && (
                           <button
                             type="button"
                             onClick={async () => {
@@ -6668,7 +6668,7 @@ const data = await res.json();`);
                           type="button"
                           onClick={() => {
                             handleUpdateTicket(selectedTicket.id, {
-                              status: selectedTicket.status,
+                              status: selectedTicket?.status,
                               priority: selectedTicket.priority,
                               notes: selectedTicket.notes,
                             });
