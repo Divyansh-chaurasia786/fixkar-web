@@ -8214,27 +8214,20 @@ echo $response;
 
         {/* ─── TAB 8: LEADS & ENQUIRIES ───────────────────────────────────── */}
         {activeTab === 'leads' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {renderSectionGuide(
-              'Leads & Enquiries Management',
-              'Tracks incoming project inquiries, scope estimates, and contact requests submitted from the public Fixkar website.',
-              'R.K. Computer Classes submitted an inquiry: "Student Admission & Test Portal with Fast2SMS OTP verification (Budget ₹35,000)". You can review requirements, update lead status (New -> Contacted -> In Discussion), and click "Convert to Client".',
-              'leads'
-            )}
-
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div className="fixkar-panel" style={{ padding: 0, overflow: 'hidden' }}>
-              {/* Header with Search, Filter Pills & Clear Action */}
-              <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+              {/* Header with Search, Filter Pills & Actions */}
+              <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
                   {/* Search Bar */}
                   <div style={{ position: 'relative' }}>
-                    <Search size={14} color="#64748B" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+                    <Search size={13} color="#64748B" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
                     <input
                       type="text"
                       placeholder="Search name, phone, package..."
                       value={leadSearchQuery}
                       onChange={(e) => setLeadSearchQuery(e.target.value)}
-                      style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '20px', padding: '7px 12px 7px 32px', color: '#fff', fontSize: '0.8rem', outline: 'none', width: '230px' }}
+                      style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '20px', padding: '6px 12px 6px 30px', color: '#fff', fontSize: '0.76rem', outline: 'none', width: '220px' }}
                     />
                   </div>
 
@@ -8244,15 +8237,16 @@ echo $response;
                       { id: 'All', label: 'All Inquiries', count: leads.length },
                       { id: 'New', label: 'New', count: leads.filter((l) => l.status === 'New').length },
                       { id: 'Contacted', label: 'Contacted', count: leads.filter((l) => l.status === 'Contacted').length },
+                      { id: 'In Discussion', label: 'In Discussion', count: leads.filter((l) => l.status === 'In Discussion').length },
                       { id: 'Demo Shared', label: 'Demo Shared', count: leads.filter((l) => l.status === 'Demo Shared').length },
                       { id: '50% Paid', label: '50% Paid', count: leads.filter((l) => l.status === '50% Paid').length },
-                      { id: 'Closed', label: 'Closed', count: leads.filter((l) => l.status === 'Closed').length },
                     ].map((f) => (
                       <button
                         key={f.id}
                         type="button"
                         onClick={() => setLeadStatusFilter(f.id)}
                         className={`fixkar-pill-btn ${leadStatusFilter === f.id ? 'active' : ''}`}
+                        style={{ fontSize: '0.7rem', padding: '4px 9px' }}
                       >
                         <span>{f.label} ({f.count})</span>
                       </button>
@@ -8260,51 +8254,63 @@ echo $response;
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <button
+                    type="button"
+                    onClick={fetchAllData}
+                    disabled={loading}
+                    style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#94A3B8', padding: '5px 10px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                  >
+                    <RefreshCw size={11} className={loading ? 'animate-spin' : ''} />
+                    <span>Sync</span>
+                  </button>
+
                   {leads.length > 0 && (
                     <button
+                      type="button"
                       onClick={handleClearAllLeads}
                       style={{
-                        background: 'rgba(244, 63, 94, 0.12)',
-                        border: '1px solid rgba(244, 63, 94, 0.3)',
+                        background: 'rgba(244, 63, 94, 0.1)',
+                        border: '1px solid rgba(244, 63, 94, 0.25)',
                         color: '#FDA4AF',
-                        padding: '6px 12px',
-                        borderRadius: '8px',
-                        fontSize: '0.74rem',
+                        padding: '5px 10px',
+                        borderRadius: '6px',
+                        fontSize: '0.72rem',
                         fontWeight: 700,
                         cursor: 'pointer',
                         display: 'inline-flex',
                         alignItems: 'center',
-                        gap: '5px',
+                        gap: '4px',
                       }}
+                      title="Clear all leads from database"
                     >
-                      <Trash2 size={12} />
-                      <span>Clear All Leads</span>
+                      <Trash2 size={11} />
+                      <span>Clear All</span>
                     </button>
                   )}
                 </div>
               </div>
 
-              {/* Compact Master Leads Table (100% Fit, Zero Horizontal Scroll) */}
-              <div style={{ overflowX: 'auto' }}>
-                <table className="fixkar-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+              {/* Master Leads Table (100% Responsive Fit, Zero Horizontal Scroll) */}
+              <div style={{ overflowX: 'hidden' }}>
+                <table className="fixkar-table" style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', margin: 0 }}>
                   <thead>
                     <tr>
-                      <th style={{ width: '28%', textAlign: 'left', padding: '12px 16px', whiteSpace: 'nowrap' }}>PROSPECT / CLIENT</th>
-                      <th style={{ width: '18%', textAlign: 'left', padding: '12px 16px', whiteSpace: 'nowrap' }}>ESTIMATED BUDGET</th>
-                      <th style={{ width: '18%', textAlign: 'left', padding: '12px 16px', whiteSpace: 'nowrap' }}>SUBMISSION DATE</th>
-                      <th style={{ width: '14%', textAlign: 'center', padding: '12px 16px', whiteSpace: 'nowrap' }}>STATUS</th>
-                      <th style={{ width: '8%', textAlign: 'center', padding: '12px 16px', whiteSpace: 'nowrap' }}>CALL</th>
-                      <th style={{ width: '14%', textAlign: 'right', padding: '12px 16px', whiteSpace: 'nowrap' }}>ACTION</th>
+                      <th style={{ width: '24%', textAlign: 'left', padding: '10px 14px' }}>PROSPECT &amp; CLIENT</th>
+                      <th style={{ width: '24%', textAlign: 'left', padding: '10px 14px' }}>SERVICE REQUIRED</th>
+                      <th style={{ width: '13%', textAlign: 'left', padding: '10px 14px' }}>EST. BUDGET</th>
+                      <th style={{ width: '13%', textAlign: 'center', padding: '10px 14px' }}>STATUS</th>
+                      <th style={{ width: '10%', textAlign: 'center', padding: '10px 14px' }}>DATE</th>
+                      <th style={{ width: '16%', textAlign: 'right', padding: '10px 14px' }}>ACTIONS</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredLeads.length === 0 ? (
                       <tr>
-                        <td colSpan={6} style={{ textAlign: 'center', padding: '40px 16px', color: '#64748B' }}>
-                          <MessageSquare size={26} color="#38BDF8" style={{ margin: '0 auto 8px', display: 'block', opacity: 0.6 }} />
-                          <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#94A3B8' }}>No Quotation Leads Found</div>
-                          <div style={{ fontSize: '0.74rem', color: '#64748B', marginTop: '2px' }}>
+                        <td colSpan={6} style={{ textAlign: 'center', padding: '36px 16px', color: '#64748B' }}>
+                          <MessageSquare size={24} color="#38BDF8" style={{ margin: '0 auto 8px', display: 'block', opacity: 0.6 }} />
+                          <div style={{ fontSize: '0.86rem', fontWeight: 700, color: '#94A3B8' }}>No Inquiries Found</div>
+                          <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '2px' }}>
                             {leads.length === 0 ? 'Public quotation inquiries submitted from the website calculator will appear here live.' : 'No inquiries match your current search/filter.'}
                           </div>
                         </td>
@@ -8322,44 +8328,54 @@ echo $response;
                               style={{
                                 background: isExpanded ? 'rgba(56, 189, 248, 0.04)' : 'transparent',
                                 borderBottom: isExpanded ? 'none' : '1px solid rgba(255, 255, 255, 0.05)',
-                                transition: 'background 0.15s ease',
                               }}
                             >
                               {/* 1. Prospect Column */}
-                              <td style={{ verticalAlign: 'middle', padding: '12px 16px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                  {renderClientAvatar({ businessName: ld.name || ld.businessName, logoUrl: ld.logoUrl }, 34)}
-                                  <div style={{ minWidth: 0 }}>
-                                    <div style={{ fontWeight: 700, color: '#fff', fontSize: '0.88rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                      {ld.name || ld.businessName || 'Anonymous Visitor'}
+                              <td style={{ verticalAlign: 'middle', padding: '10px 14px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                  {renderClientAvatar({ businessName: ld.businessName || ld.name, logoUrl: ld.logoUrl }, 30)}
+                                  <div style={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
+                                    <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.82rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                      {ld.businessName || ld.name || 'Anonymous Visitor'}
                                     </div>
-                                    <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '1px' }}>
-                                      {ld.serviceRequired ? ld.serviceRequired.split('(')[0].trim() : 'Website Inquiry'}
+                                    <div style={{ fontSize: '0.68rem', color: '#94A3B8', marginTop: '1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                      {ld.name} {ld.city ? `• ${ld.city}` : ''}
                                     </div>
                                   </div>
                                 </div>
                               </td>
 
-                              {/* 2. Estimated Budget Column */}
-                              <td style={{ verticalAlign: 'middle', padding: '12px 16px', whiteSpace: 'nowrap' }}>
-                                <div style={{ fontWeight: 800, color: '#FDE047', fontFamily: 'monospace', fontSize: '0.94rem' }}>
-                                  {ld.estimatedQuote || ld.budget || 'Custom Quote'}
+                              {/* 2. Service Required */}
+                              <td style={{ verticalAlign: 'middle', padding: '10px 14px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                  <span style={{
+                                    fontSize: '0.62rem',
+                                    fontWeight: 800,
+                                    padding: '2px 6px',
+                                    borderRadius: '4px',
+                                    background: 'rgba(56, 189, 248, 0.12)',
+                                    color: '#38BDF8',
+                                    border: '1px solid rgba(56, 189, 248, 0.25)',
+                                    whiteSpace: 'nowrap'
+                                  }}>
+                                    {ld.packageSelected || 'Custom App'}
+                                  </span>
+                                  <span style={{ color: '#CBD5E1', fontSize: '0.74rem', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                    {ld.serviceRequired ? ld.serviceRequired.split('(')[0].trim() : 'Web Platform'}
+                                  </span>
                                 </div>
-                                <div style={{ fontSize: '0.68rem', color: '#64748B' }}>50/50 Milestone</div>
                               </td>
 
-                              {/* 3. Submission Date Column */}
-                              <td style={{ verticalAlign: 'middle', padding: '12px 16px', whiteSpace: 'nowrap' }}>
-                                <div style={{ color: '#E2E8F0', fontSize: '0.8rem', fontWeight: 600, whiteSpace: 'nowrap' }}>
-                                  {ld.createdAt ? new Date(ld.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : ld.date || 'Today'}
+                              {/* 3. Estimated Budget */}
+                              <td style={{ verticalAlign: 'middle', padding: '10px 14px', whiteSpace: 'nowrap' }}>
+                                <div style={{ fontWeight: 800, color: '#FDE047', fontFamily: 'monospace', fontSize: '0.86rem' }}>
+                                  {ld.estimatedQuote || ld.budget || 'Custom'}
                                 </div>
-                                <div style={{ fontSize: '0.7rem', color: '#64748B', fontFamily: 'monospace' }}>
-                                  {ld.createdAt ? new Date(ld.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-                                </div>
+                                <div style={{ fontSize: '0.64rem', color: '#64748B' }}>50% Advance</div>
                               </td>
 
-                              {/* 4. Status Column */}
-                              <td style={{ verticalAlign: 'middle', padding: '12px 16px', textAlign: 'center', whiteSpace: 'nowrap' }}>
+                              {/* 4. Status Selector */}
+                              <td style={{ verticalAlign: 'middle', padding: '10px 14px', textAlign: 'center', whiteSpace: 'nowrap' }}>
                                 <select
                                   value={ld.status || 'New'}
                                   onChange={(e) => handleUpdateLeadStatus(ld.id, e.target.value)}
@@ -8389,240 +8405,193 @@ echo $response;
                                         : ld.status === 'In Discussion'
                                         ? '#C084FC'
                                         : '#4ADE80',
-                                    padding: '4px 8px',
-                                    borderRadius: '6px',
-                                    fontSize: '0.72rem',
-                                    fontWeight: 700,
+                                    padding: '3px 6px',
+                                    borderRadius: '5px',
+                                    fontSize: '0.68rem',
+                                    fontWeight: 800,
                                     cursor: 'pointer',
                                     outline: 'none',
-                                    whiteSpace: 'nowrap',
                                   }}
                                 >
                                   <option value="New" style={{ background: '#0F172A', color: '#FBBF24' }}>● New</option>
                                   <option value="Contacted" style={{ background: '#0F172A', color: '#38BDF8' }}>● Contacted</option>
                                   <option value="In Discussion" style={{ background: '#0F172A', color: '#C084FC' }}>● In Discussion</option>
+                                  <option value="Demo Shared" style={{ background: '#0F172A', color: '#38BDF8' }}>● Demo Shared</option>
+                                  <option value="50% Paid" style={{ background: '#0F172A', color: '#4ADE80' }}>● 50% Paid</option>
                                   <option value="Converted" style={{ background: '#0F172A', color: '#4ADE80' }}>● Converted</option>
                                 </select>
                               </td>
 
-                              {/* 5. Contact Column (Call Icon Sign Only) */}
-                              <td style={{ verticalAlign: 'middle', padding: '12px 16px', textAlign: 'center', whiteSpace: 'nowrap' }}>
-                                {ld.phone ? (
-                                  <a
-                                    href={`tel:${rawPhone}`}
-                                    style={{
-                                      color: '#38BDF8',
-                                      textDecoration: 'none',
-                                      width: '32px',
-                                      height: '32px',
-                                      borderRadius: '8px',
-                                      background: 'rgba(56, 189, 248, 0.12)',
-                                      border: '1px solid rgba(56, 189, 248, 0.3)',
-                                      display: 'inline-flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      transition: 'all 0.15s ease',
-                                    }}
-                                    title={`Call ${ld.name || 'Lead'}: ${formatPhoneNumber(ld.phone)}`}
-                                  >
-                                    <Phone size={13} color="#38BDF8" />
-                                  </a>
-                                ) : (
-                                  <span style={{ color: '#64748B', fontSize: '0.74rem' }}>—</span>
-                                )}
+                              {/* 5. Date */}
+                              <td style={{ verticalAlign: 'middle', padding: '10px 14px', textAlign: 'center', whiteSpace: 'nowrap' }}>
+                                <div style={{ color: '#CBD5E1', fontSize: '0.74rem', fontWeight: 600, fontFamily: 'monospace' }}>
+                                  {ld.createdAt ? new Date(ld.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : ld.date || 'Today'}
+                                </div>
                               </td>
 
-                              {/* 6. Full Details Toggle Button */}
-                              <td style={{ verticalAlign: 'middle', padding: '12px 16px', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                                <button
-                                  onClick={() => toggleLeadExpand(ld.id)}
-                                  style={{
-                                    background: isExpanded ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                                    border: `1px solid ${isExpanded ? 'rgba(56, 189, 248, 0.4)' : 'rgba(255, 255, 255, 0.12)'}`,
-                                    color: isExpanded ? '#38BDF8' : '#CBD5E1',
-                                    padding: '6px 14px',
-                                    borderRadius: '8px',
-                                    fontSize: '0.76rem',
-                                    fontWeight: 700,
-                                    cursor: 'pointer',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '6px',
-                                    whiteSpace: 'nowrap',
-                                    transition: 'all 0.15s ease',
-                                  }}
-                                >
-                                  <Eye size={12} />
-                                  <span>{isExpanded ? 'Hide Details' : 'Full Details'}</span>
-                                  {isExpanded ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-                                </button>
+                              {/* 6. Action Buttons */}
+                              <td style={{ verticalAlign: 'middle', padding: '10px 14px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                                <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'flex-end', gap: '4px' }}>
+                                  {/* WhatsApp Button */}
+                                  <a
+                                    href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hello ${ld.name || ld.businessName}!
+
+Thank you for reaching out to Fixkar regarding '${ld.serviceRequired || ld.packageSelected || 'Website Project'}'.
+Estimated Investment: ${ld.estimatedQuote || ld.budget || 'Custom'}.
+
+When would be a good time to discuss your project requirements?`)}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    title="Send WhatsApp Message"
+                                    style={{
+                                      background: 'rgba(74, 222, 128, 0.12)',
+                                      border: '1px solid rgba(74, 222, 128, 0.35)',
+                                      color: '#4ADE80',
+                                      padding: '3px 7px',
+                                      borderRadius: '5px',
+                                      fontSize: '0.66rem',
+                                      fontWeight: 700,
+                                      textDecoration: 'none',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '3px',
+                                    }}
+                                  >
+                                    <span>💬 WA</span>
+                                  </a>
+
+                                  {/* Call Button */}
+                                  {ld.phone && (
+                                    <a
+                                      href={`tel:${rawPhone}`}
+                                      title={`Call ${ld.phone}`}
+                                      style={{
+                                        background: 'rgba(56, 189, 248, 0.12)',
+                                        border: '1px solid rgba(56, 189, 248, 0.35)',
+                                        color: '#38BDF8',
+                                        padding: '3px 7px',
+                                        borderRadius: '5px',
+                                        fontSize: '0.66rem',
+                                        fontWeight: 700,
+                                        textDecoration: 'none',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '3px',
+                                      }}
+                                    >
+                                      <Phone size={10} />
+                                      <span>Call</span>
+                                    </a>
+                                  )}
+
+                                  {/* Details Expand Toggle */}
+                                  <button
+                                    type="button"
+                                    onClick={() => toggleLeadExpand(ld.id)}
+                                    title="View scope details"
+                                    style={{
+                                      background: isExpanded ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                                      border: `1px solid ${isExpanded ? 'rgba(56, 189, 248, 0.4)' : 'rgba(255, 255, 255, 0.12)'}`,
+                                      color: isExpanded ? '#38BDF8' : '#CBD5E1',
+                                      padding: '3px 7px',
+                                      borderRadius: '5px',
+                                      fontSize: '0.66rem',
+                                      fontWeight: 700,
+                                      cursor: 'pointer',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '2px',
+                                    }}
+                                  >
+                                    <span>{isExpanded ? 'Hide' : 'Details'}</span>
+                                    {isExpanded ? <ChevronUp size={10} /> : <ChevronDown size={10} />}
+                                  </button>
+                                </div>
                               </td>
                             </tr>
 
                             {/* Expanded Details Drawer */}
                             {isExpanded && (
-                              <tr style={{ background: 'rgba(15, 23, 42, 0.75)' }}>
-                                <td colSpan={6} style={{ padding: '0 16px 16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                                  <div
-                                    style={{
-                                      background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%)',
-                                      border: '1px solid rgba(56, 189, 248, 0.22)',
-                                      borderRadius: '12px',
-                                      padding: '16px 20px',
-                                      display: 'flex',
-                                      flexDirection: 'column',
-                                      gap: '14px',
-                                      boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.08)',
-                                    }}
-                                  >
-                                    {/* Header Info */}
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
-                                      <div>
-                                        <div style={{ fontSize: '0.7rem', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 700 }}>
-                                          Project Requirements &amp; Scope
-                                        </div>
-                                        <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#fff', marginTop: '2px' }}>
-                                          {ld.serviceRequired || ld.projectScope || 'Complete Custom Website Development'}
-                                        </div>
+                              <tr style={{ background: 'rgba(15, 23, 42, 0.7)', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                                <td colSpan={6} style={{ padding: '14px 18px' }}>
+                                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
+                                    {/* Left Box: Client Message & Scope */}
+                                    <div style={{ background: 'rgba(0, 0, 0, 0.3)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '8px', padding: '10px 14px' }}>
+                                      <div style={{ fontSize: '0.68rem', color: '#93C5FD', fontWeight: 700, textTransform: 'uppercase', marginBottom: '6px' }}>
+                                        Project Scope &amp; Client Requirement
                                       </div>
-                                      <div style={{ textAlign: 'right' }}>
-                                        <div style={{ fontSize: '0.7rem', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 700 }}>
-                                          Total Estimated Quotation
-                                        </div>
-                                        <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#FDE047', fontFamily: 'monospace', marginTop: '2px' }}>
-                                          {ld.estimatedQuote || ld.budget || 'Custom Quote'}
-                                        </div>
-                                        <div style={{ fontSize: '0.68rem', color: '#38BDF8' }}>50% Advance / 50% on Live Production</div>
+                                      <div style={{ fontSize: '0.76rem', color: '#E2E8F0', lineHeight: 1.5 }}>
+                                        {ld.message || ld.notes || 'No custom notes provided with quote submission.'}
+                                      </div>
+                                      <div style={{ marginTop: '8px', display: 'flex', gap: '10px', fontSize: '0.7rem', color: '#94A3B8' }}>
+                                        <span>📧 Email: <strong style={{ color: '#CBD5E1' }}>{ld.email || 'N/A'}</strong></span>
+                                        <span>📱 Phone: <strong style={{ color: '#CBD5E1' }}>{ld.phone || 'N/A'}</strong></span>
                                       </div>
                                     </div>
 
-                                    {/* Features Badges */}
-                                    {ld.features && ld.features.length > 0 && (
+                                    {/* Right Box: Features & Convert Action */}
+                                    <div style={{ background: 'rgba(0, 0, 0, 0.3)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '8px', padding: '10px 14px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '8px' }}>
                                       <div>
-                                        <div style={{ fontSize: '0.7rem', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 700, marginBottom: '6px' }}>
-                                          Selected Features &amp; Modules
+                                        <div style={{ fontSize: '0.68rem', color: '#86EFAC', fontWeight: 700, textTransform: 'uppercase', marginBottom: '6px' }}>
+                                          Selected Features &amp; Add-ons
                                         </div>
-                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                                          {ld.features.map((f, i) => (
-                                            <span
-                                              key={i}
-                                              style={{
-                                                fontSize: '0.74rem',
-                                                background: 'rgba(56, 189, 248, 0.1)',
-                                                border: '1px solid rgba(56, 189, 248, 0.25)',
-                                                color: '#93C5FD',
-                                                padding: '4px 10px',
-                                                borderRadius: '6px',
-                                                fontWeight: 600,
-                                              }}
-                                            >
-                                              ✓ {typeof f === 'string' ? f : f.name || 'Feature'}
+                                        <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                                          {(ld.features && ld.features.length > 0 ? ld.features : ['Responsive UI', 'Domain + VPS Server', 'Fast2SMS OTP', 'SEO Optimization']).map((f, i) => (
+                                            <span key={i} style={{ background: 'rgba(74, 222, 128, 0.1)', border: '1px solid rgba(74, 222, 128, 0.25)', color: '#86EFAC', fontSize: '0.64rem', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>
+                                              ✓ {f}
                                             </span>
                                           ))}
                                         </div>
                                       </div>
-                                    )}
 
-                                    {/* Summary Grid */}
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px', background: 'rgba(0, 0, 0, 0.3)', padding: '12px 16px', borderRadius: '8px' }}>
-                                      <div>
-                                        <span style={{ fontSize: '0.68rem', color: '#64748B', display: 'block' }}>Prospect / Contact Person</span>
-                                        <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#fff' }}>{ld.name || ld.businessName || 'Anonymous Visitor'}</span>
-                                      </div>
-                                      <div>
-                                        <span style={{ fontSize: '0.68rem', color: '#64748B', display: 'block' }}>Phone / WhatsApp</span>
-                                        <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#38BDF8', fontFamily: 'monospace' }}>{ld.phone || 'Not provided'}</span>
-                                      </div>
-                                      <div>
-                                        <span style={{ fontSize: '0.68rem', color: '#64748B', display: 'block' }}>Submission Timestamp</span>
-                                        <span style={{ fontSize: '0.82rem', color: '#CBD5E1' }}>
-                                          {ld.createdAt ? new Date(ld.createdAt).toLocaleString('en-IN') : ld.date || 'Today'}
-                                        </span>
-                                      </div>
-                                      <div>
-                                        <span style={{ fontSize: '0.68rem', color: '#64748B', display: 'block' }}>Lead Status</span>
-                                        <span style={{ fontSize: '0.82rem', fontWeight: 700, color: ld.status === 'New' ? '#FBBF24' : '#4ADE80' }}>
-                                          ● {ld.status || 'New'}
-                                        </span>
-                                      </div>
-                                    </div>
+                                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px', paddingTop: '6px', borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleDeleteLead(ld.id)}
+                                          style={{ background: 'none', border: 'none', color: '#FDA4AF', fontSize: '0.7rem', cursor: 'pointer', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                                        >
+                                          <Trash2 size={11} />
+                                          <span>Delete Inquiry</span>
+                                        </button>
 
-                                    {/* Action Buttons Inside Expanded Drawer */}
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '12px' }}>
-                                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                                        {/* Direct WhatsApp Button */}
-                                        {ld.phone && (
-                                          <a
-                                            href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hello ${ld.name || 'Sir'}! Thank you for contacting Fixkar regarding your quotation for ${ld.serviceRequired || 'your website'}. I am connecting from the Fixkar engineering team.`)}`}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            style={{
-                                              background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                                              color: '#fff',
-                                              border: 'none',
-                                              padding: '8px 16px',
-                                              borderRadius: '8px',
-                                              fontSize: '0.8rem',
-                                              fontWeight: 700,
-                                              display: 'inline-flex',
-                                              alignItems: 'center',
-                                              gap: '6px',
-                                              textDecoration: 'none',
-                                              boxShadow: '0 4px 15px rgba(16, 185, 129, 0.35)',
-                                            }}
-                                            title="Chat with prospect on WhatsApp"
-                                          >
-                                            <Send size={13} />
-                                            <span>Chat on WhatsApp</span>
-                                          </a>
-                                        )}
-
-                                        {/* Direct Call Button */}
-                                        {ld.phone && (
-                                          <a
-                                            href={`tel:${rawPhone}`}
-                                            style={{
-                                              background: 'rgba(56, 189, 248, 0.12)',
-                                              border: '1px solid rgba(56, 189, 248, 0.3)',
-                                              color: '#38BDF8',
-                                              padding: '8px 14px',
-                                              borderRadius: '8px',
-                                              fontSize: '0.8rem',
-                                              fontWeight: 700,
-                                              textDecoration: 'none',
-                                              display: 'inline-flex',
-                                              alignItems: 'center',
-                                              gap: '6px',
-                                            }}
-                                            title="Direct Phone Call"
-                                          >
-                                            <Phone size={13} />
-                                            <span>Call ({formatPhoneNumber(ld.phone)})</span>
-                                          </a>
-                                        )}
+                                        <button
+                                          type="button"
+                                          onClick={() => {
+                                            setNewClientForm({
+                                              businessName: ld.businessName || ld.name || '',
+                                              businessType: 'Enterprise Client',
+                                              logoUrl: '',
+                                              contactPerson: ld.name || '',
+                                              phone: ld.phone || '',
+                                              whatsapp: ld.phone || '',
+                                              email: ld.email || '',
+                                              city: ld.city || 'Patna',
+                                              state: 'Bihar',
+                                              pinCode: '',
+                                              agreedPackage: ld.packageSelected || ld.serviceRequired || 'Custom Web Application Architecture',
+                                            });
+                                            setActiveTab('clients');
+                                            setIsAddClientModalOpen(true);
+                                          }}
+                                          style={{
+                                            background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                                            color: '#fff',
+                                            border: 'none',
+                                            padding: '5px 12px',
+                                            borderRadius: '6px',
+                                            fontSize: '0.72rem',
+                                            fontWeight: 800,
+                                            cursor: 'pointer',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '4px',
+                                            boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)',
+                                          }}
+                                        >
+                                          <UserCheck size={12} />
+                                          <span>Convert to Client &rarr;</span>
+                                        </button>
                                       </div>
-
-                                      {/* Delete Lead Button */}
-                                      <button
-                                        onClick={() => handleDeleteLead(ld.id)}
-                                        style={{
-                                          background: 'rgba(244, 63, 94, 0.1)',
-                                          border: '1px solid rgba(244, 63, 94, 0.25)',
-                                          color: '#FDA4AF',
-                                          padding: '7px 12px',
-                                          borderRadius: '8px',
-                                          fontSize: '0.76rem',
-                                          fontWeight: 600,
-                                          cursor: 'pointer',
-                                          display: 'inline-flex',
-                                          alignItems: 'center',
-                                          gap: '5px',
-                                        }}
-                                        title="Delete Lead"
-                                      >
-                                        <Trash2 size={12} />
-                                        <span>Delete Lead</span>
-                                      </button>
                                     </div>
                                   </div>
                                 </td>
@@ -8639,7 +8608,7 @@ echo $response;
           </div>
         )}
 
-        {/* ─── TAB 9: SERVICES & QUOTE CONFIGURATION ENGINE ──────────────── */}
+{/* ─── TAB 9: SERVICES & QUOTE CONFIGURATION ENGINE ──────────────── */}
         {activeTab === 'services' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {/* Header Control Panel */}
