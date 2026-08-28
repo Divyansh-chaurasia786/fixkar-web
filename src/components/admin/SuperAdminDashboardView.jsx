@@ -42,7 +42,8 @@ import {
   Send,
   Layers,
   Play,
-  Pause
+  Pause,
+  Inbox
 } from 'lucide-react';
 import '../../styles/admin-console.css';
 
