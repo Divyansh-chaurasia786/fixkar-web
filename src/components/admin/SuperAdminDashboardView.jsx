@@ -147,20 +147,23 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
   const [gatewaySaving, setGatewaySaving] = useState(false);
   const [showMasterApiKey, setShowMasterApiKey] = useState(false);
 
-  // Email Gateway Config State (Resend Enterprise Master Pool)
+  // Email Gateway Config State (Brevo / Resend Master Pool)
   const [emailGatewayConfig, setEmailGatewayConfig] = useState({
-    provider: 'Resend Enterprise Cloud Mail Engine',
+    provider: 'Brevo Cloud Email Gateway (Sendinblue)',
     apiKey: '',
-    senderAddress: 'support@fixkar.co.in',
+    senderAddress: 'supportfixkar@gmail.com',
     senderName: 'Fixkar Support & Cloud Services',
-    wholesaleCostPerEmail: 0.034,
+    wholesaleCostPerEmail: 0.03125,
     status: '🟢 Master Cloud Mail Matrix Active (Connected)',
     lastSyncedAt: new Date().toISOString(),
+    emailsRemainingToday: 300,
+    emailsSentToday: 0,
+    dailyLimit: 300,
     packages: [
-      { id: 'email_starter', name: 'Starter Email Pack', credits: 5000, price: 499, popular: false, desc: '5,000 High-Speed Transactional Emails • Verified Delivery' },
-      { id: 'email_growth', name: 'Growth Email Pack', credits: 25000, price: 1499, popular: true, desc: '25,000 High-Speed Transactional Emails • High Deliverability Queue' },
-      { id: 'email_scale', name: 'Scale Email Pack', credits: 50000, price: 2499, popular: false, desc: '50,000 High-Speed Transactional Emails • Dedicated IP Routing' },
-      { id: 'email_enterprise', name: 'Enterprise Email Pack', credits: 100000, price: 4499, popular: false, desc: '100,000 High-Speed Transactional Emails • Enterprise Deliverability SLA' }
+      { id: 'email_5k', name: 'Starter Cloud', credits: 5000, price: 319, popular: false, desc: '5,000 High-Speed Transactional Emails • Verified Inbox Delivery' },
+      { id: 'email_10k', name: 'Growth Velocity', credits: 10000, price: 625, popular: true, desc: '10,000 Transactional Emails • Priority Deliverability Queue' },
+      { id: 'email_25k', name: 'Business Scale', credits: 25000, price: 1599, popular: false, desc: '25,000 Transactional Emails • Dedicated IP Delivery' },
+      { id: 'email_50k', name: 'Enterprise Matrix', credits: 50000, price: 3125, popular: false, desc: '50,000 Transactional Emails • High-Throughput SLA' }
     ]
   });
   const [emailGatewaySaving, setEmailGatewaySaving] = useState(false);
