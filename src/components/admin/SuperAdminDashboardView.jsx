@@ -5529,11 +5529,18 @@ const data = await res.json();`);
                               </td>
 
                               <td style={{ padding: '11px 14px' }}>
-                                {isPending ? (
-                                  <span style={{ fontSize: '0.7rem', color: '#FBBF24', background: 'rgba(251, 191, 36, 0.15)', border: '1px solid rgba(251, 191, 36, 0.3)', padding: '3px 8px', borderRadius: '6px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                    ⏳ {prov.timeRemainingText || (prov.hoursLeft ? prov.hoursLeft + 'h left' : '48h left')}
-                                  </span>
-                                ) : (
+                                {isPending ? (() => {
+                                  const diff = Math.max(0, new Date(prov.expiresAt || (Date.now() + 48*3600*1000)).getTime() - Date.now());
+                                  const h = Math.floor(diff / (1000 * 60 * 60));
+                                  const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                                  const s = Math.floor((diff % (1000 * 60)) / 1000);
+                                  const countdownStr = diff <= 0 ? 'EXPIRED (Review)' : `${h}h ${m}m ${s < 10 ? '0' : ''}${s}s left`;
+                                  return (
+                                    <span style={{ fontSize: '0.7rem', color: '#FBBF24', background: 'rgba(251, 191, 36, 0.15)', border: '1px solid rgba(251, 191, 36, 0.3)', padding: '3px 8px', borderRadius: '6px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'monospace' }}>
+                                      ⏳ {countdownStr}
+                                    </span>
+                                  );
+                                })() : (
                                   <span style={{
                                     fontSize: '0.66rem',
                                     fontWeight: 800,
