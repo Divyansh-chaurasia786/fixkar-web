@@ -3512,7 +3512,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                     </span>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
                     {(otpPricing.packages || []).map((pkg) => (
                       <div
                         key={pkg.id}
