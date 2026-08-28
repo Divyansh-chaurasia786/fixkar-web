@@ -2282,80 +2282,146 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
           });
 
           return (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '4px 0 24px 0' }}>
-              {/* 1. TOP GOVERNANCE TELEMETRY CARDS */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '14px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', padding: '2px 0 20px 0' }}>
+              {/* 1. TOP GOVERNANCE TELEMETRY CARDS (Single-Row Balanced 4-Card Grid) */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
                 {/* Card 1: Total Managed Deliverables */}
-                <div style={{ background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.7) 100%)', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: '16px', padding: '18px 20px', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '0.7rem', color: '#93C5FD', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                <div
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: '1px solid rgba(56, 189, 248, 0.22)',
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#93C5FD', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                       TOTAL MANAGED PROJECTS
                     </span>
-                    <Globe size={16} color="#38BDF8" />
+                    <Globe size={14} color="#38BDF8" />
                   </div>
-                  <div style={{ fontSize: '1.9rem', fontWeight: 900, color: '#38BDF8', fontFamily: 'monospace', lineHeight: 1.1 }}>
-                    {totalProjs}
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#38BDF8', fontFamily: 'monospace' }}>
+                      {totalProjs}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>Active Deliverables</span>
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '6px' }}>
-                    Active client web deliverables
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#86EFAC', fontWeight: 600 }}>● Pipeline Active</span>
+                    <span style={{ color: '#94A3B8' }}>100% Monitored</span>
                   </div>
                 </div>
 
                 {/* Card 2: QA Testing Authorized (Stage 2) */}
-                <div style={{ background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.7) 100%)', border: '1px solid rgba(245, 158, 11, 0.35)', borderRadius: '16px', padding: '18px 20px', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '0.7rem', color: '#FDE047', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                <div
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: '1px solid rgba(245, 158, 11, 0.22)',
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#FDE047', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                       QA TESTING GATE (STAGE 2)
                     </span>
-                    <ShieldAlert size={16} color="#F59E0B" />
+                    <ShieldAlert size={14} color="#F59E0B" />
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <div style={{ fontSize: '1.9rem', fontWeight: 900, color: '#F59E0B', fontFamily: 'monospace', lineHeight: 1.1 }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#F59E0B', fontFamily: 'monospace' }}>
                       {testingApprovedCount} / {totalProjs}
-                    </div>
-                    <span style={{ fontSize: '0.66rem', background: 'rgba(245, 158, 11, 0.18)', color: '#FDE047', padding: '2px 7px', borderRadius: '4px', fontWeight: 800 }}>
-                      {totalProjs > 0 ? Math.round((testingApprovedCount / totalProjs) * 100) : 0}% Approved
+                    </span>
+                    <span style={{ fontSize: '0.64rem', background: 'rgba(245, 158, 11, 0.18)', color: '#FDE047', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
+                      {totalProjs > 0 ? Math.round((testingApprovedCount / totalProjs) * 100) : 0}% Cleared
                     </span>
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#CBD5E1', marginTop: '6px' }}>
-                    Regular Admin permitted to run QA
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#FBBF24' }}>Stage 2 Gate</span>
+                    <span style={{ color: '#94A3B8' }}>Admin Permitted</span>
                   </div>
                 </div>
 
                 {/* Card 3: Live Production Cleared (Stage 5) */}
-                <div style={{ background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.7) 100%)', border: '1px solid rgba(74, 222, 128, 0.35)', borderRadius: '16px', padding: '18px 20px', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '0.7rem', color: '#86EFAC', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                <div
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: '1px solid rgba(74, 222, 128, 0.22)',
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: '#86EFAC', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                       LIVE DEPLOY GATE (STAGE 5)
                     </span>
-                    <Zap size={16} color="#4ADE80" />
+                    <Zap size={14} color="#4ADE80" />
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <div style={{ fontSize: '1.9rem', fontWeight: 900, color: '#4ADE80', fontFamily: 'monospace', lineHeight: 1.1 }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#4ADE80', fontFamily: 'monospace' }}>
                       {liveApprovedCount} / {totalProjs}
-                    </div>
-                    <span style={{ fontSize: '0.66rem', background: 'rgba(74, 222, 128, 0.18)', color: '#86EFAC', padding: '2px 7px', borderRadius: '4px', fontWeight: 800 }}>
-                      {totalProjs > 0 ? Math.round((liveApprovedCount / totalProjs) * 100) : 0}% Cleared
+                    </span>
+                    <span style={{ fontSize: '0.64rem', background: 'rgba(74, 222, 128, 0.18)', color: '#86EFAC', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
+                      {totalProjs > 0 ? Math.round((liveApprovedCount / totalProjs) * 100) : 0}% Approved
                     </span>
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#CBD5E1', marginTop: '6px' }}>
-                    Production DNS &amp; live deploy allowed
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: '#4ADE80' }}>Production DNS</span>
+                    <span style={{ color: '#94A3B8' }}>Live Authorized</span>
                   </div>
                 </div>
 
                 {/* Card 4: Governance Action Status */}
-                <div style={{ background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.7) 100%)', border: `1px solid ${pendingCount > 0 ? 'rgba(239, 68, 68, 0.35)' : 'rgba(168, 85, 247, 0.35)'}`, borderRadius: '16px', padding: '18px 20px', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '0.7rem', color: pendingCount > 0 ? '#FCA5A5' : '#D8B4FE', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                <div
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: `1px solid ${pendingCount > 0 ? 'rgba(239, 68, 68, 0.28)' : 'rgba(168, 85, 247, 0.22)'}`,
+                    borderRadius: '10px',
+                    padding: '11px 13px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = pendingCount > 0 ? 'rgba(239, 68, 68, 0.6)' : 'rgba(168, 85, 247, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = pendingCount > 0 ? 'rgba(239, 68, 68, 0.28)' : 'rgba(168, 85, 247, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.62rem', color: pendingCount > 0 ? '#FCA5A5' : '#D8B4FE', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                       PENDING CLEARANCES
                     </span>
-                    <Crown size={16} color={pendingCount > 0 ? '#F87171' : '#C084FC'} />
+                    <Crown size={14} color={pendingCount > 0 ? '#F87171' : '#C084FC'} />
                   </div>
-                  <div style={{ fontSize: '1.9rem', fontWeight: 900, color: pendingCount > 0 ? '#F87171' : '#C084FC', fontFamily: 'monospace', lineHeight: 1.1 }}>
-                    {pendingCount === 0 ? 'All Clear' : `${pendingCount} Pending`}
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: pendingCount > 0 ? '#F87171' : '#C084FC', fontFamily: 'monospace' }}>
+                      {pendingCount === 0 ? 'All Clear' : `${pendingCount} Pending`}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8' }}>{pendingCount === 0 ? '0 Bottlenecks' : 'Awaiting Super Admin'}</span>
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#CBD5E1', marginTop: '6px' }}>
-                    {pendingCount === 0 ? 'Zero bottlenecks in pipeline' : 'Projects waiting for Super Admin review'}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span style={{ color: pendingCount > 0 ? '#FCA5A5' : '#86EFAC' }}>{pendingCount > 0 ? '● Action Required' : '● Fully Unblocked'}</span>
+                    <span style={{ color: '#94A3B8' }}>Root Review</span>
                   </div>
                 </div>
               </div>
@@ -2364,31 +2430,31 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
               <div
                 style={{
                   background: 'linear-gradient(135deg, rgba(30, 27, 75, 0.8) 0%, rgba(15, 23, 42, 0.95) 50%, rgba(20, 30, 50, 0.8) 100%)',
-                  border: '1px solid rgba(245, 158, 11, 0.4)',
-                  borderRadius: '16px',
-                  padding: '16px 22px',
+                  border: '1px solid rgba(245, 158, 11, 0.35)',
+                  borderRadius: '12px',
+                  padding: '12px 18px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  gap: '16px',
+                  gap: '14px',
                   flexWrap: 'wrap',
-                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                  boxShadow: '0 4px 18px rgba(0, 0, 0, 0.3)',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1, minWidth: '300px' }}>
-                  <div style={{ background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(245, 158, 11, 0.08) 100%)', border: '1px solid rgba(245, 158, 11, 0.4)', padding: '10px', borderRadius: '12px', color: '#FDE047', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <ShieldCheck size={22} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: '280px' }}>
+                  <div style={{ background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(245, 158, 11, 0.08) 100%)', border: '1px solid rgba(245, 158, 11, 0.4)', padding: '8px', borderRadius: '10px', color: '#FDE047', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <ShieldCheck size={18} />
                   </div>
                   <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontWeight: 900, color: '#fff', fontSize: '0.94rem', letterSpacing: '0.02em' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                      <span style={{ fontWeight: 800, color: '#fff', fontSize: '0.88rem' }}>
                         Dual-Gate Release Governance Active
                       </span>
-                      <span style={{ fontSize: '0.64rem', background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)', color: '#fff', padding: '2px 7px', borderRadius: '4px', fontWeight: 800 }}>
+                      <span style={{ fontSize: '0.62rem', background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)', color: '#fff', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>
                         ROOT ENFORCED
                       </span>
                     </div>
-                    <div style={{ fontSize: '0.74rem', color: '#CBD5E1', marginTop: '3px', lineHeight: 1.4 }}>
+                    <div style={{ fontSize: '0.72rem', color: '#CBD5E1', marginTop: '2px', lineHeight: 1.35 }}>
                       Admins are strictly blocked from activating <strong>"Stage 2: QA Testing"</strong> and <strong>"Stage 5: Live Deploy"</strong> until Super Admin clearance is granted below.
                     </div>
                   </div>
@@ -2402,14 +2468,15 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                       background: 'rgba(245, 158, 11, 0.15)',
                       border: '1px solid rgba(245, 158, 11, 0.35)',
                       color: '#FDE047',
-                      padding: '7px 12px',
-                      borderRadius: '8px',
+                      padding: '6px 12px',
+                      borderRadius: '7px',
                       fontSize: '0.72rem',
                       fontWeight: 800,
                       cursor: 'pointer',
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '5px',
+                      transition: 'all 0.15s ease',
                     }}
                     title="Authorize all projects for QA Testing in one click"
                   >
@@ -2424,14 +2491,15 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                       background: 'rgba(74, 222, 128, 0.15)',
                       border: '1px solid rgba(74, 222, 128, 0.35)',
                       color: '#86EFAC',
-                      padding: '7px 12px',
-                      borderRadius: '8px',
+                      padding: '6px 12px',
+                      borderRadius: '7px',
                       fontSize: '0.72rem',
                       fontWeight: 800,
                       cursor: 'pointer',
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '5px',
+                      transition: 'all 0.15s ease',
                     }}
                     title="Authorize all projects for Live Production Release in one click"
                   >
@@ -2520,7 +2588,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 </div>
 
                 <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-                  <table className="fixkar-table" style={{ fontSize: '0.8rem', width: '100%', minWidth: '920px', tableLayout: 'fixed' }}>
+                  <table className="fixkar-table" style={{ fontSize: '0.78rem', width: '100%', tableLayout: 'fixed' }}>
                     <thead>
                       <tr>
                         <th style={{ width: '27%', minWidth: '220px', whiteSpace: 'nowrap' }}>CLIENT &amp; REPOSITORY</th>
