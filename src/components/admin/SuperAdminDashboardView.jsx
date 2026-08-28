@@ -5494,12 +5494,12 @@ const data = await res.json();`);
                   <table className="fixkar-table" style={{ width: '100%', tableLayout: 'fixed', margin: 0 }}>
                     <thead>
                       <tr>
-                        <th style={{ width: '18%', padding: '10px 14px' }}>CLIENT</th>
-                        <th style={{ width: '14%', padding: '10px 14px' }}>PROVISIONAL CREDITS</th>
-                        <th style={{ width: '18%', padding: '10px 14px' }}>PAYMENT DUE / UTR</th>
-                        <th style={{ width: '14%', padding: '10px 14px' }}>ALLOCATED BY</th>
-                        <th style={{ width: '18%', padding: '10px 14px' }}>TIME REMAINING (48H SLA)</th>
-                        <th style={{ width: '18%', padding: '10px 14px', textAlign: 'right' }}>SUPER ADMIN DECISION</th>
+                        <th style={{ width: '18%', padding: '10px 10px' }}>CLIENT</th>
+                        <th style={{ width: '14%', padding: '10px 10px' }}>PROVISIONAL CREDITS</th>
+                        <th style={{ width: '18%', padding: '10px 10px' }}>PAYMENT DUE / UTR</th>
+                        <th style={{ width: '14%', padding: '10px 10px' }}>ALLOCATED BY</th>
+                        <th style={{ width: '18%', padding: '10px 10px' }}>TIME REMAINING (48H SLA)</th>
+                        <th style={{ width: '18%', padding: '10px 10px', textAlign: 'right' }}>SUPER ADMIN DECISION</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -5926,11 +5926,11 @@ const data = await res.json();`);
                   <table className="fixkar-table" style={{ width: '100%', tableLayout: 'fixed', margin: 0 }}>
                     <thead>
                       <tr>
-                        <th style={{ width: '22%', padding: '10px 14px' }}>CLIENT &amp; DOMAIN</th>
-                        <th style={{ width: '26%', padding: '10px 14px' }}>SERVICE &amp; INFRASTRUCTURE</th>
-                        <th style={{ width: '22%', padding: '10px 14px' }}>EXPIRY &amp; COUNTDOWN</th>
-                        <th style={{ width: '12%', padding: '10px 14px' }}>ANNUAL PRICE</th>
-                        <th style={{ width: '18%', padding: '10px 14px', textAlign: 'right' }}>RENEWAL ACTIONS</th>
+                        <th style={{ width: '21%', padding: '10px 10px' }}>CLIENT &amp; DOMAIN</th>
+                        <th style={{ width: '21%', padding: '10px 10px' }}>SERVICE &amp; INFRASTRUCTURE</th>
+                        <th style={{ width: '20%', padding: '10px 10px' }}>EXPIRY &amp; COUNTDOWN</th>
+                        <th style={{ width: '10%', padding: '10px 10px' }}>PRICE</th>
+                        <th style={{ width: '28%', padding: '10px 10px', textAlign: 'right' }}>ACTIONS</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -6023,8 +6023,8 @@ const data = await res.json();`);
                                 </div>
                               </td>
 
-                              <td style={{ padding: '11px 14px', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                              <td style={{ padding: '10px 10px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                                <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'flex-end', gap: '4px' }}>
                                   <button
                                     type="button"
                                     onClick={() => handleSendRenewalEmail(r)}
