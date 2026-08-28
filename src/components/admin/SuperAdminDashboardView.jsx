@@ -2287,19 +2287,24 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
                 {/* Card 1: Total Managed Deliverables */}
                 <div
+                  onClick={() => setProjectFilterState('all')}
                   style={{
-                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
-                    border: '1px solid rgba(56, 189, 248, 0.22)',
+                    background: projectFilterState === 'all'
+                      ? 'linear-gradient(180deg, rgba(30, 58, 138, 0.3) 0%, rgba(15, 23, 42, 0.95) 100%)'
+                      : 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: `1px solid ${projectFilterState === 'all' ? 'rgba(56, 189, 248, 0.6)' : 'rgba(56, 189, 248, 0.22)'}`,
                     borderRadius: '10px',
                     padding: '11px 13px',
+                    cursor: 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '6px',
                     transition: 'all 0.2s ease',
                     boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = projectFilterState === 'all' ? 'rgba(56, 189, 248, 0.6)' : 'rgba(56, 189, 248, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to view all managed projects"
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ fontSize: '0.62rem', color: '#93C5FD', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -2315,25 +2320,30 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                     <span style={{ color: '#86EFAC', fontWeight: 600 }}>● Pipeline Active</span>
-                    <span style={{ color: '#94A3B8' }}>100% Monitored</span>
+                    <span style={{ color: '#94A3B8' }}>Show All ({totalProjs})</span>
                   </div>
                 </div>
 
                 {/* Card 2: QA Testing Authorized (Stage 2) */}
                 <div
+                  onClick={() => setProjectFilterState(projectFilterState === 'needs-testing' ? 'all' : 'needs-testing')}
                   style={{
-                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
-                    border: '1px solid rgba(245, 158, 11, 0.22)',
+                    background: projectFilterState === 'needs-testing'
+                      ? 'linear-gradient(180deg, rgba(120, 53, 15, 0.3) 0%, rgba(15, 23, 42, 0.95) 100%)'
+                      : 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: `1px solid ${projectFilterState === 'needs-testing' ? 'rgba(245, 158, 11, 0.6)' : 'rgba(245, 158, 11, 0.22)'}`,
                     borderRadius: '10px',
                     padding: '11px 13px',
+                    cursor: 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '6px',
                     transition: 'all 0.2s ease',
                     boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = projectFilterState === 'needs-testing' ? 'rgba(245, 158, 11, 0.6)' : 'rgba(245, 158, 11, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to filter projects needing QA clearance"
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ fontSize: '0.62rem', color: '#FDE047', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -2351,25 +2361,30 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                     <span style={{ color: '#FBBF24' }}>Stage 2 Gate</span>
-                    <span style={{ color: '#94A3B8' }}>Admin Permitted</span>
+                    <span style={{ color: '#94A3B8' }}>{totalProjs - testingApprovedCount} Awaiting QA</span>
                   </div>
                 </div>
 
                 {/* Card 3: Live Production Cleared (Stage 5) */}
                 <div
+                  onClick={() => setProjectFilterState(projectFilterState === 'needs-live' ? 'all' : 'needs-live')}
                   style={{
-                    background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
-                    border: '1px solid rgba(74, 222, 128, 0.22)',
+                    background: projectFilterState === 'needs-live'
+                      ? 'linear-gradient(180deg, rgba(6, 78, 59, 0.3) 0%, rgba(15, 23, 42, 0.95) 100%)'
+                      : 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                    border: `1px solid ${projectFilterState === 'needs-live' ? 'rgba(74, 222, 128, 0.6)' : 'rgba(74, 222, 128, 0.22)'}`,
                     borderRadius: '10px',
                     padding: '11px 13px',
+                    cursor: 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '6px',
                     transition: 'all 0.2s ease',
                     boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.6)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = projectFilterState === 'needs-live' ? 'rgba(74, 222, 128, 0.6)' : 'rgba(74, 222, 128, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to filter projects needing Live Deploy clearance"
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ fontSize: '0.62rem', color: '#86EFAC', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -2387,25 +2402,28 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                     <span style={{ color: '#4ADE80' }}>Production DNS</span>
-                    <span style={{ color: '#94A3B8' }}>Live Authorized</span>
+                    <span style={{ color: '#94A3B8' }}>{totalProjs - liveApprovedCount} Awaiting Live</span>
                   </div>
                 </div>
 
                 {/* Card 4: Governance Action Status */}
                 <div
+                  onClick={() => setProjectFilterState(projectFilterState === 'needs-testing' ? 'needs-live' : 'needs-testing')}
                   style={{
                     background: 'linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)',
-                    border: `1px solid ${pendingCount > 0 ? 'rgba(239, 68, 68, 0.28)' : 'rgba(168, 85, 247, 0.22)'}`,
+                    border: `1px solid ${pendingCount > 0 ? 'rgba(239, 68, 68, 0.4)' : 'rgba(168, 85, 247, 0.22)'}`,
                     borderRadius: '10px',
                     padding: '11px 13px',
+                    cursor: 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '6px',
                     transition: 'all 0.2s ease',
                     boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = pendingCount > 0 ? 'rgba(239, 68, 68, 0.6)' : 'rgba(168, 85, 247, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = pendingCount > 0 ? 'rgba(239, 68, 68, 0.28)' : 'rgba(168, 85, 247, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = pendingCount > 0 ? 'rgba(239, 68, 68, 0.7)' : 'rgba(168, 85, 247, 0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = pendingCount > 0 ? 'rgba(239, 68, 68, 0.4)' : 'rgba(168, 85, 247, 0.22)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  title="Click to toggle between pending clearance queues"
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ fontSize: '0.62rem', color: pendingCount > 0 ? '#FCA5A5' : '#D8B4FE', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -2421,7 +2439,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.68rem', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                     <span style={{ color: pendingCount > 0 ? '#FCA5A5' : '#86EFAC' }}>{pendingCount > 0 ? '● Action Required' : '● Fully Unblocked'}</span>
-                    <span style={{ color: '#94A3B8' }}>Root Review</span>
+                    <span style={{ color: '#94A3B8' }}>Filter Queue</span>
                   </div>
                 </div>
               </div>
@@ -2591,17 +2609,17 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                   <table className="fixkar-table" style={{ fontSize: '0.78rem', width: '100%', tableLayout: 'fixed' }}>
                     <thead>
                       <tr>
-                        <th style={{ width: '27%', minWidth: '220px', whiteSpace: 'nowrap' }}>CLIENT &amp; REPOSITORY</th>
-                        <th style={{ width: '23%', minWidth: '200px', whiteSpace: 'nowrap' }}>CURRENT SPRINT PROGRESS</th>
-                        <th style={{ width: '21%', minWidth: '185px', whiteSpace: 'nowrap' }}>🧪 QA TESTING GATE (STAGE 2)</th>
-                        <th style={{ width: '21%', minWidth: '185px', whiteSpace: 'nowrap' }}>🟢 LIVE DEPLOY GATE (STAGE 5)</th>
-                        <th style={{ width: '8%', minWidth: '90px', textAlign: 'center', whiteSpace: 'nowrap' }}>STATUS</th>
+                        <th style={{ width: '26%', whiteSpace: 'nowrap' }}>CLIENT &amp; REPOSITORY</th>
+                        <th style={{ width: '22%', whiteSpace: 'nowrap' }}>SPRINT PROGRESS</th>
+                        <th style={{ width: '22%', whiteSpace: 'nowrap' }}>🧪 QA TESTING (STAGE 2)</th>
+                        <th style={{ width: '20%', whiteSpace: 'nowrap' }}>🟢 LIVE DEPLOY (STAGE 5)</th>
+                        <th style={{ width: '10%', textAlign: 'center', whiteSpace: 'nowrap' }}>CLEARANCE</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredProjects.length === 0 ? (
                         <tr>
-                          <td colSpan={5} style={{ textAlign: 'center', padding: '36px', color: '#64748B' }}>
+                          <td colSpan={4} style={{ textAlign: 'center', padding: '36px', color: '#64748B' }}>
                             No projects match the current search / filter criteria.
                           </td>
                         </tr>
@@ -5139,7 +5157,7 @@ echo $response;
                     ))}
                   {(renewals || []).length === 0 && (
                     <tr>
-                      <td colSpan={5} style={{ padding: '32px', textAlign: 'center', color: '#64748B', fontSize: '0.82rem' }}>
+                      <td colSpan={4} style={{ padding: '32px', textAlign: 'center', color: '#64748B', fontSize: '0.82rem' }}>
                         ✓ No renewal records found. Sync to load client infrastructure data.
                       </td>
                     </tr>
