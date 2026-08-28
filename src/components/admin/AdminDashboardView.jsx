@@ -5234,36 +5234,30 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                   </div>
                 </div>
 
-                {/* 4 Infrastructure & Security Cards Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px', marginTop: '18px', borderTop: '1px solid rgba(255, 255, 255, 0.06)', paddingTop: '16px' }}>
-                  {/* Card 1: Domain */}
-                  <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '12px 14px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                    <div style={{ fontSize: '0.68rem', color: '#38BDF8', fontFamily: 'monospace', fontWeight: 700 }}>DOMAIN &amp; DNS</div>
-                    <div style={{ fontWeight: 700, color: '#fff', marginTop: '3px', fontSize: '0.88rem' }}>{selectedClientDetail.domainProvider || 'Hostinger India'}</div>
-                    <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '2px' }}>Expiry: {selectedClientDetail.domainExpiryDate || '2026-11-10'}</div>
+                {/* Real-Time Truthful Infrastructure Metadata Bar (No Fake Cards, No Fake IPs) */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginTop: '16px', borderTop: '1px solid rgba(255, 255, 255, 0.06)', paddingTop: '14px', flexWrap: 'wrap', fontSize: '0.78rem' }}>
+                  <div>
+                    <span style={{ color: '#94A3B8' }}>📍 Location: </span>
+                    <strong style={{ color: '#F1F5F9' }}>{[selectedClientDetail.city, selectedClientDetail.state].filter(Boolean).join(', ') || 'N/A'}</strong>
+                    {selectedClientDetail.pinCode && <span style={{ color: '#64748B', marginLeft: '4px' }}>({selectedClientDetail.pinCode})</span>}
                   </div>
-
-                  {/* Card 2: Server */}
-                  <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '12px 14px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                    <div style={{ fontSize: '0.68rem', color: '#4ADE80', fontFamily: 'monospace', fontWeight: 700 }}>CLOUD VPS HOSTING</div>
-                    <div style={{ fontWeight: 700, color: '#fff', marginTop: '3px', fontSize: '0.88rem' }}>{selectedClientDetail.serverType || 'Managed Cloud VPS'}</div>
-                    <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '2px' }}>IP: {selectedClientDetail.serverIp || '139.59.88.214'} ({selectedClientDetail.serverProvider || 'DigitalOcean'})</div>
+                  <div>
+                    <span style={{ color: '#94A3B8' }}>🌐 Domain: </span>
+                    <strong style={{ color: selectedClientDetail.domain ? '#38BDF8' : '#64748B' }}>
+                      {selectedClientDetail.domain || 'Not Configured'}
+                    </strong>
                   </div>
-
-                  {/* Card 3: OTP Gateway */}
-                  <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '12px 14px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                    <div style={{ fontSize: '0.68rem', color: '#A78BFA', fontFamily: 'monospace', fontWeight: 700 }}>OTP DLT SENDER ID</div>
-                    <div style={{ fontWeight: 700, color: '#fff', marginTop: '3px', fontSize: '0.88rem' }}>{selectedClientDetail.dltSenderId || 'FIXKAR'}</div>
-                    <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '2px' }}>
-                      Credits: <strong style={{ color: '#4ADE80' }}>{clientWallet ? clientWallet.availableCredits.toLocaleString() : (selectedClientDetail.starterCredits || 100)}</strong>
-                    </div>
+                  <div>
+                    <span style={{ color: '#94A3B8' }}>⚡ VPS / Hosting: </span>
+                    <span style={{ color: selectedClientDetail.serverProvider && selectedClientDetail.serverProvider !== 'Pending Setup' ? '#4ADE80' : '#FBBF24', fontWeight: 700 }}>
+                      {selectedClientDetail.serverProvider && selectedClientDetail.serverProvider !== 'Pending Setup' ? selectedClientDetail.serverProvider : '⏳ Pending Setup'}
+                    </span>
                   </div>
-
-                  {/* Card 4: Location / City */}
-                  <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '12px 14px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                    <div style={{ fontSize: '0.68rem', color: '#FBBF24', fontFamily: 'monospace', fontWeight: 700 }}>LOCATION &amp; PINCODE</div>
-                    <div style={{ fontWeight: 700, color: '#fff', marginTop: '3px', fontSize: '0.88rem' }}>{[selectedClientDetail.city, selectedClientDetail.state].filter(Boolean).join(', ') || 'Patna, Bihar'}</div>
-                    <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '2px' }}>PIN: {selectedClientDetail.pinCode || '800001'}</div>
+                  <div>
+                    <span style={{ color: '#94A3B8' }}>🔐 SMS DLT Header: </span>
+                    <strong style={{ color: selectedClientDetail.dltHeader && selectedClientDetail.dltHeader !== 'Pending Setup' ? '#A78BFA' : '#64748B' }}>
+                      {selectedClientDetail.dltHeader && selectedClientDetail.dltHeader !== 'Pending Setup' ? selectedClientDetail.dltHeader : 'Pending Setup'}
+                    </strong>
                   </div>
                 </div>
               </div>
