@@ -8556,23 +8556,7 @@ When would be a good time to discuss your project requirements?`)}`}
 
                                         <button
                                           type="button"
-                                          onClick={() => {
-                                            setNewClientForm({
-                                              businessName: ld.businessName || ld.name || '',
-                                              businessType: 'Enterprise Client',
-                                              logoUrl: '',
-                                              contactPerson: ld.name || '',
-                                              phone: ld.phone || '',
-                                              whatsapp: ld.phone || '',
-                                              email: ld.email || '',
-                                              city: ld.city || 'Patna',
-                                              state: 'Bihar',
-                                              pinCode: '',
-                                              agreedPackage: ld.packageSelected || ld.serviceRequired || 'Custom Web Application Architecture',
-                                            });
-                                            setActiveTab('clients');
-                                            setIsAddClientModalOpen(true);
-                                          }}
+                                          onClick={() => handleConvertToClientFromLead(ld.id)}
                                           style={{
                                             background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
                                             color: '#fff',
