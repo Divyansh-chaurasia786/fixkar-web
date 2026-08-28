@@ -2087,7 +2087,7 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.78rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                     <span style={{ color: '#94A3B8' }}>Provider:</span>
-                    <span style={{ color: '#fff', fontWeight: 600 }}>{(gatewayConfig.provider || 'Enterprise Sovereign Telecom Gateway').replace(/Fast2SMS/gi, 'Enterprise Telecom')}</span>
+                    <span style={{ color: '#fff', fontWeight: 600 }}>{(gatewayConfig.provider || 'Enterprise Sovereign Telecom Gateway').replace(/Fast2SMS\s*Enterprise/gi, 'Enterprise Telecom').replace(/Fast2SMS/gi, 'Enterprise Telecom')}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                     <span style={{ color: '#94A3B8' }}>Delivery Route:</span>
