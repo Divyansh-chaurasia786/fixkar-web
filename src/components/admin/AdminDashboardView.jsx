@@ -1048,7 +1048,7 @@ export function AdminDashboardView({ onNavigateHome }) {
       balanceDue: String(inv.balanceDue !== undefined ? inv.balanceDue : Math.max(0, estTotal - amt)),
       totalProjectBudget: estTotal,
       dueDate: inv.dueDate || new Date().toISOString().split('T')[0],
-      status: inv.status || 'Paid',
+      status: inv?.status || 'Paid',
       paymentMethod: inv.paymentMethod || 'UPI (Google Pay / PhonePe / Paytm / QR)',
       transactionReference: inv.transactionReference || `UPI/${Math.floor(100000000000 + Math.random() * 900000000000)}`,
       advanceRef: inv.advanceRef || '',
@@ -1329,7 +1329,7 @@ export function AdminDashboardView({ onNavigateHome }) {
           ...prev,
           upstreamWalletAmount: data.upstreamWalletAmount,
           upstreamBalance: data.upstreamBalance,
-          status: data.status,
+          status: data?.status,
           lastSyncedTimestamp: data.lastSyncedTimestamp
         }));
         setToastMessage(`✅ ${data.message}`);
@@ -1558,20 +1558,20 @@ export function AdminDashboardView({ onNavigateHome }) {
   };
 
   // Metric Calculations (100% Dynamic)
-  const pendingEnquiriesCount = leads.filter((l) => l.status === 'New' || l.status === 'In Discussion').length;
-  const activeClientsCount = clients.filter((c) => c.status === 'Active' || !c.status).length;
+  const pendingEnquiriesCount = leads.filter((l) => l?.status === 'New' || l?.status === 'In Discussion').length;
+  const activeClientsCount = clients.filter((c) => c?.status === 'Active' || !c?.status).length;
   const liveProjectsCount = projects.filter((p) => p.sprintStatus && p.sprintStatus.includes('Live')).length;
   const inSprintProjectsCount = projects.filter((p) => !p.sprintStatus || !p.sprintStatus.includes('Live')).length;
-  const pendingInvoicesCount = invoices.filter((i) => i.status !== 'Paid').length;
+  const pendingInvoicesCount = invoices.filter((i) => i?.status !== 'Paid').length;
   const pendingRevenueTotal = invoices
-    .filter((i) => i.status !== 'Paid')
+    .filter((i) => i?.status !== 'Paid')
     .reduce((sum, i) => sum + (Number(i.amount || i.total) || 0), 0);
-  const pendingRechargesCount = recharges.filter((r) => r.status === 'Pending').length;
+  const pendingRechargesCount = recharges.filter((r) => r?.status === 'Pending').length;
 
   // Dynamic exact-day renewals calculation
   const todayDate = new Date();
   const dynamicUpcomingRenewals = (renewals || [])
-    .filter((r) => r.status !== 'Renewed' && r.status !== 'Paid')
+    .filter((r) => r?.status !== 'Renewed' && r?.status !== 'Paid')
     .map((r) => {
       const diffDays = r.daysRemaining !== undefined
         ? r.daysRemaining
@@ -1592,7 +1592,7 @@ export function AdminDashboardView({ onNavigateHome }) {
     : 'Renewals Up to Date';
 
   const lowOtpClientsCount = otpWallets.filter((w) => Number(w.availableCredits || w.balance || w.credits || 0) < 1000).length;
-  const openSupportTicketsCount = supportTickets.filter((t) => t.status === 'Open' || t.status === 'In Progress').length;
+  const openSupportTicketsCount = supportTickets.filter((t) => t?.status === 'Open' || t?.status === 'In Progress').length;
   const unreadNotificationsCount = notifications.filter((n) => !n.isRead).length;
 
   // Filtered Clients
@@ -1607,7 +1607,7 @@ export function AdminDashboardView({ onNavigateHome }) {
       cCode.toLowerCase().includes(q) ||
       phone.includes(q) ||
       email.toLowerCase().includes(q);
-    const matchesStatus = clientStatusFilter === 'All' || c.status === clientStatusFilter;
+    const matchesStatus = clientStatusFilter === 'All' || c?.status === clientStatusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -1621,7 +1621,7 @@ export function AdminDashboardView({ onNavigateHome }) {
       name.toLowerCase().includes(q) ||
       phone.includes(q) ||
       service.toLowerCase().includes(q);
-    const matchesStatus = leadStatusFilter === 'All' || ld.status === leadStatusFilter;
+    const matchesStatus = leadStatusFilter === 'All' || ld?.status === leadStatusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -2405,8 +2405,8 @@ export function AdminDashboardView({ onNavigateHome }) {
                 {feedbackReviewsList
                   .filter(f => !selectedFeedbackProject.domain || f.projectDomain === selectedFeedbackProject.domain || f.clientCode === selectedFeedbackProject.clientCode)
                   .map((tkt) => {
-                    const isSolved = tkt.status === 'Solved' || tkt.status === 'Updated';
-                    const isWorking = tkt.status === 'Working' || tkt.status === 'In Progress' || tkt.status === 'Updating';
+                    const isSolved = tkt?.status === 'Solved' || tkt?.status === 'Updated';
+                    const isWorking = tkt?.status === 'Working' || tkt?.status === 'In Progress' || tkt?.status === 'Updating';
 
                     return (
                       <div
@@ -2435,7 +2435,7 @@ export function AdminDashboardView({ onNavigateHome }) {
                           {/* Interactive Status Switcher Buttons */}
                           <div style={{ display: 'flex', gap: '5px', background: 'rgba(0, 0, 0, 0.3)', padding: '3px', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.06)' }}>
                             {[
-                              { id: 'In Review', label: '⏳ Pending', bg: '#F59E0B', active: tkt.status === 'In Review' || tkt.status === 'Pending' },
+                              { id: 'In Review', label: '⏳ Pending', bg: '#F59E0B', active: tkt?.status === 'In Review' || tkt?.status === 'Pending' },
                               { id: 'Working', label: '🔨 In Code / Updating', bg: '#2563EB', active: isWorking },
                               { id: 'Solved', label: '✓ Updated & Deployed', bg: '#10B981', active: isSolved },
                             ].map((st) => (
@@ -2640,7 +2640,7 @@ export function AdminDashboardView({ onNavigateHome }) {
           },
         ];
 
-        const passedCount = testItems.filter((t) => t.status === 'Passed').length;
+        const passedCount = testItems.filter((t) => t?.status === 'Passed').length;
         const totalCount = testItems.length;
         const passPercentage = Math.round((passedCount / totalCount) * 100);
 
@@ -2805,9 +2805,9 @@ export function AdminDashboardView({ onNavigateHome }) {
                 </div>
 
                 {testItems.map((item) => {
-                  const isPass = item.status === 'Passed';
-                  const isProg = item.status === 'In Progress';
-                  const isFail = item.status === 'Failed';
+                  const isPass = item?.status === 'Passed';
+                  const isProg = item?.status === 'In Progress';
+                  const isFail = item?.status === 'Failed';
 
                   return (
                     <div
@@ -2837,7 +2837,7 @@ export function AdminDashboardView({ onNavigateHome }) {
                         {[
                           { id: 'Passed', label: '✅ Passed', bg: '#10B981', active: isPass },
                           { id: 'In Progress', label: '⚡ Testing', bg: '#2563EB', active: isProg },
-                          { id: 'Pending', label: '⏳ Pending', bg: '#64748B', active: item.status === 'Pending' },
+                          { id: 'Pending', label: '⏳ Pending', bg: '#64748B', active: item?.status === 'Pending' },
                           { id: 'Failed', label: '❌ Bug Found', bg: '#EF4444', active: isFail },
                         ].map((btn) => (
                           <button
@@ -3924,7 +3924,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                 <span>Inbound &amp; Client Mail</span>
               </div>
               {(() => {
-                const unreadCount = (inboundEmails || []).filter((e) => e.status === 'UNREAD').length;
+                const unreadCount = (inboundEmails || []).filter((e) => e?.status === 'UNREAD').length;
                 if (unreadCount === 0) return null;
                 return (
                   <span style={{ fontSize: '0.62rem', background: 'rgba(56, 189, 248, 0.2)', color: '#38BDF8', padding: '1px 6px', borderRadius: '10px', fontWeight: 800 }}>
@@ -4274,7 +4274,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
 
                   {/* Notifications Scrollable List */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '340px', overflowY: 'auto', paddingRight: '2px' }}>
-                    {leads.filter((l) => l.status === 'New').length === 0 && notifications.length === 0 ? (
+                    {leads.filter((l) => l?.status === 'New').length === 0 && notifications.length === 0 ? (
                       <div style={{ textAlign: 'center', padding: '24px 12px', color: '#64748B' }}>
                         <Sparkles size={22} color="#38BDF8" style={{ margin: '0 auto 8px', display: 'block', opacity: 0.7 }} />
                         <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#94A3B8' }}>All Caught Up!</div>
@@ -4285,7 +4285,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                     ) : (
                       <>
                         {/* 1. New Website Quotation Inquiries (Top Priority) */}
-                        {leads.filter((l) => l.status === 'New').map((ld) => (
+                        {leads.filter((l) => l?.status === 'New').map((ld) => (
                           <div
                             key={ld.id}
                             style={{
@@ -4807,7 +4807,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                   {/* Modern Friendly Pill Tabs */}
                   <div className="fixkar-pill-bar">
                     {['All', 'Active', 'Pending'].map((st) => {
-                      const count = st === 'All' ? clients.length : clients.filter((c) => c.status === st).length;
+                      const count = st === 'All' ? clients.length : clients.filter((c) => c?.status === st).length;
                       return (
                         <button
                           key={st}
@@ -5017,7 +5017,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
           );
 
           const totalClientBilled = clientInvoices.reduce((sum, inv) => sum + (inv.rawAmount || parseInt(String(inv.total || '0').replace(/\D/g, ''), 10) || 0), 0);
-          const totalClientPaid = clientInvoices.filter(i => i.status === 'Paid').reduce((sum, inv) => sum + (inv.rawAmount || parseInt(String(inv.total || '0').replace(/\D/g, ''), 10) || 0), 0);
+          const totalClientPaid = clientInvoices.filter(i => i?.status === 'Paid').reduce((sum, inv) => sum + (inv.rawAmount || parseInt(String(inv.total || '0').replace(/\D/g, ''), 10) || 0), 0);
           const totalClientDue = totalClientBilled - totalClientPaid;
 
           const rawWaPhone = String(selectedClientDetail.whatsapp || selectedClientDetail.phone || '9835012345').replace(/\D/g, '');
@@ -5038,8 +5038,8 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                   <span style={{ fontSize: '0.72rem', fontFamily: 'monospace', color: '#38BDF8', background: 'rgba(56, 189, 248, 0.15)', padding: '4px 10px', borderRadius: '8px', fontWeight: 700 }}>
                     {selectedClientDetail.clientCode || selectedClientDetail.registrationNo || 'FIX-CLIENT-001'}
                   </span>
-                  <span className={`fixkar-status-chip ${selectedClientDetail.status === 'Active' ? 'success' : 'warning'}`}>
-                    ● {selectedClientDetail.status || 'Active'}
+                  <span className={`fixkar-status-chip ${selectedClientDetail?.status === 'Active' ? 'success' : 'warning'}`}>
+                    ● {selectedClientDetail?.status || 'Active'}
                   </span>
 
                   <button
@@ -5325,7 +5325,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                                   addons: inv.addons,
                                   balanceDue: inv.balanceDue,
                                   totalProjectBudget: inv.totalProjectBudget,
-                                  paymentStatus: inv.status === 'Paid' ? 'Paid in Full' : 'Pending Milestone',
+                                  paymentStatus: inv?.status === 'Paid' ? 'Paid in Full' : 'Pending Milestone',
                                 })}
                                 style={{
                                   background: 'rgba(56, 189, 248, 0.14)',
@@ -5377,7 +5377,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                 <div>
                   <div style={{ fontSize: '0.7rem', color: '#86EFAC', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Collected (Paid)</div>
                   <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#4ADE80', marginTop: '2px' }}>
-                    ₹{invoices.filter(i => i.status === 'Paid').reduce((acc, i) => acc + (i.rawAmount || parseInt(String(i.total || '0').replace(/\D/g, ''), 10) || 0), 0).toLocaleString('en-IN')}
+                    ₹{invoices.filter(i => i?.status === 'Paid').reduce((acc, i) => acc + (i.rawAmount || parseInt(String(i.total || '0').replace(/\D/g, ''), 10) || 0), 0).toLocaleString('en-IN')}
                   </div>
                 </div>
                 <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(74, 222, 128, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4ADE80' }}>
@@ -5389,7 +5389,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                 <div>
                   <div style={{ fontSize: '0.7rem', color: '#FDE047', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Pending / Due</div>
                   <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#FBBF24', marginTop: '2px' }}>
-                    ₹{invoices.filter(i => i.status !== 'Paid').reduce((acc, i) => acc + (i.rawAmount || parseInt(String(i.total || '0').replace(/\D/g, ''), 10) || 0), 0).toLocaleString('en-IN')}
+                    ₹{invoices.filter(i => i?.status !== 'Paid').reduce((acc, i) => acc + (i.rawAmount || parseInt(String(i.total || '0').replace(/\D/g, ''), 10) || 0), 0).toLocaleString('en-IN')}
                   </div>
                 </div>
                 <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(251, 191, 36, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FBBF24' }}>
@@ -5730,7 +5730,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                             console.error('[Save invoice API error]', err);
                           }
 
-                          if (newInvoiceForm.status === 'Paid') {
+                          if (newInvoiceForm?.status === 'Paid') {
                             const vaultDocId = `DOC-RCPT-${Math.floor(100 + Math.random() * 900)}`;
                             const vaultDoc = {
                               id: vaultDocId,
@@ -6287,7 +6287,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                       .filter((inv) => {
                         const q = receiptSearchQuery.trim().toLowerCase();
                         if (!q) {
-                          return invoiceFilter === 'All' || (invoiceFilter === 'Unpaid' && inv.status !== 'Paid') || (invoiceFilter === 'Paid' && inv.status === 'Paid');
+                          return invoiceFilter === 'All' || (invoiceFilter === 'Unpaid' && inv?.status !== 'Paid') || (invoiceFilter === 'Paid' && inv?.status === 'Paid');
                         }
                         return (
                           (inv.invoiceNumber && inv.invoiceNumber.toLowerCase().includes(q)) ||
@@ -6454,7 +6454,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                                     addons: inv.addons,
                                     balanceDue: inv.balanceDue,
                                     totalProjectBudget: inv.totalProjectBudget,
-                                    paymentStatus: inv.status === 'Paid' ? 'Paid in Full' : 'Pending Milestone',
+                                    paymentStatus: inv?.status === 'Paid' ? 'Paid in Full' : 'Pending Milestone',
                                   })}
                                   style={{
                                     background: 'rgba(56, 189, 248, 0.14)',
@@ -6498,7 +6498,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
             )}
 
             {/* ─── SUPER ADMIN 48-HOUR PROVISIONAL VERIFICATION RADAR HUB ─── */}
-            {provisionalRecharges.filter(p => p.status === 'PENDING_SUPER_ADMIN').length > 0 && (
+            {provisionalRecharges.filter(p => p?.status === 'PENDING_SUPER_ADMIN').length > 0 && (
               <div
                 style={{
                   background: 'linear-gradient(135deg, rgba(88, 28, 135, 0.25) 0%, rgba(15, 23, 42, 0.95) 100%)',
@@ -6523,7 +6523,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                   </div>
 
                   <span style={{ fontSize: '0.72rem', color: '#FDE047', background: 'rgba(245, 158, 11, 0.2)', border: '1px solid rgba(245, 158, 11, 0.4)', padding: '3px 10px', borderRadius: '12px', fontWeight: 800 }}>
-                    ⏳ {provisionalRecharges.filter(p => p.status === 'PENDING_SUPER_ADMIN').length} Pending Bank Review
+                    ⏳ {provisionalRecharges.filter(p => p?.status === 'PENDING_SUPER_ADMIN').length} Pending Bank Review
                   </span>
                 </div>
 
@@ -6541,7 +6541,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                     </thead>
                     <tbody>
                       {provisionalRecharges
-                        .filter(p => p.status === 'PENDING_SUPER_ADMIN')
+                        .filter(p => p?.status === 'PENDING_SUPER_ADMIN')
                         .map((prov) => (
                           <tr key={prov.id}>
                             <td>
@@ -6742,7 +6742,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                       }
 
                       return filteredWallets.map((w) => {
-                        const activeProv = provisionalRecharges.find(p => p.clientCode === w.clientCode && p.status === 'PENDING_SUPER_ADMIN');
+                        const activeProv = provisionalRecharges.find(p => p.clientCode === w.clientCode && p?.status === 'PENDING_SUPER_ADMIN');
                         return (
                           <tr key={w.id || w.clientCode}>
                             {/* 1. Client Identity */}
@@ -7281,8 +7281,8 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
 
                             {/* Status */}
                             <td>
-                              <span className={`fixkar-status-chip ${k.status === 'Active' ? 'success' : 'danger'}`}>
-                                ● {k.status}
+                              <span className={`fixkar-status-chip ${k?.status === 'Active' ? 'success' : 'danger'}`}>
+                                ● {k?.status}
                               </span>
                             </td>
 
@@ -7313,11 +7313,11 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
 
                                 <button
                                   type="button"
-                                  onClick={() => handleToggleClientApiKey(k.id, k.status)}
+                                  onClick={() => handleToggleClientApiKey(k.id, k?.status)}
                                   style={{
-                                    background: k.status === 'Active' ? 'rgba(251, 191, 36, 0.15)' : 'rgba(74, 222, 128, 0.15)',
-                                    border: `1px solid ${k.status === 'Active' ? 'rgba(251, 191, 36, 0.35)' : 'rgba(74, 222, 128, 0.35)'}`,
-                                    color: k.status === 'Active' ? '#FBBF24' : '#4ADE80',
+                                    background: k?.status === 'Active' ? 'rgba(251, 191, 36, 0.15)' : 'rgba(74, 222, 128, 0.15)',
+                                    border: `1px solid ${k?.status === 'Active' ? 'rgba(251, 191, 36, 0.35)' : 'rgba(74, 222, 128, 0.35)'}`,
+                                    color: k?.status === 'Active' ? '#FBBF24' : '#4ADE80',
                                     padding: '4px 8px',
                                     borderRadius: '5px',
                                     fontSize: '0.68rem',
@@ -7325,7 +7325,7 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
                                     cursor: 'pointer',
                                   }}
                                 >
-                                  {k.status === 'Active' ? 'Pause' : 'Resume'}
+                                  {k?.status === 'Active' ? 'Pause' : 'Resume'}
                                 </button>
 
                                 <button
@@ -7558,8 +7558,8 @@ echo $response;
 
             const matchesStatus =
               rechargeStatusFilter === 'All' ||
-              (rechargeStatusFilter === 'Approved' && (rch.status === 'Approved' || String(rch.status).includes('Approved'))) ||
-              (rechargeStatusFilter === 'Pending' && (rch.status === 'Pending' || String(rch.status).includes('Pending') || String(rch.status).includes('Provisional')));
+              (rechargeStatusFilter === 'Approved' && (rch?.status === 'Approved' || String(rch?.status).includes('Approved'))) ||
+              (rechargeStatusFilter === 'Pending' && (rch?.status === 'Pending' || String(rch?.status).includes('Pending') || String(rch?.status).includes('Provisional')));
 
             return matchesSearch && matchesStatus;
           });
@@ -7636,8 +7636,8 @@ echo $response;
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
                   {[
                     { id: 'All', label: `All (${recharges.length})` },
-                    { id: 'Approved', label: `🟢 Approved (${recharges.filter(r => r.status === 'Approved' || String(r.status).includes('Approved')).length})` },
-                    { id: 'Pending', label: `⏳ Pending (${recharges.filter(r => r.status === 'Pending' || String(r.status).includes('Pending') || String(r.status).includes('Provisional')).length})` },
+                    { id: 'Approved', label: `🟢 Approved (${recharges.filter(r => r?.status === 'Approved' || String(r?.status).includes('Approved')).length})` },
+                    { id: 'Pending', label: `⏳ Pending (${recharges.filter(r => r?.status === 'Pending' || String(r?.status).includes('Pending') || String(r?.status).includes('Provisional')).length})` },
                   ].map((f) => (
                     <button
                       key={f.id}
@@ -7671,7 +7671,7 @@ echo $response;
                   </div>
 
                   <span style={{ fontSize: '0.74rem', color: '#FDE047' }}>
-                    {recharges.filter(r => r.status === 'Pending').length} Pending Requests
+                    {recharges.filter(r => r?.status === 'Pending').length} Pending Requests
                   </span>
                 </div>
 
@@ -7771,13 +7771,13 @@ echo $response;
                               </td>
 
                               <td>
-                                <span className={`fixkar-status-chip ${rch.status === 'Approved' || String(rch.status).includes('Approved') ? 'success' : 'warning'}`}>
-                                  ● {rch.status}
+                                <span className={`fixkar-status-chip ${rch?.status === 'Approved' || String(rch?.status).includes('Approved') ? 'success' : 'warning'}`}>
+                                  ● {rch?.status}
                                 </span>
                               </td>
 
                               <td style={{ textAlign: 'right' }}>
-                                {rch.status === 'Pending' ? (
+                                {rch?.status === 'Pending' ? (
                                   <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '6px' }}>
                                     <button
                                       onClick={() => handleApproveRecharge(rch.id)}
@@ -7954,7 +7954,7 @@ echo $response;
                         const code = proj.clientCode || 'FIX-PROJ';
                         const checklist = projectQaChecklists[code] || { mobile: 'Passed', forms: 'Passed', speed: 'Passed', ssl: 'Passed', otp: 'Passed', seo: 'Passed' };
                         const passedQACount = Object.values(checklist).filter(v => v === 'Passed').length;
-                        const openRevisionsCount = feedbackReviewsList.filter(f => (!proj.domain || f.projectDomain === proj.domain || f.clientCode === proj.clientCode) && f.status !== 'Solved' && f.status !== 'Updated').length;
+                        const openRevisionsCount = feedbackReviewsList.filter(f => (!proj.domain || f.projectDomain === proj.domain || f.clientCode === proj.clientCode) && f?.status !== 'Solved' && f?.status !== 'Updated').length;
 
                         return (
                           <tr key={proj.id}>
@@ -8235,11 +8235,11 @@ echo $response;
                   <div className="fixkar-pill-bar">
                     {[
                       { id: 'All', label: 'All Inquiries', count: leads.length },
-                      { id: 'New', label: 'New', count: leads.filter((l) => l.status === 'New').length },
-                      { id: 'Contacted', label: 'Contacted', count: leads.filter((l) => l.status === 'Contacted').length },
-                      { id: 'In Discussion', label: 'In Discussion', count: leads.filter((l) => l.status === 'In Discussion').length },
-                      { id: 'Demo Shared', label: 'Demo Shared', count: leads.filter((l) => l.status === 'Demo Shared').length },
-                      { id: '50% Paid', label: '50% Paid', count: leads.filter((l) => l.status === '50% Paid').length },
+                      { id: 'New', label: 'New', count: leads.filter((l) => l?.status === 'New').length },
+                      { id: 'Contacted', label: 'Contacted', count: leads.filter((l) => l?.status === 'Contacted').length },
+                      { id: 'In Discussion', label: 'In Discussion', count: leads.filter((l) => l?.status === 'In Discussion').length },
+                      { id: 'Demo Shared', label: 'Demo Shared', count: leads.filter((l) => l?.status === 'Demo Shared').length },
+                      { id: '50% Paid', label: '50% Paid', count: leads.filter((l) => l?.status === '50% Paid').length },
                     ].map((f) => (
                       <button
                         key={f.id}
@@ -8377,32 +8377,32 @@ echo $response;
                               {/* 4. Status Selector */}
                               <td style={{ verticalAlign: 'middle', padding: '10px 8px', textAlign: 'center', whiteSpace: 'nowrap' }}>
                                 <select
-                                  value={ld.status || 'New'}
+                                  value={ld?.status || 'New'}
                                   onChange={(e) => handleUpdateLeadStatus(ld.id, e.target.value)}
                                   style={{
                                     background:
-                                      ld.status === 'New'
+                                      ld?.status === 'New'
                                         ? 'rgba(251, 191, 36, 0.15)'
-                                        : ld.status === 'Contacted'
+                                        : ld?.status === 'Contacted'
                                         ? 'rgba(56, 189, 248, 0.15)'
-                                        : ld.status === 'In Discussion'
+                                        : ld?.status === 'In Discussion'
                                         ? 'rgba(168, 85, 247, 0.15)'
                                         : 'rgba(74, 222, 128, 0.15)',
                                     border: `1px solid ${
-                                      ld.status === 'New'
+                                      ld?.status === 'New'
                                         ? 'rgba(251, 191, 36, 0.4)'
-                                        : ld.status === 'Contacted'
+                                        : ld?.status === 'Contacted'
                                         ? 'rgba(56, 189, 248, 0.4)'
-                                        : ld.status === 'In Discussion'
+                                        : ld?.status === 'In Discussion'
                                         ? 'rgba(168, 85, 247, 0.4)'
                                         : 'rgba(74, 222, 128, 0.4)'
                                     }`,
                                     color:
-                                      ld.status === 'New'
+                                      ld?.status === 'New'
                                         ? '#FBBF24'
-                                        : ld.status === 'Contacted'
+                                        : ld?.status === 'Contacted'
                                         ? '#38BDF8'
-                                        : ld.status === 'In Discussion'
+                                        : ld?.status === 'In Discussion'
                                         ? '#C084FC'
                                         : '#4ADE80',
                                     padding: '3px 6px',
@@ -10191,15 +10191,15 @@ When would be a good time to discuss your project requirements?`)}`}
               };
             }
             clientGroups[key].tickets.push(t);
-            if (t.status === 'Open') clientGroups[key].openCount += 1;
-            if (t.status === 'In Progress') clientGroups[key].inProgressCount += 1;
-            if (t.status === 'Resolved') clientGroups[key].resolvedCount += 1;
+            if (t?.status === 'Open') clientGroups[key].openCount += 1;
+            if (t?.status === 'In Progress') clientGroups[key].inProgressCount += 1;
+            if (t?.status === 'Resolved') clientGroups[key].resolvedCount += 1;
           });
 
           const groupList = Object.values(clientGroups);
-          const totalOpen = supportTickets.filter(t => t.status === 'Open').length;
-          const totalInProgress = supportTickets.filter(t => t.status === 'In Progress').length;
-          const totalResolved = supportTickets.filter(t => t.status === 'Resolved').length;
+          const totalOpen = supportTickets.filter(t => t?.status === 'Open').length;
+          const totalInProgress = supportTickets.filter(t => t?.status === 'In Progress').length;
+          const totalResolved = supportTickets.filter(t => t?.status === 'Resolved').length;
 
           return (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -10534,7 +10534,7 @@ When would be a good time to discuss your project requirements?`)}`}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   {groupList.map((grp) => {
                     const isExpanded = !!expandedSupportClients[grp.key];
-                    const filteredGrpTickets = grp.tickets.filter(t => supportFilter === 'All' || t.status === supportFilter);
+                    const filteredGrpTickets = grp.tickets.filter(t => supportFilter === 'All' || t?.status === supportFilter);
 
                     if (filteredGrpTickets.length === 0 && supportFilter !== 'All') return null;
 
@@ -10647,8 +10647,8 @@ When would be a good time to discuss your project requirements?`)}`}
                                       </span>
                                     </td>
                                     <td>
-                                      <span className={`fixkar-status-chip ${t.status === 'Resolved' ? 'success' : t.status === 'In Progress' ? 'info' : 'warning'}`}>
-                                        ● {t.status}
+                                      <span className={`fixkar-status-chip ${t?.status === 'Resolved' ? 'success' : t?.status === 'In Progress' ? 'info' : 'warning'}`}>
+                                        ● {t?.status}
                                       </span>
                                     </td>
                                     <td style={{ textAlign: 'right' }}>
@@ -10756,7 +10756,7 @@ When would be a good time to discuss your project requirements?`)}`}
                         Current Status
                       </label>
                       <select
-                        value={selectedTicket.status}
+                        value={selectedTicket?.status}
                         onChange={(e) => {
                           const newStatus = e.target.value;
                           setSelectedTicket((prev) => ({ ...prev, status: newStatus }));
@@ -10843,7 +10843,7 @@ When would be a good time to discuss your project requirements?`)}`}
                     </button>
 
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        {selectedTicket.status !== 'Resolved' && (
+                        {selectedTicket?.status !== 'Resolved' && (
                           <button
                             type="button"
                             onClick={() => {
@@ -10864,7 +10864,7 @@ When would be a good time to discuss your project requirements?`)}`}
                           type="button"
                           onClick={() => {
                             handleUpdateTicket(selectedTicket.id, {
-                              status: selectedTicket.status,
+                              status: selectedTicket?.status,
                               priority: selectedTicket.priority,
                               notes: selectedTicket.notes,
                             });
@@ -12233,7 +12233,7 @@ Fixkar Web & AI Engineering Studio (Bihar, India)`}
 
           const handleMarkInboundRead = async (email) => {
             setSelectedInboundEmailModal(email);
-            if (email.status === 'UNREAD') {
+            if (email?.status === 'UNREAD') {
               try {
                 await fetch(`${API_BASE}/api/admin/emails/inbound/mark-read`, {
                   method: 'POST',
@@ -12334,16 +12334,16 @@ Fixkar Web & AI Engineering Studio (Bihar, India)`}
                             onClick={() => handleMarkInboundRead(email)}
                             style={{
                               borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
-                              background: email.status === 'UNREAD' ? 'rgba(56, 189, 248, 0.05)' : 'transparent',
+                              background: email?.status === 'UNREAD' ? 'rgba(56, 189, 248, 0.05)' : 'transparent',
                               cursor: 'pointer',
                               transition: 'background 0.15s ease',
                             }}
                             onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'; }}
-                            onMouseLeave={(e) => { e.currentTarget.style.background = email.status === 'UNREAD' ? 'rgba(56, 189, 248, 0.05)' : 'transparent'; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.background = email?.status === 'UNREAD' ? 'rgba(56, 189, 248, 0.05)' : 'transparent'; }}
                           >
                             <td style={{ padding: '12px 14px', overflow: 'hidden' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                {email.status === 'UNREAD' && (
+                                {email?.status === 'UNREAD' && (
                                   <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#38BDF8', display: 'inline-block', flexShrink: 0 }} />
                                 )}
                                 <div style={{ minWidth: 0, overflow: 'hidden' }}>
@@ -12507,7 +12507,7 @@ Fixkar Web & AI Engineering Studio (Bihar, India)`}
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                           <span style={{ fontSize: '0.68rem', background: 'rgba(34, 197, 94, 0.15)', border: '1px solid rgba(34, 197, 94, 0.35)', color: '#4ADE80', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>
-                            ✓ {reply.status || 'DELIVERED'}
+                            ✓ {reply?.status || 'DELIVERED'}
                           </span>
                           <span style={{ fontSize: '0.7rem', color: '#94A3B8' }}>
                             {reply.formattedTime || (reply.timestamp ? new Date(reply.timestamp).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) : 'Recently')}
