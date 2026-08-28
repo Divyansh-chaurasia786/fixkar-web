@@ -3512,51 +3512,52 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                     </span>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(145px, 1fr))', gap: '8px' }}>
                     {(otpPricing.packages || []).map((pkg) => (
                       <div
                         key={pkg.id}
                         style={{
-                          background: pkg.popular ? 'rgba(37, 99, 235, 0.15)' : 'rgba(255, 255, 255, 0.02)',
-                          border: `1px solid ${pkg.popular ? '#38BDF8' : 'rgba(255, 255, 255, 0.08)'}`,
-                          borderRadius: '10px',
-                          padding: '12px',
+                          background: pkg.popular ? 'rgba(37, 99, 235, 0.12)' : 'rgba(15, 23, 42, 0.6)',
+                          border: `1px solid ${pkg.popular ? 'rgba(56, 189, 248, 0.5)' : 'rgba(255, 255, 255, 0.07)'}`,
+                          borderRadius: '8px',
+                          padding: '8px 10px',
                           display: 'flex',
                           flexDirection: 'column',
                           justifyContent: 'space-between',
-                          gap: '8px',
+                          gap: '6px',
                           position: 'relative',
+                          transition: 'all 0.15s ease',
                         }}
                       >
                         {pkg.popular && (
-                          <span style={{ position: 'absolute', top: '-7px', right: '10px', background: '#38BDF8', color: '#000', fontSize: '0.58rem', fontWeight: 900, padding: '1px 5px', borderRadius: '3px', letterSpacing: '0.04em' }}>
+                          <span style={{ position: 'absolute', top: '-6px', right: '8px', background: '#38BDF8', color: '#000', fontSize: '0.52rem', fontWeight: 900, padding: '1px 4px', borderRadius: '3px', letterSpacing: '0.03em' }}>
                             POPULAR
                           </span>
                         )}
 
                         <div>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <strong style={{ fontSize: '0.82rem', color: '#fff' }}>{pkg.name}</strong>
-                            <span style={{ fontSize: '0.68rem', color: '#38BDF8', fontFamily: 'monospace', fontWeight: 700 }}>
-                              ₹{((Number(pkg.price) || 0) / (Number(pkg.credits) || 1)).toFixed(3)}/sms
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '4px' }}>
+                            <strong style={{ fontSize: '0.74rem', color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{pkg.name}</strong>
+                            <span style={{ fontSize: '0.62rem', color: '#38BDF8', fontFamily: 'monospace', fontWeight: 700, flexShrink: 0 }}>
+                              ₹{((Number(pkg.price) || 0) / (Number(pkg.credits) || 1)).toFixed(3)}
                             </span>
                           </div>
-                          <div style={{ fontSize: '1.15rem', fontWeight: 900, color: '#FDE047', fontFamily: 'monospace', margin: '3px 0 1px' }}>
-                            +{(Number(pkg.credits) || 0).toLocaleString()} <span style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 600 }}>SMS</span>
+                          <div style={{ fontSize: '0.98rem', fontWeight: 900, color: '#FDE047', fontFamily: 'monospace', margin: '2px 0 1px' }}>
+                            +{(Number(pkg.credits) || 0).toLocaleString()} <span style={{ fontSize: '0.62rem', color: '#94A3B8', fontWeight: 600 }}>SMS</span>
                           </div>
-                          <p style={{ fontSize: '0.66rem', color: '#94A3B8', margin: '3px 0 0', lineHeight: 1.3 }}>
+                          <p style={{ fontSize: '0.60rem', color: '#94A3B8', margin: '2px 0 0', lineHeight: 1.25, height: '24px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                             {pkg.desc}
                           </p>
                         </div>
 
                         <div
                           style={{
-                            background: pkg.popular ? 'linear-gradient(135deg, #38BDF8 0%, #2563EB 100%)' : 'rgba(255, 255, 255, 0.06)',
-                            border: `1px solid ${pkg.popular ? '#38BDF8' : 'rgba(255, 255, 255, 0.15)'}`,
+                            background: pkg.popular ? 'linear-gradient(135deg, #38BDF8 0%, #2563EB 100%)' : 'rgba(255, 255, 255, 0.05)',
+                            border: `1px solid ${pkg.popular ? '#38BDF8' : 'rgba(255, 255, 255, 0.12)'}`,
                             color: '#fff',
-                            padding: '5px 10px',
-                            borderRadius: '6px',
-                            fontSize: '0.7rem',
+                            padding: '3px 6px',
+                            borderRadius: '5px',
+                            fontSize: '0.65rem',
                             fontWeight: 700,
                             textAlign: 'center',
                           }}
