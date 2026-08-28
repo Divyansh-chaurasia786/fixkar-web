@@ -717,7 +717,40 @@ export function AdminDashboardView({ onNavigateHome }) {
     }
   };
 
+  const handleConvertToClientFromLead = async (leadId) => {
+    try {
+      setLoading(true);
+      const res = await fetch(`${API_BASE}/api/admin/leads/${leadId}/convert`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${adminToken}`,
+        },
+      });
+      const d = await res.json();
+      if (d.success && d.client) {
+        setClients((prev) => [d.client, ...(prev || []).filter((c) => c?.clientCode !== d.client.clientCode)]);
+        setLeads((prev) => (prev || []).map((l) => (l?.id === leadId ? { ...l, status: 'Converted' } : l)));
+        setSelectedClientDetail(d.client);
+        setActiveTab('clients');
+        setDraftSavedNotice(`🎉 SUCCESS! '${d.client.businessName}' has been converted and onboarded to Clients (${d.client.clientCode})!`);
+        setTimeout(() => setDraftSavedNotice(null), 6000);
+      } else {
+        alert(d.error || d.message || 'Failed to convert lead to client.');
+      }
+    } catch (err) {
+      console.error('Error converting lead to client:', err);
+      alert('Network Error: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleUpdateLeadStatus = async (leadId, newStatus) => {
+    if (newStatus === 'Converted') {
+      await handleConvertToClientFromLead(leadId);
+      return;
+    }
     try {
       const res = await fetch(`${API_BASE}/api/admin/leads/${leadId}`, {
         method: 'PATCH',
@@ -729,7 +762,7 @@ export function AdminDashboardView({ onNavigateHome }) {
       });
       if (res.ok) {
         setLeads((prev) =>
-          prev.map((l) => (l.id === leadId ? { ...l, status: newStatus } : l))
+          prev.map((l) => (l?.id === leadId ? { ...l, status: newStatus } : l))
         );
       }
     } catch (err) {
