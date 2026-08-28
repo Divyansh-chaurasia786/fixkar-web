@@ -3358,8 +3358,8 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                     </button>
                   </div>
 
-                  <div style={{ overflowX: 'auto', width: '100%' }}>
-                    <table className="fixkar-table" style={{ width: '100%', minWidth: '800px' }}>
+                  <div style={{ width: '100%', overflowX: 'hidden' }}>
+                    <table className="fixkar-table" style={{ width: '100%', tableLayout: 'fixed' }}>
                       <thead>
                         <tr>
                           <th style={{ width: '25%' }}>PLAN NAME &amp; SUBTITLE</th>
@@ -3994,8 +3994,8 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                       </button>
                     </div>
 
-                    <div style={{ overflowX: 'auto', width: '100%' }}>
-                      <table className="fixkar-table" style={{ width: '100%', minWidth: '800px' }}>
+                    <div style={{ width: '100%', overflowX: 'hidden' }}>
+                      <table className="fixkar-table" style={{ width: '100%', tableLayout: 'fixed' }}>
                         <thead>
                           <tr>
                             <th style={{ width: '25%' }}>PLAN NAME &amp; SUBTITLE</th>
@@ -4887,8 +4887,8 @@ export function SuperAdminDashboardView({ onNavigateHome }) {
                     </div>
                   </div>
                 ) : (
-                  <div style={{ width: '100%', overflowX: 'auto' }}>
-                    <table className="fixkar-table" style={{ width: '100%', minWidth: '860px', margin: 0 }}>
+                  <div style={{ width: '100%', overflowX: 'hidden' }}>
+                    <table className="fixkar-table" style={{ width: '100%', tableLayout: 'fixed', margin: 0 }}>
                       <thead>
                         <tr>
                           <th style={{ width: '18%', padding: '10px 14px' }}>CLIENT / BUSINESS</th>
@@ -5490,8 +5490,8 @@ const data = await res.json();`);
                 </div>
 
                 {/* Table */}
-                <div style={{ width: '100%', overflowX: 'auto' }}>
-                  <table className="fixkar-table" style={{ width: '100%', minWidth: '860px', margin: 0 }}>
+                <div style={{ width: '100%', overflowX: 'hidden' }}>
+                  <table className="fixkar-table" style={{ width: '100%', tableLayout: 'fixed', margin: 0 }}>
                     <thead>
                       <tr>
                         <th style={{ width: '18%', padding: '10px 14px' }}>CLIENT</th>
@@ -5922,8 +5922,8 @@ const data = await res.json();`);
                 </div>
 
                 {/* Table */}
-                <div style={{ width: '100%', overflowX: 'auto' }}>
-                  <table className="fixkar-table" style={{ width: '100%', minWidth: '900px', margin: 0 }}>
+                <div style={{ width: '100%', overflowX: 'hidden' }}>
+                  <table className="fixkar-table" style={{ width: '100%', tableLayout: 'fixed', margin: 0 }}>
                     <thead>
                       <tr>
                         <th style={{ width: '22%', padding: '10px 14px' }}>CLIENT &amp; DOMAIN</th>
@@ -6366,7 +6366,7 @@ const data = await res.json();`);
                 </div>
 
                 {/* Table */}
-                <div style={{ width: '100%', overflowX: 'auto' }}>
+                <div style={{ width: '100%', overflowX: 'hidden' }}>
                   <table className="fixkar-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
                     <thead>
                       <tr style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
