@@ -408,16 +408,16 @@ export function AgreementModal({ doc, clientData, onClose }) {
                 {isPhase1 ? 'MANAGED SERVICE AGREEMENT & WORK ORDER (PHASE 1 MSA)' : 'PRODUCTION HANDOVER & 1-YEAR SLA MAINTENANCE CONTRACT (PHASE 2)'}
               </div>
               <div style={{ fontSize: '0.66rem', color: '#64748B', marginTop: '2px', fontWeight: 600 }}>
-                Executed under the provisions of the Indian Contract Act, 1872 &bull; Information Technology Act, 2000 (Section 10A)
+                Official Web Software Development &amp; Managed Platform Agreement
               </div>
             </div>
 
             {/* Legal Recital Preamble */}
             <div style={{ fontSize: '0.70rem', color: '#334155', textAlign: 'justify', marginBottom: '10px', background: '#F8FAFC', padding: '6px 10px', borderRadius: '4px', borderLeft: '3px solid ' + (isPhase1 ? '#0284C7' : '#10B981') }}>
               {isPhase1 ? (
-                <span>THIS MANAGED SERVICE AGREEMENT (the "<strong>Agreement</strong>") is entered into on this <strong>{dateStr}</strong> at Lucknow, Uttar Pradesh under the <strong>Indian Contract Act, 1872</strong> and the <strong>Information Technology Act, 2000 (Section 10A)</strong> by and between:</span>
+                <span>THIS MANAGED SERVICE AGREEMENT (the "<strong>Agreement</strong>") is entered into on this <strong>{dateStr}</strong> at Lucknow, Uttar Pradesh at Lucknow, Uttar Pradesh by and between:</span>
               ) : (
-                <span>THIS PRODUCTION HANDOVER CERTIFICATE AND SLA MAINTENANCE CONTRACT is entered into on this <strong>{dateStr}</strong> at Lucknow, Uttar Pradesh under the <strong>Indian Contract Act, 1872</strong> upon successful staging verification and live deployment by and between:</span>
+                <span>THIS PRODUCTION HANDOVER CERTIFICATE AND SLA MAINTENANCE CONTRACT is entered into on this <strong>{dateStr}</strong> at Lucknow, Uttar Pradesh upon successful staging verification and live deployment by and between:</span>
               )}
             </div>
 
@@ -509,7 +509,7 @@ export function AgreementModal({ doc, clientData, onClose }) {
                   </div>
 
                   <div>
-                    <strong style={{ color: '#0F172A' }}>2. 50/50 MILESTONE PAYMENT TERMS (SECTION 2(d), INDIAN CONTRACT ACT, 1872):</strong> (a) <strong>Phase 1 Advance (50% - ₹{phase1Advance.toLocaleString('en-IN')}):</strong> Payable immediately upon contract execution for domain registration, cloud VPS provisioning, and engineering sprint kickstart. (b) <strong>Phase 2 Final (50% - ₹{phase2Final.toLocaleString('en-IN')}):</strong> Strictly payable upon staging verification <u>when the website is fully ready and tested, prior to public live DNS routing</u>.
+                    <strong style={{ color: '#0F172A' }}>2. 50/50 MILESTONE PAYMENT SCHEDULE:</strong> (a) <strong>Phase 1 Advance (50% - ₹{phase1Advance.toLocaleString('en-IN')}):</strong> Payable immediately upon contract execution for domain registration, cloud VPS provisioning, and engineering sprint kickstart. (b) <strong>Phase 2 Final (50% - ₹{phase2Final.toLocaleString('en-IN')}):</strong> Strictly payable upon staging verification <u>when the website is fully ready and tested, prior to public live DNS routing</u>.
                   </div>
 
                   <div>
@@ -549,7 +549,7 @@ export function AgreementModal({ doc, clientData, onClose }) {
               </div>
 
               <div>
-                <strong style={{ color: '#0F172A' }}>{isPhase1 ? '6' : '7'}. GOVERNING LAW &amp; JURISDICTION:</strong> This Agreement is governed by the <strong>Indian Contract Act, 1872</strong>, the <strong>Information Technology Act, 2000</strong>, and the <strong>Specific Relief Act, 1963</strong>. Any legal dispute shall be subject to the exclusive jurisdiction of the competent civil courts in Lucknow, Uttar Pradesh, India.
+                <strong style={{ color: '#0F172A' }}>{isPhase1 ? '6' : '7'}. GOVERNING LAW &amp; JURISDICTION:</strong> This Agreement shall be governed by and construed in accordance with the laws of India. In the event of any dispute, the matter shall be subject to the exclusive jurisdiction of the competent courts in Lucknow, Uttar Pradesh, India.
               </div>
             </div>
 
@@ -619,7 +619,7 @@ export function AgreementModal({ doc, clientData, onClose }) {
               <strong style={{ color: '#0F172A' }}>Fixkar Technology Solutions</strong> &bull; Lucknow, Uttar Pradesh, India
             </div>
             <div style={{ fontStyle: 'italic' }}>
-              Official Letterpad Document &bull; IT Act 2000 (Sec 10A) Compliant
+              Official Fixkar Service Agreement &bull; Valid &amp; Binding Document
             </div>
             <div style={{ fontFamily: 'monospace', fontWeight: 700, color: '#0284C7' }}>
               PAGE 1 OF 1 &bull; {digitalVerificationHash.slice(0, 18)}
