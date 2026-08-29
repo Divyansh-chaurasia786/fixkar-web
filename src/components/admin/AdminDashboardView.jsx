@@ -836,7 +836,11 @@ export function AdminDashboardView({ onNavigateHome }) {
 
   useEffect(() => {
     fetchAllData();
-    const interval = setInterval(fetchAllData, 4000);
+    const interval = setInterval(() => {
+      if (!document.hidden) {
+        fetchAllData();
+      }
+    }, 30000);
     const onFocus = () => fetchAllData();
     window.addEventListener('focus', onFocus);
     return () => {
