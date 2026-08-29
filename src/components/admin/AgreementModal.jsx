@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Printer, ShieldCheck, MessageSquare, Copy, FileText, Download, Globe } from 'lucide-react';
+import { X, Printer, ShieldCheck, MessageSquare, Copy, FileText, Download } from 'lucide-react';
 
 export function AgreementModal({ doc, clientData, onClose }) {
   if (!doc && !clientData) return null;
@@ -19,23 +19,23 @@ export function AgreementModal({ doc, clientData, onClose }) {
     return s;
   };
 
-  const clientName = clientData?.businessName || clientData?.client || sanitizeString(doc?.clientName) || sanitizeString(doc?.client) || sanitizeString(doc?.name) || 'Registered Client Business';
+  const businessName = clientData?.businessName || clientData?.client || sanitizeString(doc?.clientName) || sanitizeString(doc?.client) || 'Registered Client Business';
   const clientCode = clientData?.clientCode || doc?.clientCode || 'FIX-CLNT-001';
   
-  // Clean Contact Person Name: Avoid file strings or company-like names as person name
+  // Explicit client authorized representative name
   let rawPerson = clientData?.contactPerson || clientData?.name || clientData?.leadName || sanitizeString(doc?.contactPerson);
   if (!rawPerson || rawPerson.toLowerCase().includes('.pdf') || rawPerson.includes('Agreement')) {
-    rawPerson = 'Authorized Signatory';
+    rawPerson = 'Authorized Representative';
   }
-  const contactPerson = rawPerson;
+  const clientPersonName = rawPerson;
 
   const phone = clientData?.phone || doc?.phone || '';
   const email = clientData?.email || doc?.email || 'contact@client.in';
   
-  // Clean Domain: fallback to sensible domain name based on clientName
+  // Domain handling
   let rawDomain = clientData?.domain || doc?.domain || '';
   if (!rawDomain || rawDomain === 'clientwebsite.in') {
-    rawDomain = clientName.toLowerCase().replace(/[^a-z0-9]/g, '') + '.in';
+    rawDomain = businessName.toLowerCase().replace(/[^a-z0-9]/g, '') + '.in';
   }
   const domain = rawDomain;
 
@@ -70,34 +70,34 @@ export function AgreementModal({ doc, clientData, onClose }) {
     const cp = String(phone || '').replace(/\D/g, '');
     const text = isPhase1
       ? encodeURIComponent(
-          'Hello ' + contactPerson + '!\n\n' +
+          'Hello ' + clientPersonName + '!\n\n' +
           '📜 FIXKAR OFFICIAL MANAGED SERVICE AGREEMENT (PHASE 1 MSA)\n' +
-          '• Ref: ' + refCode + ' • Client: ' + clientName + ' (' + clientCode + ')\n' +
-          '• Domain Scope: Custom Domain (.in / .com) to be finalized & registered in Phase 1\n\n' +
+          '• Client: ' + clientPersonName + ' • Business: ' + businessName + ' (' + clientCode + ')\n' +
+          '• Ref: ' + refCode + '\n\n' +
+          '🌐 DOMAIN POLICY:\n' +
+          '• Official domain name (.in / .com) will be mutually decided after discussion with you.\n\n' +
           '💰 50/50 PAYMENT SCHEDULE:\n' +
           '• Total Project Value: Rs. ' + totalCost.toLocaleString('en-IN') + '\n' +
-          '• Phase 1 Advance (50%): Rs. ' + phase1Advance.toLocaleString('en-IN') + ' (Domain purchase, VPS setup & Kickoff)\n' +
-          '• Phase 2 Final (50%): Rs. ' + phase2Final.toLocaleString('en-IN') + ' (Due Before Live DNS Handover)\n\n' +
-          '⚖️ INDIAN LAW VALID TERMS:\n' +
+          '• Phase 1 Advance (50%): Rs. ' + phase1Advance.toLocaleString('en-IN') + ' (Paid at Kickoff)\n' +
+          '• Phase 2 Final (50%): Rs. ' + phase2Final.toLocaleString('en-IN') + ' (Due Before Live Handover)\n\n' +
+          '⚖️ KEY TERMS:\n' +
           '• 1-Year Free Maintenance (Strictly Bug-Fixes & Technical Errors only)\n' +
-          '• 7-Day Post-Live Refinement Window (Updates only, no new features)\n' +
-          '• Feature Additions/Removals: Separately chargeable\n\n' +
+          '• 7-Day Post-Live Refinement Window (Updates only, no new features)\n\n' +
           'Leadership: Divyansh Chaurasia (Founder) & Pankaj Tiwari (Co-Founder)\n' +
           'Office: Lucknow, UP, India\n' +
           'Portal: https://fixkar.co.in/#client-login\n' +
           '— Fixkar Technology Solutions'
         )
       : encodeURIComponent(
-          'Hello ' + contactPerson + '!\n\n' +
+          'Hello ' + clientPersonName + '!\n\n' +
           '🛡️ FIXKAR FINAL HANDOVER & 1-YEAR SLA CONTRACT (PHASE 2)\n' +
-          '• Ref: ' + refCode + ' • Client: ' + clientName + ' (' + clientCode + ')\n' +
+          '• Client: ' + clientPersonName + ' • Business: ' + businessName + ' (' + clientCode + ')\n' +
           '• Live Production Domain: https://' + domain + '\n\n' +
           '✅ 100% FINANCIAL SETTLEMENT:\n' +
           '• Total Amount: Rs. ' + totalCost.toLocaleString('en-IN') + ' (Fully Settled / Balance Due: Rs. 0)\n\n' +
           '📅 ACTIVE WARRANTIES:\n' +
           '• 7-Day Refinement Period: Active (Minor adjustments to existing features only)\n' +
-          '• 1-Year Free Bug-Fix Maintenance: Active (365 Days 99.9% Uptime SLA)\n' +
-          '• Feature Modifications: Separately chargeable\n\n' +
+          '• 1-Year Free Bug-Fix Maintenance: Active (365 Days 99.9% Uptime SLA)\n\n' +
           'Portal: https://fixkar.co.in/#client-login\n' +
           '— Fixkar Technology Solutions'
         );
@@ -421,7 +421,7 @@ export function AgreementModal({ doc, clientData, onClose }) {
               )}
             </div>
 
-            {/* Parties Box - Executive 2-Column Format */}
+            {/* Parties Box - Executive 2-Column Format (Client Name + Business Name Displayed) */}
             <div style={{ border: '1px solid #E2E8F0', borderRadius: '6px', padding: '8px 12px', marginBottom: '12px', background: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', fontSize: '0.70rem' }}>
                 <div style={{ borderRight: '1px solid #E2E8F0', paddingRight: '8px' }}>
@@ -440,17 +440,21 @@ export function AgreementModal({ doc, clientData, onClose }) {
                   <div style={{ fontWeight: 800, color: isPhase1 ? '#0284C7' : '#10B981', textTransform: 'uppercase', fontSize: '0.64rem', marginBottom: '2px' }}>
                     2. CLIENT SUBSCRIBER (PARTY B):
                   </div>
-                  <div style={{ fontWeight: 800, color: '#0F172A' }}>{clientName}</div>
-                  <div style={{ color: '#475569' }}>Authorized Signatory / Owner: <strong>{contactPerson}</strong></div>
-                  <div style={{ color: '#64748B' }}>Client Identification Code: <strong style={{ fontFamily: 'monospace', color: '#0284C7' }}>{clientCode}</strong></div>
+                  <div style={{ fontWeight: 800, color: '#0F172A' }}>{businessName}</div>
+                  <div style={{ color: '#475569' }}>
+                    Client Name / Authorized Signatory: <strong>{clientPersonName}</strong>
+                  </div>
+                  <div style={{ color: '#64748B' }}>
+                    Client Identification Code: <strong style={{ fontFamily: 'monospace', color: '#0284C7' }}>{clientCode}</strong>
+                  </div>
                   
-                  {/* DYNAMIC DOMAIN STATUS (Phase 1 vs Phase 2) */}
+                  {/* CLEAN DOMAIN POLICY (Discussion Based in Phase 1 vs Live in Phase 2) */}
                   <div style={{ color: '#64748B', marginTop: '2px' }}>
                     {isPhase1 ? (
                       <span>
                         <strong>Domain Allocation:</strong>{' '}
-                        <span style={{ color: '#0284C7', fontWeight: 700 }}>
-                          Custom Domain (.in / .com) to be finalized &amp; registered in Phase 1
+                        <span style={{ color: '#0284C7', fontWeight: 600 }}>
+                          Official domain name (.in / .com) will be finalized after discussion with the Client
                         </span>
                       </span>
                     ) : (
@@ -496,16 +500,16 @@ export function AgreementModal({ doc, clientData, onClose }) {
               </table>
             </div>
 
-            {/* Standard Legal Clauses (Balanced Spacing) */}
+            {/* Standard Legal Clauses (Balanced Spacing & Clean Language) */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', fontSize: '0.67rem', color: '#334155', textAlign: 'justify' }}>
               {isPhase1 ? (
                 <>
                   <div>
-                    <strong style={{ color: '#0F172A' }}>1. SCOPE OF SERVICES &amp; DELIVERABLES:</strong> Fixkar Technology Solutions shall architect, design, program, purchase &amp; provision the client domain (https://{domain}), and configure the responsive web software platform for {clientName} including mobile-optimized UI/UX, backend API integration, Fast2SMS transactional OTP authentication, SSL HTTPS security, database architecture, and self-service Client Portal access (<strong>https://fixkar.co.in/#client-login</strong>).
+                    <strong style={{ color: '#0F172A' }}>1. SCOPE OF SERVICES &amp; DELIVERABLES:</strong> Fixkar Technology Solutions shall architect, design, program, and configure the responsive web software platform for {businessName} (represented by {clientPersonName}). Deliverables include mobile-optimized UI/UX, backend API integration, Fast2SMS transactional OTP authentication, SSL HTTPS security, database architecture, and self-service Client Portal access (<strong>https://fixkar.co.in/#client-login</strong>). <u>The official domain name (.in / .com) will be mutually decided and registered following direct consultation with the client</u>.
                   </div>
 
                   <div>
-                    <strong style={{ color: '#0F172A' }}>2. 50/50 MILESTONE PAYMENT TERMS (SECTION 2(d), INDIAN CONTRACT ACT, 1872):</strong> (a) <strong>Phase 1 Advance (50% - ₹{phase1Advance.toLocaleString('en-IN')}):</strong> Payable immediately upon contract execution for domain registration purchase, cloud VPS provisioning, and development kickstart. (b) <strong>Phase 2 Final (50% - ₹{phase2Final.toLocaleString('en-IN')}):</strong> Strictly payable upon staging verification <u>when the website is fully ready and tested, prior to public live DNS routing</u>.
+                    <strong style={{ color: '#0F172A' }}>2. 50/50 MILESTONE PAYMENT TERMS (SECTION 2(d), INDIAN CONTRACT ACT, 1872):</strong> (a) <strong>Phase 1 Advance (50% - ₹{phase1Advance.toLocaleString('en-IN')}):</strong> Payable immediately upon contract execution for domain registration, cloud VPS provisioning, and engineering sprint kickstart. (b) <strong>Phase 2 Final (50% - ₹{phase2Final.toLocaleString('en-IN')}):</strong> Strictly payable upon staging verification <u>when the website is fully ready and tested, prior to public live DNS routing</u>.
                   </div>
 
                   <div>
@@ -583,16 +587,16 @@ export function AgreementModal({ doc, clientData, onClose }) {
                   <div style={{ fontSize: '0.58rem', color: '#64748B', marginTop: '1px' }}>Date: {dateStr}</div>
                 </div>
 
-                {/* Client Authorized Signatory */}
+                {/* Client Authorized Signatory (Business Name + Client Person Name) */}
                 <div style={{ border: '1px solid #CBD5E1', borderRadius: '4px', padding: '6px 8px', background: '#F8FAFC' }}>
                   <div style={{ fontWeight: 800, textTransform: 'uppercase', color: isPhase1 ? '#0284C7' : '#10B981', fontSize: '0.60rem', marginBottom: '2px' }}>
-                    FOR {clientName.slice(0, 18).toUpperCase()}:
+                    FOR {businessName.slice(0, 18).toUpperCase()}:
                   </div>
                   <div style={{ height: '32px', borderBottom: '1px solid #64748B', display: 'flex', alignItems: 'flex-end', paddingBottom: '2px' }}>
                     <span style={{ fontSize: '0.58rem', color: '#94A3B8', fontStyle: 'italic' }}>Signature: __________________</span>
                   </div>
-                  <div style={{ fontWeight: 800, color: '#0F172A', marginTop: '3px' }}>{contactPerson}</div>
-                  <div style={{ fontSize: '0.60rem', color: '#475569' }}>Authorized Signatory / Client</div>
+                  <div style={{ fontWeight: 800, color: '#0F172A', marginTop: '3px' }}>{clientPersonName}</div>
+                  <div style={{ fontSize: '0.60rem', color: '#475569' }}>Owner / Authorized Signatory</div>
                   <div style={{ fontSize: '0.58rem', color: '#64748B', marginTop: '1px' }}>Client Code: <strong style={{ color: '#0284C7' }}>{clientCode}</strong></div>
                 </div>
               </div>
