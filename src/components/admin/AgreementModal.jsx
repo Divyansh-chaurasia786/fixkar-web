@@ -73,7 +73,7 @@ export function AgreementModal({ doc, clientData, onClose }) {
           'Hello ' + contactPerson + '!\n\n' +
           '📜 FIXKAR OFFICIAL MANAGED SERVICE AGREEMENT (PHASE 1 MSA)\n' +
           '• Ref: ' + refCode + ' • Client: ' + clientName + ' (' + clientCode + ')\n' +
-          '• Proposed Domain: https://' + domain + ' (To be registered under Phase 1)\n\n' +
+          '• Domain Scope: Custom Domain (.in / .com) to be finalized & registered in Phase 1\n\n' +
           '💰 50/50 PAYMENT SCHEDULE:\n' +
           '• Total Project Value: Rs. ' + totalCost.toLocaleString('en-IN') + '\n' +
           '• Phase 1 Advance (50%): Rs. ' + phase1Advance.toLocaleString('en-IN') + ' (Domain purchase, VPS setup & Kickoff)\n' +
@@ -450,7 +450,7 @@ export function AgreementModal({ doc, clientData, onClose }) {
                       <span>
                         <strong>Domain Allocation:</strong>{' '}
                         <span style={{ color: '#0284C7', fontWeight: 700 }}>
-                          https://{domain} (To be purchased &amp; provisioned under Phase 1)
+                          Custom Domain (.in / .com) to be finalized &amp; registered in Phase 1
                         </span>
                       </span>
                     ) : (
