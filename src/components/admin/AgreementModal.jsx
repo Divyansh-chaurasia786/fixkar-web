@@ -68,7 +68,8 @@ export function AgreementModal({ doc, clientData, onClose }) {
           '• 1-Year Free Maintenance (Strictly Bug-Fixes & Technical Errors only)\n' +
           '• 7-Day Post-Live Refinement Window (Updates only, no new features)\n' +
           '• Feature Additions/Removals: Separately chargeable\n\n' +
-          'Partners: Pankaj Tiwari & Divyansh Chaurasia (Lucknow, UP)\n' +
+          'Leadership: Divyansh Chaurasia (Founder) & Pankaj Tiwari (Co-Founder)\n' +
+          'Office: Lucknow, UP, India\n' +
           'Portal: https://fixkar.co.in/#client-login\n' +
           '— Fixkar Technology Solutions'
         )
@@ -368,7 +369,7 @@ export function AgreementModal({ doc, clientData, onClose }) {
                     / WEB DEVELOPMENT &amp; DIGITAL SOLUTIONS
                   </div>
                   <div style={{ fontSize: '0.66rem', color: '#64748B', marginTop: '3px' }}>
-                    <strong>Designated Partners:</strong> Pankaj Tiwari &bull; Divyansh Chaurasia &nbsp;|&nbsp; <strong>Office:</strong> Lucknow, UP, India
+                    <strong>Founder:</strong> Divyansh Chaurasia &nbsp;&bull;&nbsp; <strong>Co-Founder:</strong> Pankaj Tiwari &nbsp;|&nbsp; <strong>Office:</strong> Lucknow, UP, India
                   </div>
                 </div>
 
@@ -414,7 +415,9 @@ export function AgreementModal({ doc, clientData, onClose }) {
                     1. SERVICE PROVIDER (PARTY A):
                   </div>
                   <div style={{ fontWeight: 800, color: '#0F172A' }}>Fixkar Technology Solutions</div>
-                  <div style={{ color: '#475569' }}>Designated Partners: <strong>Pankaj Tiwari</strong> &amp; <strong>Divyansh Chaurasia</strong></div>
+                  <div style={{ color: '#475569' }}>
+                    Founder: <strong>Divyansh Chaurasia</strong> &bull; Co-Founder: <strong>Pankaj Tiwari</strong>
+                  </div>
                   <div style={{ color: '#64748B' }}>Corporate Email: support@fixkar.co.in</div>
                   <div style={{ color: '#64748B' }}>Registered Operations: Lucknow, Uttar Pradesh, India</div>
                 </div>
@@ -513,46 +516,41 @@ export function AgreementModal({ doc, clientData, onClose }) {
               </div>
             </div>
 
-            {/* 3-PARTY SIGNATURES: 2 PARTNER STAMPS FOR FIXKAR + CLIENT SIGNATURE */}
+            {/* 3-PARTY SIGNATURES WITH BOTH PARTNER SIGNATURES + SINGLE FIXKAR COMPANY STAMP */}
             <div style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1.5px solid #0F172A' }}>
               <div style={{ fontSize: '0.66rem', fontWeight: 800, textTransform: 'uppercase', textAlign: 'center', color: '#0F172A', marginBottom: '8px', letterSpacing: '0.03em' }}>
                 IN WITNESS WHEREOF, THE PARTIES HERETO HAVE EXECUTED THIS AGREEMENT BY PHYSICAL SIGNATURES:
               </div>
 
+              {/* 3-Column Signatures Grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', fontSize: '0.67rem' }}>
-                {/* Fixkar Partner 1 (Pankaj Tiwari with Official Stamp) */}
+                {/* Fixkar Founder: Divyansh Chaurasia */}
                 <div style={{ border: '1px solid #CBD5E1', borderRadius: '4px', padding: '6px 8px', background: '#F8FAFC' }}>
                   <div style={{ fontWeight: 800, textTransform: 'uppercase', color: '#0284C7', fontSize: '0.60rem', marginBottom: '2px' }}>
-                    FOR FIXKAR (PARTNER 1):
-                  </div>
-                  <div style={{ height: '32px', borderBottom: '1px solid #64748B', display: 'flex', alignItems: 'flex-end', paddingBottom: '2px' }}>
-                    <span style={{ fontSize: '0.58rem', color: '#94A3B8', fontStyle: 'italic' }}>Signature: __________________</span>
-                  </div>
-                  <div style={{ fontWeight: 800, color: '#0F172A', marginTop: '3px' }}>Pankaj Tiwari</div>
-                  <div style={{ fontSize: '0.60rem', color: '#475569' }}>Partner &bull; Fixkar Tech Solutions</div>
-                  <div style={{ fontSize: '0.58rem', color: '#64748B', marginTop: '1px' }}>Date: {dateStr}</div>
-                  <div style={{ fontSize: '0.58rem', color: '#0284C7', fontWeight: 700, marginTop: '2px' }}>
-                    Partner Stamp: _______________
-                  </div>
-                </div>
-
-                {/* Fixkar Partner 2 (Divyansh Chaurasia with Official Stamp) */}
-                <div style={{ border: '1px solid #CBD5E1', borderRadius: '4px', padding: '6px 8px', background: '#F8FAFC' }}>
-                  <div style={{ fontWeight: 800, textTransform: 'uppercase', color: '#0284C7', fontSize: '0.60rem', marginBottom: '2px' }}>
-                    FOR FIXKAR (PARTNER 2):
+                    FOR FIXKAR (FOUNDER):
                   </div>
                   <div style={{ height: '32px', borderBottom: '1px solid #64748B', display: 'flex', alignItems: 'flex-end', paddingBottom: '2px' }}>
                     <span style={{ fontSize: '0.58rem', color: '#94A3B8', fontStyle: 'italic' }}>Signature: __________________</span>
                   </div>
                   <div style={{ fontWeight: 800, color: '#0F172A', marginTop: '3px' }}>Divyansh Chaurasia</div>
-                  <div style={{ fontSize: '0.60rem', color: '#475569' }}>Partner &bull; Fixkar Tech Solutions</div>
+                  <div style={{ fontSize: '0.60rem', color: '#475569' }}>Founder &bull; Fixkar Tech Solutions</div>
                   <div style={{ fontSize: '0.58rem', color: '#64748B', marginTop: '1px' }}>Date: {dateStr}</div>
-                  <div style={{ fontSize: '0.58rem', color: '#0284C7', fontWeight: 700, marginTop: '2px' }}>
-                    Partner Stamp: _______________
-                  </div>
                 </div>
 
-                {/* Client Signature (Signature Only, No Stamp) */}
+                {/* Fixkar Co-Founder: Pankaj Tiwari */}
+                <div style={{ border: '1px solid #CBD5E1', borderRadius: '4px', padding: '6px 8px', background: '#F8FAFC' }}>
+                  <div style={{ fontWeight: 800, textTransform: 'uppercase', color: '#0284C7', fontSize: '0.60rem', marginBottom: '2px' }}>
+                    FOR FIXKAR (CO-FOUNDER):
+                  </div>
+                  <div style={{ height: '32px', borderBottom: '1px solid #64748B', display: 'flex', alignItems: 'flex-end', paddingBottom: '2px' }}>
+                    <span style={{ fontSize: '0.58rem', color: '#94A3B8', fontStyle: 'italic' }}>Signature: __________________</span>
+                  </div>
+                  <div style={{ fontWeight: 800, color: '#0F172A', marginTop: '3px' }}>Pankaj Tiwari</div>
+                  <div style={{ fontSize: '0.60rem', color: '#475569' }}>Co-Founder &bull; Fixkar Tech Solutions</div>
+                  <div style={{ fontSize: '0.58rem', color: '#64748B', marginTop: '1px' }}>Date: {dateStr}</div>
+                </div>
+
+                {/* Client Authorized Signatory */}
                 <div style={{ border: '1px solid #CBD5E1', borderRadius: '4px', padding: '6px 8px', background: '#F8FAFC' }}>
                   <div style={{ fontWeight: 800, textTransform: 'uppercase', color: isPhase1 ? '#0284C7' : '#10B981', fontSize: '0.60rem', marginBottom: '2px' }}>
                     FOR {clientName.slice(0, 18).toUpperCase()}:
@@ -563,7 +561,16 @@ export function AgreementModal({ doc, clientData, onClose }) {
                   <div style={{ fontWeight: 800, color: '#0F172A', marginTop: '3px' }}>{contactPerson}</div>
                   <div style={{ fontSize: '0.60rem', color: '#475569' }}>Authorized Signatory / Client</div>
                   <div style={{ fontSize: '0.58rem', color: '#64748B', marginTop: '1px' }}>Client Code: <strong style={{ color: '#0284C7' }}>{clientCode}</strong></div>
-                  <div style={{ fontSize: '0.58rem', color: '#64748B' }}>Date: {dateStr}</div>
+                </div>
+              </div>
+
+              {/* SINGLE UNIFIED FIXKAR COMPANY OFFICIAL STAMP/SEAL */}
+              <div style={{ marginTop: '8px', padding: '6px 12px', background: '#F0F9FF', border: '1px dashed #0284C7', borderRadius: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.64rem' }}>
+                <div style={{ color: '#0369A1', fontWeight: 700 }}>
+                  🏢 <strong>FIXKAR TECHNOLOGY SOLUTIONS</strong> (Official Corporate Stamp &amp; Seal)
+                </div>
+                <div style={{ color: '#64748B', fontStyle: 'italic' }}>
+                  Official Seal: _________________________________
                 </div>
               </div>
             </div>
