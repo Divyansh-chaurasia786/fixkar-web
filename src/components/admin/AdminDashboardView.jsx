@@ -3346,7 +3346,11 @@ Fixkar Engineering Hub                    Date: ${new Date().toISOString().split
       {selectedDocPreview && (
         <AgreementModal
           doc={selectedDocPreview}
-          clientData={selectedDocPreview.clientData || selectedDocPreview}
+          clientData={
+            selectedDocPreview.clientData ||
+            clients.find(c => c.clientCode === selectedDocPreview.clientCode || c.businessName === selectedDocPreview.client || c.businessName === selectedDocPreview.clientName) ||
+            selectedDocPreview
+          }
           onClose={() => setSelectedDocPreview(null)}
         />
       )}
