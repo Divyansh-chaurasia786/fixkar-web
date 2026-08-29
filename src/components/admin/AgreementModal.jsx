@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Printer, ShieldCheck, MessageSquare, Copy, FileText, Download } from 'lucide-react';
+import { X, Printer, ShieldCheck, MessageSquare, Copy, FileText, Download, Globe } from 'lucide-react';
 
 export function AgreementModal({ doc, clientData, onClose }) {
   if (!doc && !clientData) return null;
@@ -21,10 +21,24 @@ export function AgreementModal({ doc, clientData, onClose }) {
 
   const clientName = clientData?.businessName || clientData?.client || sanitizeString(doc?.clientName) || sanitizeString(doc?.client) || sanitizeString(doc?.name) || 'Registered Client Business';
   const clientCode = clientData?.clientCode || doc?.clientCode || 'FIX-CLNT-001';
-  const contactPerson = clientData?.contactPerson || clientData?.name || clientData?.leadName || sanitizeString(doc?.contactPerson) || clientName;
+  
+  // Clean Contact Person Name: Avoid file strings or company-like names as person name
+  let rawPerson = clientData?.contactPerson || clientData?.name || clientData?.leadName || sanitizeString(doc?.contactPerson);
+  if (!rawPerson || rawPerson.toLowerCase().includes('.pdf') || rawPerson.includes('Agreement')) {
+    rawPerson = 'Authorized Signatory';
+  }
+  const contactPerson = rawPerson;
+
   const phone = clientData?.phone || doc?.phone || '';
   const email = clientData?.email || doc?.email || 'contact@client.in';
-  const domain = clientData?.domain || doc?.domain || 'clientwebsite.in';
+  
+  // Clean Domain: fallback to sensible domain name based on clientName
+  let rawDomain = clientData?.domain || doc?.domain || '';
+  if (!rawDomain || rawDomain === 'clientwebsite.in') {
+    rawDomain = clientName.toLowerCase().replace(/[^a-z0-9]/g, '') + '.in';
+  }
+  const domain = rawDomain;
+
   const agreedPackage = clientData?.agreedPackage || clientData?.businessType || 'Standard Web Platform Architecture';
   const dateStr = doc?.date || new Date().toISOString().split('T')[0];
 
@@ -59,11 +73,11 @@ export function AgreementModal({ doc, clientData, onClose }) {
           'Hello ' + contactPerson + '!\n\n' +
           '📜 FIXKAR OFFICIAL MANAGED SERVICE AGREEMENT (PHASE 1 MSA)\n' +
           '• Ref: ' + refCode + ' • Client: ' + clientName + ' (' + clientCode + ')\n' +
-          '• Production Domain: https://' + domain + '\n\n' +
+          '• Proposed Domain: https://' + domain + ' (To be registered under Phase 1)\n\n' +
           '💰 50/50 PAYMENT SCHEDULE:\n' +
           '• Total Project Value: Rs. ' + totalCost.toLocaleString('en-IN') + '\n' +
-          '• Phase 1 Advance (50%): Rs. ' + phase1Advance.toLocaleString('en-IN') + ' (Paid at Kickoff)\n' +
-          '• Phase 2 Final (50%): Rs. ' + phase2Final.toLocaleString('en-IN') + ' (Due Before Live Handover)\n\n' +
+          '• Phase 1 Advance (50%): Rs. ' + phase1Advance.toLocaleString('en-IN') + ' (Domain purchase, VPS setup & Kickoff)\n' +
+          '• Phase 2 Final (50%): Rs. ' + phase2Final.toLocaleString('en-IN') + ' (Due Before Live DNS Handover)\n\n' +
           '⚖️ INDIAN LAW VALID TERMS:\n' +
           '• 1-Year Free Maintenance (Strictly Bug-Fixes & Technical Errors only)\n' +
           '• 7-Day Post-Live Refinement Window (Updates only, no new features)\n' +
@@ -429,7 +443,26 @@ export function AgreementModal({ doc, clientData, onClose }) {
                   <div style={{ fontWeight: 800, color: '#0F172A' }}>{clientName}</div>
                   <div style={{ color: '#475569' }}>Authorized Signatory / Owner: <strong>{contactPerson}</strong></div>
                   <div style={{ color: '#64748B' }}>Client Identification Code: <strong style={{ fontFamily: 'monospace', color: '#0284C7' }}>{clientCode}</strong></div>
-                  <div style={{ color: '#64748B' }}>Live Domain: <strong style={{ color: '#0F172A' }}>https://{domain}</strong> {phone ? ' • Ph: ' + phone : ''}</div>
+                  
+                  {/* DYNAMIC DOMAIN STATUS (Phase 1 vs Phase 2) */}
+                  <div style={{ color: '#64748B', marginTop: '2px' }}>
+                    {isPhase1 ? (
+                      <span>
+                        <strong>Domain Allocation:</strong>{' '}
+                        <span style={{ color: '#0284C7', fontWeight: 700 }}>
+                          https://{domain} (To be purchased &amp; provisioned under Phase 1)
+                        </span>
+                      </span>
+                    ) : (
+                      <span>
+                        <strong>Live Production Domain:</strong>{' '}
+                        <a href={'https://' + domain} target="_blank" rel="noreferrer" style={{ color: '#059669', fontWeight: 800, textDecoration: 'none' }}>
+                          https://{domain}
+                        </a>
+                      </span>
+                    )}
+                    {phone ? ' • Ph: ' + phone : ''}
+                  </div>
                 </div>
               </div>
             </div>
@@ -468,11 +501,11 @@ export function AgreementModal({ doc, clientData, onClose }) {
               {isPhase1 ? (
                 <>
                   <div>
-                    <strong style={{ color: '#0F172A' }}>1. SCOPE OF SERVICES &amp; DELIVERABLES:</strong> Fixkar Technology Solutions shall architect, design, program, and configure the responsive web software platform for {clientName} including mobile-optimized UI/UX, backend API integration, Fast2SMS transactional OTP authentication, SSL HTTPS security, database architecture, and self-service Client Portal access (<strong>https://fixkar.co.in/#client-login</strong>).
+                    <strong style={{ color: '#0F172A' }}>1. SCOPE OF SERVICES &amp; DELIVERABLES:</strong> Fixkar Technology Solutions shall architect, design, program, purchase &amp; provision the client domain (https://{domain}), and configure the responsive web software platform for {clientName} including mobile-optimized UI/UX, backend API integration, Fast2SMS transactional OTP authentication, SSL HTTPS security, database architecture, and self-service Client Portal access (<strong>https://fixkar.co.in/#client-login</strong>).
                   </div>
 
                   <div>
-                    <strong style={{ color: '#0F172A' }}>2. 50/50 MILESTONE PAYMENT TERMS (SECTION 2(d), INDIAN CONTRACT ACT, 1872):</strong> (a) <strong>Phase 1 Advance (50% - ₹{phase1Advance.toLocaleString('en-IN')}):</strong> Payable immediately upon contract execution for domain registration, cloud VPS provisioning, and development kickstart. (b) <strong>Phase 2 Final (50% - ₹{phase2Final.toLocaleString('en-IN')}):</strong> Strictly payable upon staging verification <u>when the website is fully ready and tested, prior to public live DNS routing</u>.
+                    <strong style={{ color: '#0F172A' }}>2. 50/50 MILESTONE PAYMENT TERMS (SECTION 2(d), INDIAN CONTRACT ACT, 1872):</strong> (a) <strong>Phase 1 Advance (50% - ₹{phase1Advance.toLocaleString('en-IN')}):</strong> Payable immediately upon contract execution for domain registration purchase, cloud VPS provisioning, and development kickstart. (b) <strong>Phase 2 Final (50% - ₹{phase2Final.toLocaleString('en-IN')}):</strong> Strictly payable upon staging verification <u>when the website is fully ready and tested, prior to public live DNS routing</u>.
                   </div>
 
                   <div>
@@ -486,7 +519,7 @@ export function AgreementModal({ doc, clientData, onClose }) {
               ) : (
                 <>
                   <div>
-                    <strong style={{ color: '#0F172A' }}>1. PRODUCTION HANDOVER &amp; LIVE ACCEPTANCE:</strong> The Client certifies that it has thoroughly verified and approved the completed web platform on staging. Fixkar Technology Solutions has deployed the production build to <strong>https://{domain}</strong> under high-availability Managed Cloud VPS architecture with active SSL encryption.
+                    <strong style={{ color: '#0F172A' }}>1. PRODUCTION HANDOVER &amp; LIVE ACCEPTANCE:</strong> The Client certifies that it has thoroughly verified and approved the completed web platform on staging. Fixkar Technology Solutions has deployed the production build to the live domain <strong>https://{domain}</strong> under high-availability Managed Cloud VPS architecture with active SSL encryption.
                   </div>
 
                   <div>
