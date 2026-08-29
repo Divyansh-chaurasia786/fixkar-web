@@ -8,9 +8,18 @@ export function AgreementModal({ doc, clientData, onClose }) {
   const initialPhase = (doc?.type === 'Technical Spec' || doc?.name?.includes('SLA') || doc?.title?.includes('SLA') || clientData?.phase2Complete) ? 'phase2' : 'phase1';
   const [activePhase, setActivePhase] = useState(initialPhase);
 
-  const clientName = clientData?.businessName || clientData?.client || doc?.client || 'Registered Client Business';
+    const sanitizeString = (val, fallback = '') => {
+    if (!val) return fallback;
+    let s = String(val).trim();
+    if (s.toLowerCase().includes('.pdf') || s.toLowerCase().includes('.docx') || s.toLowerCase().includes('agreement') || s.toLowerCase().includes('contract') || s.toLowerCase().includes('spec')) {
+      return fallback;
+    }
+    return s;
+  };
+
+  const clientName = clientData?.businessName || clientData?.client || doc?.clientName || sanitizeString(doc?.client, '') || 'Registered Client Business';
   const clientCode = clientData?.clientCode || doc?.clientCode || 'FIX-CLNT-001';
-  const contactPerson = clientData?.contactPerson || clientData?.name || clientData?.leadName || doc?.contactPerson || doc?.name || 'Authorized Representative';
+  const contactPerson = clientData?.contactPerson || clientData?.name || clientData?.leadName || sanitizeString(doc?.contactPerson, '') || sanitizeString(doc?.name, '') || 'Authorized Representative';
   const phone = clientData?.phone || doc?.phone || '';
   const email = clientData?.email || doc?.email || 'contact@client.in';
   const domain = clientData?.domain || doc?.domain || 'clientwebsite.in';
@@ -662,7 +671,7 @@ export function AgreementModal({ doc, clientData, onClose }) {
                     <div style={{ fontSize: '0.68rem', color: '#475569' }}>Authorized Signatory / Owner</div>
                     <div style={{ fontSize: '0.66rem', color: '#64748B', marginTop: '3px' }}>Code: <strong style={{ color: '#0284C7' }}>{clientCode}</strong></div>
                     <div style={{ fontSize: '0.66rem', color: '#64748B' }}>Date: <strong>{dateStr}</strong></div>
-                    <div style={{ fontSize: '0.64rem', color: '#64748B', marginTop: '6px' }}>Stamp / Seal: _______________</div>
+                    
                   </div>
                 </div>
               </div>
