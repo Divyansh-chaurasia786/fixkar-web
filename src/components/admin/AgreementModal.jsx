@@ -75,7 +75,7 @@ export function AgreementModal({ doc, clientData, onClose }) {
           '• Client: ' + clientPersonName + ' • Business: ' + businessName + ' (' + clientCode + ')\n' +
           '• Ref: ' + refCode + '\n\n' +
           '🌐 DOMAIN POLICY:\n' +
-          '• Official domain name (.in / .com) will be mutually decided after discussion with you.\n\n' +
+          '• Official custom domain name will be mutually decided and registered after discussion with you.\n\n' +
           '💰 50/50 PAYMENT SCHEDULE:\n' +
           '• Total Project Value: Rs. ' + totalCost.toLocaleString('en-IN') + '\n' +
           '• Phase 1 Advance (50%): Rs. ' + phase1Advance.toLocaleString('en-IN') + ' (Paid at Kickoff)\n' +
@@ -454,7 +454,7 @@ export function AgreementModal({ doc, clientData, onClose }) {
                       <span>
                         <strong>Domain Allocation:</strong>{' '}
                         <span style={{ color: '#0284C7', fontWeight: 600 }}>
-                          Official domain name (.in / .com) will be finalized after discussion with the Client
+                          Official custom domain will be finalized & registered after discussion with the Client
                         </span>
                       </span>
                     ) : (
